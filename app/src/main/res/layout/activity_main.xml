@@ -62,11 +62,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/spinner_and_switch">
-                <ImageView
+<!--                <ImageView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentTop="true"-->
+<!--                    android:src="@mipmap/chart" />-->
+                <lecho.lib.hellocharts.view.LineChartView
+                    android:id="@+id/chart"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:src="@mipmap/chart" />
+                    android:layout_height="500dp" />
             </RelativeLayout>
 
             <!--comment-->
