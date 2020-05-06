@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">COVID19_forecast_frontend</string>
+    <string name="national_forecast">全国疫情趋势</string>
+    <string-array name="item_choices">
+        <item>新增确诊</item>
+        <item>累计确诊</item>
+        <item>治愈率</item>
+        <item>死亡率</item>
+    </string-array>
+</resources>
