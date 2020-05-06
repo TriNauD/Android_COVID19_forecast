@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
             Line line = new Line(values);               //根据值来创建一条线
 
-            line.setColor(Color.BLUE);  //线的颜色
+            line.setColor(Color.rgb(126,185,236));  //线的颜色
             line.setCubic(true);        //曲线
 
             lines.add(line);
