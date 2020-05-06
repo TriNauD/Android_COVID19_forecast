@@ -16,7 +16,6 @@ import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 
-@TargetApi(21)
 public class MainActivity extends AppCompatActivity {
 
     @Override

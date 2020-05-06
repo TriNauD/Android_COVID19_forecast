@@ -25,6 +25,7 @@
 
     <!--scroll-->
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
@@ -33,7 +34,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp">
-
             <!--spinner+switch-->
             <RelativeLayout
                 android:id="@+id/spinner_and_switch"
@@ -79,6 +79,7 @@
 
             <!--comment-->
             <RelativeLayout
+                android:id="@+id/comment_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/chart_view"
