@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
         //坐标轴
         Axis axisX = new Axis();
         Axis axisY = new Axis();
-        axisX.setName("Axis X");
-        axisY.setName("Axis Y");
+        /*axisX.setName("Axis X");
+        axisY.setName("Axis Y");*/
         myLineData.setAxisXBottom(axisX);            //设置X轴位置 下方
         myLineData.setAxisYLeft(axisY);              //设置Y轴位置 左边
 

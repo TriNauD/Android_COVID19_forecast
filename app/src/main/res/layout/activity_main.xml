@@ -32,14 +32,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="0dp">
 
             <!--spinner+switch-->
             <RelativeLayout
                 android:id="@+id/spinner_and_switch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="0dp">
                 <Spinner
                     android:id="@+id/spinner"
                     android:layout_width="wrap_content"
@@ -70,7 +70,10 @@
                 <lecho.lib.hellocharts.view.LineChartView
                     android:id="@+id/chart"
                     android:layout_width="match_parent"
-                    android:layout_height="500dp" />
+                    android:layout_height="280dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"/>
             </RelativeLayout>
 
             <!--comment-->
