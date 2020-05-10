@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 显示图表
      */
-    public void showChart() {
+    private void showChart() {
         int numberOfPoints = 8;                     //节点数
         int maxNumberOfLines = 4;                   //图上折线/曲线的最多条数
         int numberOfLines = 1;                      //图上折线/曲线的显示条数
