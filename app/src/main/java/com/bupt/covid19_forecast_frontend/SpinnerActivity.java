@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
-
+/*This is xjy's pull request test*/
 public class SpinnerActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     @Override
