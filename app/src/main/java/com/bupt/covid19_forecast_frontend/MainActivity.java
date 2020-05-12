@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static int numberOfPoints = 8; //节点数
     private static int numberOfLines = 1; //图上折线/曲线的显示条数
     private static int maxNumberOfLines = 4; //图上折线/曲线的最多条数
+    private static int curLineIndex = 0;//当前显示的线是几号
     private LineChartView myLineChartView; //折线图的view
     private float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints]; //将线上的点放在一个数组中
     private List<Line> lines = new ArrayList<>(); //所有线
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void initChart() {
         Log.i(TAG, "initChart 进入函数");
         myLineChartView = findViewById(R.id.chart); //绑定视图
-        List<Line> curLines = lines.subList(0,numberOfLines);//去除不需要的条数
+        List<Line> curLines = lines.subList(curLineIndex,curLineIndex+1);//去除不需要的条数
         myLineData = new LineChartData(curLines);//设置为显示的条数
         myLineChartView.setLineChartData(myLineData);//设置图表控件
    }
@@ -139,7 +140,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
-        //TODO:应该按照pos决定图表的线，现在的效果是多显示了一个线（？
+        //TODO:坐标轴还有点问题（？？
+        curLineIndex = pos;
+        initChart();
+        initAxis();
+        showChart();
     }
 
     /**
