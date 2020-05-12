@@ -1,10 +1,8 @@
 package com.bupt.covid19_forecast_frontend;
 
-import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,12 +20,19 @@ import lecho.lib.hellocharts.view.LineChartView;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
+    //日志TAG，调试用，默认使用类名
     private static final String TAG = "MainActivity";
 
-    private static int numberOfPoints = 8;                     //节点数
 
-    private LineChartView myLineChartView;
+    /*————————————绘图相关————————————*/
 
+    private static int numberOfPoints = 8; //节点数
+    private LineChartView myLineChartView; //折线图的view
+
+    /**
+     * 重载AppCompatActivity的函数，在活动创建时调用
+     * @param savedInstanceState ？？？系统使用参数
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,23 +45,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-        //日志调试
-        Log.i(TAG, "onItemSelected 进入函数");
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-        Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
-
-    }
-
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
-        Log.i(TAG, "onNothingSelected 进入函数");
-    }
-
     /**
-     * 初始化图表
+     * 自制-初始化图表
+     * 功能：初始化图表信息，目前包括数据、颜色、坐标轴等等
      */
     private void initChart() {
         int maxNumberOfLines = 4;                   //图上折线/曲线的最多条数
@@ -98,10 +89,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-
-
     /**
-     *绘图
+     * 自制-绘图
+     * 功能：调用后会绘图，达到刷新图像的目的
      * */
     private void showChart(){
         final Viewport v = new Viewport(myLineChartView.getMaximumViewport());//创建一个图标视图 大小为控件的最大大小
@@ -112,4 +102,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myLineChartView.setMaximumViewport(v);   //给最大的视图设置 相当于原图
         myLineChartView.setCurrentViewport(v);   //给当前的视图设置 相当于当前展示的图
     }
+
+
+    /*————————————spinner相关————————————*/
+
+    /**
+     * 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
+     * @param pos 选项的位置，0 ~ n-1
+     * */
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        //日志调试
+        Log.i(TAG, "onItemSelected 进入函数");
+        // An item was selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos)
+        Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
+
+    }
+
+    /**
+     * 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单没有任何选择时调用
+     * */
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
+        Log.i(TAG, "onNothingSelected 进入函数");
+    }
+
 }
