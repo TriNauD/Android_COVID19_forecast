@@ -23,12 +23,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //日志TAG，调试用，默认使用类名
     private static final String TAG = "MainActivity";
 
-
-    /*————————————绘图相关————————————*/
-
-    private static int numberOfPoints = 8; //节点数
-    private LineChartView myLineChartView; //折线图的view
-
     /**
      * 重载AppCompatActivity的函数，在活动创建时调用
      * @param savedInstanceState ？？？系统使用参数
@@ -37,23 +31,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initLines();
         initChart();
         showChart();
         //spinner
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
-
     }
 
+    /*————————————绘图相关————————————*/
+
+    private static int numberOfPoints = 8; //节点数
+    private static int numberOfLines = 1; //图上折线/曲线的显示条数
+    private static int maxNumberOfLines = 4; //图上折线/曲线的最多条数
+    private LineChartView myLineChartView; //折线图的view
+    private float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints]; //将线上的点放在一个数组中
+    private List<Line> lines = new ArrayList<>(); //所有线
+
     /**
-     * 自制-初始化图表
-     * 功能：初始化图表信息，目前包括数据、颜色、坐标轴等等
-     */
-    private void initChart() {
-        int maxNumberOfLines = 4;                   //图上折线/曲线的最多条数
-        int numberOfLines = 1;                      //图上折线/曲线的显示条数
-        float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints]; //将线上的点放在一个数组中
-        List<Line> lines = new ArrayList<>();       //所有线
+     * 自制-初始化“线”
+     * 功能：初始化line数组
+     * */
+    private void initLines(){
 
         //循环将每条线都设置成对应的属性
         for (int i = 0; i < numberOfLines; ++i) {
@@ -72,6 +71,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             lines.add(line);
         }
+    }
+
+    /**
+     * 自制-初始化图表
+     * 功能：初始化图表信息，目前包括绑定数据和视图、坐标轴等等
+     */
+    private void initChart() {
 
         LineChartData myLineData = new LineChartData(lines); //数据
         myLineChartView = findViewById(R.id.chart); //绑定视图
@@ -84,10 +90,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         axisY.setName("Axis Y");*/
         myLineData.setAxisXBottom(axisX);            //设置X轴位置 下方
         myLineData.setAxisYLeft(axisY);              //设置Y轴位置 左边
-
-
-
-    }
+   }
 
     /**
      * 自制-绘图
