@@ -24,10 +24,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private static final String TAG = "MainActivity";
 
+    private static int numberOfPoints = 8;                     //节点数
+
+    private LineChartView myLineChartView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initChart();
         showChart();
         //spinner
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -51,10 +56,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
-     * 显示图表
+     * 初始化图表
      */
-    private void showChart() {
-        int numberOfPoints = 8;                     //节点数
+    private void initChart() {
         int maxNumberOfLines = 4;                   //图上折线/曲线的最多条数
         int numberOfLines = 1;                      //图上折线/曲线的显示条数
         float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints]; //将线上的点放在一个数组中
@@ -78,8 +82,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             lines.add(line);
         }
 
-        LineChartView myLineChartView = findViewById(R.id.chart); //绑定视图
         LineChartData myLineData = new LineChartData(lines); //数据
+        myLineChartView = findViewById(R.id.chart); //绑定视图
         myLineChartView.setLineChartData(myLineData);    //设置图表控件
 
         //坐标轴
@@ -90,7 +94,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myLineData.setAxisXBottom(axisX);            //设置X轴位置 下方
         myLineData.setAxisYLeft(axisY);              //设置Y轴位置 左边
 
-        //计算并绘图
+
+
+    }
+
+
+
+    /**
+     *绘图
+     * */
+    private void showChart(){
         final Viewport v = new Viewport(myLineChartView.getMaximumViewport());//创建一个图标视图 大小为控件的最大大小
         v.left = 0;                             //坐标原点在左下
         v.bottom = 0;
@@ -98,6 +111,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         v.right = numberOfPoints - 1;           //右边为点 坐标从0开始 点号从1 需要 -1
         myLineChartView.setMaximumViewport(v);   //给最大的视图设置 相当于原图
         myLineChartView.setCurrentViewport(v);   //给当前的视图设置 相当于当前展示的图
-
     }
 }
