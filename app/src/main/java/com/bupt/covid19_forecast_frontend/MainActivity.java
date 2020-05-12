@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         initLines();
         initChart();
+        initAxis();
         showChart();
         //spinner
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private LineChartView myLineChartView; //折线图的view
     private float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints]; //将线上的点放在一个数组中
     private List<Line> lines = new ArrayList<>(); //所有线
+    private LineChartData myLineData = new LineChartData(lines); //数据
 
     /**
      * 自制-初始化“线”
@@ -76,22 +78,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     /**
      * 自制-初始化图表
-     * 功能：初始化图表信息，目前包括绑定数据和视图、坐标轴等等
+     * 功能：初始化图表信息，包括绑定视图、设置图表控件
      */
     private void initChart() {
         Log.i(TAG, "initChart 进入函数");
-
-        LineChartData myLineData = new LineChartData(lines); //数据
         myLineChartView = findViewById(R.id.chart); //绑定视图
         myLineChartView.setLineChartData(myLineData);    //设置图表控件
+   }
 
-        //坐标轴
-        Axis axisX = new Axis();
-        Axis axisY = new Axis();
-        /*axisX.setName("Axis X");
-        axisY.setName("Axis Y");*/
-        myLineData.setAxisXBottom(axisX);            //设置X轴位置 下方
-        myLineData.setAxisYLeft(axisY);              //设置Y轴位置 左边
+   /**
+    * 自制-初始化坐标轴
+    * */
+   private void initAxis(){
+       Log.i(TAG, "initAxis 进入函数");
+       //坐标轴
+       Axis axisX = new Axis();
+       Axis axisY = new Axis();
+       myLineData.setAxisXBottom(axisX); //设置X轴位置 下方
+       myLineData.setAxisYLeft(axisY); //设置Y轴位置 左边
    }
 
     /**
@@ -127,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //TODO:应该按照pos决定图表的线，现在的效果是多显示了一个线（？
         initLines();//重新初始化线
         initChart();//重新初始化图表
+        initAxis();//坐标轴
         showChart();//绘图
     }
 
