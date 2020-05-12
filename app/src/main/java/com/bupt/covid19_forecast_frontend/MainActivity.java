@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initData();
         initLines();
         initChart();
         initAxis();
@@ -48,7 +49,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private LineChartView myLineChartView; //折线图的view
     private float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints]; //将线上的点放在一个数组中
     private List<Line> lines = new ArrayList<>(); //所有线
-    private LineChartData myLineData = new LineChartData(lines); //数据
+    private LineChartData myLineData = new LineChartData(lines); //当前显示数据
+
+
+    /**
+     * 自制-初始化数据
+     * 功能：初始化randomNumbersTab数据，目前就先用随机数
+     * */
+    private void initData(){
+        Log.i(TAG, "initData 进入函数");
+        for (int i = 0; i < maxNumberOfLines; ++i) {
+            for (int j = 0; j < numberOfPoints; ++j) {
+                Random random = new Random();
+                randomNumbersTab[i][j] = random.nextInt(100);
+            }
+        }
+    }
 
     /**
      * 自制-初始化“线”
@@ -56,22 +72,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * */
     private void initLines(){
         Log.i(TAG, "initLines 进入函数");
-
         //循环将每条线都设置成对应的属性
-        for (int i = 0; i < numberOfLines; ++i) {
-            //节点的值
-            List<PointValue> values = new ArrayList<>();
-            for (int j = 0; j < numberOfPoints; ++j) {
-                Random random = new Random();
-                randomNumbersTab[i][j] = random.nextInt(100);
-                values.add(new PointValue(j, randomNumbersTab[i][j]));
+        for (int i = 0; i < maxNumberOfLines; i++) {
+            List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
+            for (int j = 0; j < numberOfPoints; j++) {
+                tempArrayList.add(new PointValue(j, randomNumbersTab[i][j]));
             }
-
-            Line line = new Line(values);               //根据值来创建一条线
-
-            line.setColor(Color.rgb(126,185,236));  //线的颜色
-            line.setCubic(true);        //曲线
-
+            Line line = new Line(tempArrayList);//根据值来创建一条线
+            line.setColor(Color.rgb(126,185,236));//线的颜色
+            line.setCubic(true);//曲线
             lines.add(line);
         }
     }
@@ -83,7 +92,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void initChart() {
         Log.i(TAG, "initChart 进入函数");
         myLineChartView = findViewById(R.id.chart); //绑定视图
-        myLineChartView.setLineChartData(myLineData);    //设置图表控件
+        List<Line> curLines = lines.subList(0,numberOfLines);//去除不需要的条数
+        myLineData = new LineChartData(curLines);//设置为显示的条数
+        myLineChartView.setLineChartData(myLineData);//设置图表控件
    }
 
    /**
@@ -129,10 +140,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // parent.getItemAtPosition(pos)
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
         //TODO:应该按照pos决定图表的线，现在的效果是多显示了一个线（？
-        initLines();//重新初始化线
-        initChart();//重新初始化图表
-        initAxis();//坐标轴
-        showChart();//绘图
     }
 
     /**
