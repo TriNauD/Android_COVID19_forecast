@@ -31,8 +31,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initData();
         initLines();
         initChart();
+        initAxis();
         showChart();
         //spinner
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -44,52 +46,68 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static int numberOfPoints = 8; //节点数
     private static int numberOfLines = 1; //图上折线/曲线的显示条数
     private static int maxNumberOfLines = 4; //图上折线/曲线的最多条数
+    private static int curLineIndex = 0;//当前显示的线是几号
     private LineChartView myLineChartView; //折线图的view
     private float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints]; //将线上的点放在一个数组中
     private List<Line> lines = new ArrayList<>(); //所有线
+    private LineChartData myLineData = new LineChartData(lines); //当前显示数据
+
+
+    /**
+     * 自制-初始化数据
+     * 功能：初始化randomNumbersTab数据，目前就先用随机数
+     * */
+    private void initData(){
+        Log.i(TAG, "initData 进入函数");
+        for (int i = 0; i < maxNumberOfLines; ++i) {
+            for (int j = 0; j < numberOfPoints; ++j) {
+                Random random = new Random();
+                randomNumbersTab[i][j] = random.nextInt(100);
+            }
+        }
+    }
 
     /**
      * 自制-初始化“线”
      * 功能：初始化line数组
      * */
     private void initLines(){
-
+        Log.i(TAG, "initLines 进入函数");
         //循环将每条线都设置成对应的属性
-        for (int i = 0; i < numberOfLines; ++i) {
-            //节点的值
-            List<PointValue> values = new ArrayList<>();
-            for (int j = 0; j < numberOfPoints; ++j) {
-                Random random = new Random();
-                randomNumbersTab[i][j] = random.nextInt(100);
-                values.add(new PointValue(j, randomNumbersTab[i][j]));
+        for (int i = 0; i < maxNumberOfLines; i++) {
+            List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
+            for (int j = 0; j < numberOfPoints; j++) {
+                tempArrayList.add(new PointValue(j, randomNumbersTab[i][j]));
             }
-
-            Line line = new Line(values);               //根据值来创建一条线
-
-            line.setColor(Color.rgb(126,185,236));  //线的颜色
-            line.setCubic(true);        //曲线
-
+            Line line = new Line(tempArrayList);//根据值来创建一条线
+            line.setColor(Color.rgb(126,185,236));//线的颜色
+            line.setCubic(true);//曲线
             lines.add(line);
         }
     }
 
     /**
      * 自制-初始化图表
-     * 功能：初始化图表信息，目前包括绑定数据和视图、坐标轴等等
+     * 功能：初始化图表信息，包括绑定视图、设置图表控件
      */
     private void initChart() {
-
-        LineChartData myLineData = new LineChartData(lines); //数据
+        Log.i(TAG, "initChart 进入函数");
         myLineChartView = findViewById(R.id.chart); //绑定视图
-        myLineChartView.setLineChartData(myLineData);    //设置图表控件
+        List<Line> curLines = lines.subList(curLineIndex,curLineIndex+1);//去除不需要的条数
+        myLineData = new LineChartData(curLines);//设置为显示的条数
+        myLineChartView.setLineChartData(myLineData);//设置图表控件
+   }
 
-        //坐标轴
-        Axis axisX = new Axis();
-        Axis axisY = new Axis();
-        /*axisX.setName("Axis X");
-        axisY.setName("Axis Y");*/
-        myLineData.setAxisXBottom(axisX);            //设置X轴位置 下方
-        myLineData.setAxisYLeft(axisY);              //设置Y轴位置 左边
+   /**
+    * 自制-初始化坐标轴
+    * */
+   private void initAxis(){
+       Log.i(TAG, "initAxis 进入函数");
+       //坐标轴
+       Axis axisX = new Axis();
+       Axis axisY = new Axis();
+       myLineData.setAxisXBottom(axisX); //设置X轴位置 下方
+       myLineData.setAxisYLeft(axisY); //设置Y轴位置 左边
    }
 
     /**
@@ -97,7 +115,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * 功能：调用后会绘图，达到刷新图像的目的
      * */
     private void showChart(){
-        final Viewport v = new Viewport(myLineChartView.getMaximumViewport());//创建一个图标视图 大小为控件的最大大小
+        Log.i(TAG, "showChart 进入函数");
+        final Viewport v = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
         v.left = 0;                             //坐标原点在左下
         v.bottom = 0;
         v.top = 100;                            //最高点为100
@@ -121,7 +140,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
-
+        //TODO:坐标轴还有点问题（？？
+        curLineIndex = pos;
+        initChart();
+        initAxis();
+        showChart();
     }
 
     /**
