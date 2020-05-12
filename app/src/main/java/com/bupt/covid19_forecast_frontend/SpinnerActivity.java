@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
-/*This is xjy's pull request test*/
+
 public class SpinnerActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     @Override
@@ -19,6 +19,7 @@ public class SpinnerActivity extends AppCompatActivity implements AdapterView.On
                                int pos, long id) {
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
+        parent.getItemAtPosition(pos);
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
