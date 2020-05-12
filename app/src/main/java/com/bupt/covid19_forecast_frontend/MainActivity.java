@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * 功能：初始化line数组
      * */
     private void initLines(){
+        Log.i(TAG, "initLines 进入函数");
 
         //循环将每条线都设置成对应的属性
         for (int i = 0; i < numberOfLines; ++i) {
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * 功能：初始化图表信息，目前包括绑定数据和视图、坐标轴等等
      */
     private void initChart() {
+        Log.i(TAG, "initChart 进入函数");
 
         LineChartData myLineData = new LineChartData(lines); //数据
         myLineChartView = findViewById(R.id.chart); //绑定视图
@@ -97,7 +99,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * 功能：调用后会绘图，达到刷新图像的目的
      * */
     private void showChart(){
-        final Viewport v = new Viewport(myLineChartView.getMaximumViewport());//创建一个图标视图 大小为控件的最大大小
+        Log.i(TAG, "showChart 进入函数");
+        final Viewport v = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
         v.left = 0;                             //坐标原点在左下
         v.bottom = 0;
         v.top = 100;                            //最高点为100
@@ -121,7 +124,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
-
+        //TODO:应该按照pos决定图表的线，现在的效果是多显示了一个线（？
+        initLines();//重新初始化线
+        initChart();//重新初始化图表
+        showChart();//绘图
     }
 
     /**
