@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @version 1.0
      */
     private void showPartOfChart() {
-        Log.i(TAG, "showChart 进入函数");
+        Log.i(TAG, "showPartOfChart 进入函数");
         final Viewport fullViewport = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
         fullViewport.top = 300;
         fullViewport.bottom = -20;//最下面显示的y轴坐标值
