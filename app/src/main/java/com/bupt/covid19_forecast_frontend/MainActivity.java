@@ -11,24 +11,27 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     //日志TAG，调试用，默认使用类名
     private static final String TAG = "MainActivity";
 
     /**
      * 重载AppCompatActivity的函数，在活动创建时调用
+     *
      * @param savedInstanceState ？？？系统使用参数
      * @author lym
      * @version 1.0
-     * */
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +59,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     /**
      * 自制-初始化数据
+     *
      * @Description 初始化randomNumbersTab数据，目前就先用随机数
      * @author lym
      * @version 1.0
-     * */
-    private void initData(){
+     */
+    private void initData() {
         Log.i(TAG, "initData 进入函数");
         for (int i = 0; i < maxNumberOfLines; ++i) {
             for (int j = 0; j < numberOfPoints; ++j) {
@@ -72,11 +76,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     /**
      * 自制-初始化“线”
+     *
      * @Description 初始化line数组
      * @author lym
      * @version 1.0
-     * */
-    private void initLines(){
+     */
+    private void initLines() {
         Log.i(TAG, "initLines 进入函数");
         //循环将每条线都设置成对应的属性
         for (int i = 0; i < maxNumberOfLines; i++) {
@@ -85,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 tempArrayList.add(new PointValue(j, randomNumbersTab[i][j]));
             }
             Line line = new Line(tempArrayList);//根据值来创建一条线
-            line.setColor(Color.rgb(126,185,236));//线的颜色
+            line.setColor(Color.rgb(126, 185, 236));//线的颜色
             line.setCubic(true);//曲线
             lines.add(line);
         }
@@ -93,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     /**
      * 自制-初始化图表
+     *
      * @Description 初始化图表信息，包括绑定视图、设置图表控件
      * @author lym
      * @version 1.0
@@ -100,32 +106,49 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void initChart() {
         Log.i(TAG, "initChart 进入函数");
         myLineChartView = findViewById(R.id.chart); //绑定视图
-        List<Line> curLines = lines.subList(curLineIndex,curLineIndex+1);//去除不需要的条数
+        List<Line> curLines = lines.subList(curLineIndex, curLineIndex + 1);//去除不需要的条数
         myLineData = new LineChartData(curLines);//设置为显示的条数
         myLineChartView.setLineChartData(myLineData);//设置图表控件
-   }
+    }
 
-   /**
-    * 自制-初始化坐标轴
-    * @author lym
-    * @version 1.0
-    * */
-   private void initAxis(){
-       Log.i(TAG, "initAxis 进入函数");
-       //坐标轴
-       Axis axisX = new Axis();
-       Axis axisY = new Axis();
-       myLineData.setAxisXBottom(axisX); //设置X轴位置 下方
-       myLineData.setAxisYLeft(axisY); //设置Y轴位置 左边
-   }
+    /**
+     * 自制-初始化坐标轴
+     *
+     * @author lym
+     * @version 1.0
+     */
+    private void initAxis() {
+        Log.i(TAG, "initAxis 进入函数");
+        //坐标轴
+        Axis axisX = new Axis();
+        Axis axisY = new Axis();
+
+        //增加“日期”系列x轴
+        List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
+        int day = 0;
+        for (int i = 0; i < numberOfPoints; i++) {
+            AxisValue valueX = new AxisValue(i);//这里的数字是float，作为坐标的数值
+            day++;
+            if (day > 30) {
+                day %= 30;
+            }
+            valueX.setLabel("5月" + day + "日");//将数值和文字标签绑定起来
+            valueListX.add(valueX);//添加一个值
+        }
+        axisX.setValues(valueListX);//将列表设置到x轴上面
+
+        myLineData.setAxisXBottom(axisX); //设置X轴位置 下方
+        myLineData.setAxisYLeft(axisY); //设置Y轴位置 左边
+    }
 
     /**
      * 自制-绘图
+     *
      * @Description 调整显示的图表的范围
      * @author lym
      * @version 1.0
-     * */
-    private void showPartOfChart(){
+     */
+    private void showPartOfChart() {
         Log.i(TAG, "showChart 进入函数");
         final Viewport viewport = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
         viewport.top = 150;
@@ -147,11 +170,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /*————————————spinner相关————————————*/
 
     /**
-     * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
      * @param pos 选项的位置，0 ~ n-1
+     * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
      * @author lym
      * @version 1.0
-     * */
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
@@ -170,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单没有任何选择时调用
      * @author lym
      * @version 1.0
-     * */
+     */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
