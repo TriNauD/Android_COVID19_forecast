@@ -91,6 +91,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             Line line = new Line(tempArrayList);//根据值来创建一条线
             line.setColor(Color.rgb(126, 185, 236));//线的颜色
+            //line.setPointColor(Color.rgb(255,255,255));//点的颜色 这个是白色
+            line.setPointRadius(5);//点的大小
+            line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
             line.setFilled(true);//下方填充
             line.setCubic(false);//不要曲线
             lines.add(line);
