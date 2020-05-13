@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         for (int i = 0; i < maxNumberOfLines; ++i) {
             for (int j = 0; j < numberOfPoints; ++j) {
                 Random random = new Random();
-                randomNumbersTab[i][j] = random.nextInt(100);
+                randomNumbersTab[i][j] = random.nextInt(50) + j * 10;
             }
         }
     }
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Line line = new Line(tempArrayList);//根据值来创建一条线
             line.setColor(Color.rgb(126, 185, 236));//线的颜色
             line.setFilled(true);//下方填充
-            line.setCubic(true);//曲线
+            line.setCubic(false);//不要曲线
             lines.add(line);
         }
     }
@@ -152,17 +152,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void showPartOfChart() {
         Log.i(TAG, "showChart 进入函数");
         final Viewport fullViewport = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
-        fullViewport.top = 150;
-        fullViewport.bottom = -10;//最下面显示的y轴坐标值
-        fullViewport.left = -2;//最左边显示的x轴坐标值
+        fullViewport.top = 300;
+        fullViewport.bottom = -20;//最下面显示的y轴坐标值
+        fullViewport.left = -1;//最左边显示的x轴坐标值
         fullViewport.right = numberOfPoints;
-
 
         final Viewport halfViewport = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
         halfViewport.top = fullViewport.top;
         halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
         halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
-        halfViewport.right = 20;
+        halfViewport.right = 15;
 
         myLineChartView.setMaximumViewport(fullViewport);   //给最大的视图设置 相当于原图
         myLineChartView.setCurrentViewport(halfViewport);   //给当前的视图设置 相当于当前展示的图
