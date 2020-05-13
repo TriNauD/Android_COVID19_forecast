@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             if (day > 30) {
                 day %= 30;
             }
-            valueX.setLabel("5月" + day + "日");//将数值和文字标签绑定起来
+            valueX.setLabel("5" + "/" + day);//将数值和文字标签绑定起来
             valueListX.add(valueX);//添加一个值
         }
         axisX.setValues(valueListX);//将列表设置到x轴上面
@@ -151,19 +151,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private void showPartOfChart() {
         Log.i(TAG, "showChart 进入函数");
-        final Viewport viewport = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
-        viewport.top = 150;
-        viewport.bottom = 0;//最下面显示的y轴坐标值
-        viewport.left = -4;//最左边显示的x轴坐标值
-        viewport.right = numberOfPoints;
+        final Viewport fullViewport = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
+        fullViewport.top = 150;
+        fullViewport.bottom = -10;//最下面显示的y轴坐标值
+        fullViewport.left = -2;//最左边显示的x轴坐标值
+        fullViewport.right = numberOfPoints;
+
 
         final Viewport halfViewport = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
-        halfViewport.top = viewport.top;
-        halfViewport.bottom = viewport.bottom;//最下面显示的y轴坐标值
-        halfViewport.left = viewport.left;//最左边显示的x轴坐标值
+        halfViewport.top = fullViewport.top;
+        halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
+        halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
         halfViewport.right = 20;
 
-        myLineChartView.setMaximumViewport(viewport);   //给最大的视图设置 相当于原图
+        myLineChartView.setMaximumViewport(fullViewport);   //给最大的视图设置 相当于原图
         myLineChartView.setCurrentViewport(halfViewport);   //给当前的视图设置 相当于当前展示的图
     }
 
