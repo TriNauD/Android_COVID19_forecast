@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         initLines();
         initChart();
         initAxis();
-        showChart();
+        showPartOfChart();
         //spinner
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     /*————————————绘图相关————————————*/
 
-    private int numberOfPoints = 8; //节点数
+    private int numberOfPoints = 120; //节点数
     private int maxNumberOfLines = 4; //图上折线/曲线的最多条数
     private int curLineIndex = 0;//当前显示的线是几号
     private LineChartView myLineChartView; //折线图的view
@@ -121,19 +121,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     /**
      * 自制-绘图
-     * @Description 调用后会绘图，达到刷新图像的目的
+     * @Description 调整显示的图表的范围
      * @author lym
      * @version 1.0
      * */
-    private void showChart(){
+    private void showPartOfChart(){
         Log.i(TAG, "showChart 进入函数");
-        final Viewport v = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
-        v.left = 0;                             //坐标原点在左下
-        v.bottom = 0;
-        v.top = 100;                            //最高点为100
-        v.right = numberOfPoints - 1;           //右边为点 坐标从0开始 点号从1 需要 -1
-        myLineChartView.setMaximumViewport(v);   //给最大的视图设置 相当于原图
-        myLineChartView.setCurrentViewport(v);   //给当前的视图设置 相当于当前展示的图
+        final Viewport viewport = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
+        viewport.top = 150;
+        viewport.bottom = -100;//最下面显示的y轴坐标值
+        viewport.left = -4;//最左边显示的x轴坐标值
+        viewport.right = numberOfPoints;
+
+        final Viewport halfViewport = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
+        halfViewport.top = viewport.top;
+        halfViewport.bottom = viewport.bottom;//最下面显示的y轴坐标值
+        halfViewport.left = -4;//最左边显示的x轴坐标值
+        halfViewport.right = 20;
+
+        myLineChartView.setMaximumViewport(viewport);   //给最大的视图设置 相当于原图
+        myLineChartView.setCurrentViewport(halfViewport);   //给当前的视图设置 相当于当前展示的图
     }
 
 
@@ -157,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         curLineIndex = pos;
         initChart();
         initAxis();
-        showChart();
+        showPartOfChart();
     }
 
     /**
