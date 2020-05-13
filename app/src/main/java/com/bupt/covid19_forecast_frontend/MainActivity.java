@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /**
      * 重载AppCompatActivity的函数，在活动创建时调用
      * @param savedInstanceState ？？？系统使用参数
+     * @author lym
+     * @version 1.0
      * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     /**
      * 自制-初始化数据
-     * 功能：初始化randomNumbersTab数据，目前就先用随机数
+     * @Description 初始化randomNumbersTab数据，目前就先用随机数
+     * @author lym
+     * @version 1.0
      * */
     private void initData(){
         Log.i(TAG, "initData 进入函数");
@@ -68,7 +72,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     /**
      * 自制-初始化“线”
-     * 功能：初始化line数组
+     * @Description 初始化line数组
+     * @author lym
+     * @version 1.0
      * */
     private void initLines(){
         Log.i(TAG, "initLines 进入函数");
@@ -87,7 +93,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     /**
      * 自制-初始化图表
-     * 功能：初始化图表信息，包括绑定视图、设置图表控件
+     * @Description 初始化图表信息，包括绑定视图、设置图表控件
+     * @author lym
+     * @version 1.0
      */
     private void initChart() {
         Log.i(TAG, "initChart 进入函数");
@@ -99,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
    /**
     * 自制-初始化坐标轴
+    * @author lym
+    * @version 1.0
     * */
    private void initAxis(){
        Log.i(TAG, "initAxis 进入函数");
@@ -111,7 +121,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     /**
      * 自制-绘图
-     * 功能：调用后会绘图，达到刷新图像的目的
+     * @Description 调用后会绘图，达到刷新图像的目的
+     * @author lym
+     * @version 1.0
      * */
     private void showChart(){
         Log.i(TAG, "showChart 进入函数");
@@ -128,8 +140,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /*————————————spinner相关————————————*/
 
     /**
-     * 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
+     * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
      * @param pos 选项的位置，0 ~ n-1
+     * @author lym
+     * @version 1.0
      * */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view,
@@ -147,7 +161,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
-     * 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单没有任何选择时调用
+     * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单没有任何选择时调用
+     * @author lym
+     * @version 1.0
      * */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {

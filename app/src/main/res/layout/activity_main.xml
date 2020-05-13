@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:background="#fffefe"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:navigationIcon="@mipmap/back_icon">
+        android:theme="?attr/actionBarTheme">
         <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
@@ -22,98 +21,39 @@
             android:text="@string/national_forecast"
             android:textSize="18dp"/>
     </android.support.v7.widget.Toolbar>
-
     <!--scroll-->
     <ScrollView
-        android:id="@+id/scroll_view"
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginTop="10dp">
+        android:layout_below="@+id/toolbar">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp">
-            <!--spinner+switch-->
-            <RelativeLayout
-                android:id="@+id/spinner_and_switch"
-                android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0dp">
-                <Spinner
-                    android:id="@+id/spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="40dp"
-                    android:entries="@array/item_choices" />
-                <Switch
-                    android:id="@+id/forecast_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="20dp"
-                    />
-            </RelativeLayout>
-
-            <!--chart-->
-            <RelativeLayout
-                android:id="@+id/chart_view"
-                android:layout_width="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="30dp"
+                android:entries="@array/item_choices">
+            </Spinner>
+            <Switch
+                android:id="@+id/forecast_switch"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/spinner_and_switch">
-<!--                <ImageView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_alignParentTop="true"-->
-<!--                    android:src="@mipmap/chart" />-->
-                <lecho.lib.hellocharts.view.LineChartView
-                    android:id="@+id/chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="280dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"/>
-
-            </RelativeLayout>
-
-            <!--comment-->
-            <RelativeLayout
-                android:id="@+id/comment_area"
+                android:layout_alignBaseline="@+id/spinner"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"/>
+            <lecho.lib.hellocharts.view.LineChartView
+                android:id="@+id/chart"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/chart_view"
-                android:background="@color/blue">
-                <View
-                    android:id="@+id/comment1"
-                    android:layout_width="350dp"
-                    android:layout_height="100dp"
-                    android:layout_marginTop="80dp"
-                    android:layout_marginLeft="30dp"
-                    android:background="#FFFFFF"/>
-
-                <View
-                    android:id="@+id/comment2"
-                    android:layout_width="350dp"
-                    android:layout_below="@+id/comment1"
-                    android:layout_height="100dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="30dp"
-                    android:background="#FFFFFF"/>
-
-                <View
-                    android:id="@+id/comment3"
-                    android:layout_width="350dp"
-                    android:layout_below="@+id/comment2"
-                    android:layout_height="100dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="30dp"
-                    android:background="#FFFFFF"/>
-
-            </RelativeLayout>
-
+                android:layout_height="280dp"
+                android:layout_below="@+id/spinner"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"/>
         </RelativeLayout>
-
     </ScrollView>
-
 </RelativeLayout>
