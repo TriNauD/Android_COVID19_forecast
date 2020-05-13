@@ -43,10 +43,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     /*————————————绘图相关————————————*/
 
-    private static int numberOfPoints = 8; //节点数
-    private static int numberOfLines = 1; //图上折线/曲线的显示条数
-    private static int maxNumberOfLines = 4; //图上折线/曲线的最多条数
-    private static int curLineIndex = 0;//当前显示的线是几号
+    private int numberOfPoints = 8; //节点数
+    private int maxNumberOfLines = 4; //图上折线/曲线的最多条数
+    private int curLineIndex = 0;//当前显示的线是几号
     private LineChartView myLineChartView; //折线图的view
     private float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints]; //将线上的点放在一个数组中
     private List<Line> lines = new ArrayList<>(); //所有线
