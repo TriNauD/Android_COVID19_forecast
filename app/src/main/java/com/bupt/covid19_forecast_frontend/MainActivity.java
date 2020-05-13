@@ -160,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
-        //TODO:坐标轴还有点问题（？？
         curLineIndex = pos;
         initChart();
         initAxis();
