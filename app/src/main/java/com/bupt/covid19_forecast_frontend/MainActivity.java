@@ -151,13 +151,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private void showPartOfChart() {
         Log.i(TAG, "showPartOfChart 进入函数");
-        final Viewport fullViewport = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
+
+        final Viewport MAX = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
+        final Viewport CUR = new Viewport(myLineChartView.getCurrentViewport());
+
+        final Viewport fullViewport = new Viewport(MAX);
         fullViewport.top = 300;
         fullViewport.bottom = -20;//最下面显示的y轴坐标值
         fullViewport.left = -1;//最左边显示的x轴坐标值
         fullViewport.right = numberOfPoints;
 
-        final Viewport halfViewport = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
+        final Viewport halfViewport = new Viewport(CUR);
         halfViewport.top = fullViewport.top;
         halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
         halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
