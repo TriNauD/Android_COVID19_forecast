@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             Line line = new Line(tempArrayList);//根据值来创建一条线
             line.setColor(Color.rgb(126, 185, 236));//线的颜色
+            line.setFilled(true);//下方填充
             line.setCubic(true);//曲线
             lines.add(line);
         }
@@ -152,14 +153,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "showChart 进入函数");
         final Viewport viewport = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
         viewport.top = 150;
-        viewport.bottom = -100;//最下面显示的y轴坐标值
+        viewport.bottom = 0;//最下面显示的y轴坐标值
         viewport.left = -4;//最左边显示的x轴坐标值
         viewport.right = numberOfPoints;
 
         final Viewport halfViewport = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
         halfViewport.top = viewport.top;
         halfViewport.bottom = viewport.bottom;//最下面显示的y轴坐标值
-        halfViewport.left = -4;//最左边显示的x轴坐标值
+        halfViewport.left = viewport.left;//最左边显示的x轴坐标值
         halfViewport.right = 20;
 
         myLineChartView.setMaximumViewport(viewport);   //给最大的视图设置 相当于原图
