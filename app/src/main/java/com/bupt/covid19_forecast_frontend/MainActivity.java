@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initData();
-        initLines();
         initChart();
         initAxis();
         showPartOfChart();
@@ -55,46 +54,43 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     /*————————————绘图相关————————————*/
 
-    private int numberOfPoints = 120; //节点数
-    private int maxNumberOfLines = 4; //图上折线/曲线的最多条数
-    private int curLineIndex = 0;//当前显示的线是几号
-    private LineChartView myLineChartView; //折线图的view
-    private float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints]; //将线上的点放在一个数组中
+    private int numOfRealLines = 4;//“真实线”的数量
+    private int numOfRealPoints = 120;//“真实线”的节点数
+    private int numOfForecastLines = 1;//“预测线”的数量
+    private int numOfForecastPoints = 12;//“预测线”的节点数
+    private float[][] realLineData = new float[numOfRealLines][numOfRealPoints];//“真实线”的数据存放到二维数组中
+    private float[][] forecastLineData = new float[numOfForecastLines][numOfRealPoints];//“预测线”的数据存放到二维数组中
     private List<Line> lines = new ArrayList<>(); //所有线
     private LineChartData myLineData = new LineChartData(lines); //当前显示数据
-
+    private LineChartView myLineChartView; //折线图的view
+    private int curLineIndex = 0;//当前显示的线是几号
 
     /**
-     * 自制-初始化数据
+     * 初始化所有数据，包括“数”和“线”
      *
-     * @Description 初始化randomNumbersTab数据，目前就先用随机数
+     * @Description 初始化数据，目前就先用随机数；初始化线
      * @author lym
-     * @version 1.0
+     * @version 2.0
      */
     private void initData() {
         Log.i(TAG, "initData 进入函数");
-        for (int i = 0; i < maxNumberOfLines; ++i) {
-            for (int j = 0; j < numberOfPoints; ++j) {
+
+        //————数————
+        //真实
+        for (int i = 0; i < numOfRealLines; ++i) {
+            for (int j = 0; j < numOfRealPoints; ++j) {
                 Random random = new Random();
-                randomNumbersTab[i][j] = random.nextInt(50) + j * 10;
+                realLineData[i][j] = random.nextInt(50) + j * 10;
             }
         }
-    }
+        //TODO:预测
 
-    /**
-     * 自制-初始化“线”
-     *
-     * @Description 初始化line数组
-     * @author lym
-     * @version 1.0
-     */
-    private void initLines() {
-        Log.i(TAG, "initLines 进入函数");
-        //循环将每条线都设置成对应的属性
-        for (int i = 0; i < maxNumberOfLines; i++) {
+        //————线————
+        //真实
+        for (int i = 0; i < numOfRealLines; i++) {
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
-            for (int j = 0; j < numberOfPoints; j++) {
-                tempArrayList.add(new PointValue(j, randomNumbersTab[i][j]));
+            for (int j = 0; j < numOfRealPoints; j++) {
+                tempArrayList.add(new PointValue(j, realLineData[i][j]));
             }
             Line line = new Line(tempArrayList);//根据值来创建一条线
             line.setColor(Color.rgb(126, 185, 236));//线的颜色
@@ -105,6 +101,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             line.setCubic(false);//不要曲线
             lines.add(line);
         }
+        //TODO:预测
+
     }
 
     /**
@@ -137,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //增加“日期”系列x轴
         List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
         int day = 0;
-        for (int i = 0; i < numberOfPoints; i++) {
+        for (int i = 0; i < numOfRealPoints; i++) {
             AxisValue valueX = new AxisValue(i);//这里的数字是float，作为坐标的数值
             day++;
             if (day > 30) {
@@ -169,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         fullViewport.top = 300;
         fullViewport.bottom = -20;//最下面显示的y轴坐标值
         fullViewport.left = -1;//最左边显示的x轴坐标值
-        fullViewport.right = numberOfPoints;
+        fullViewport.right = numOfRealPoints;
 
         final Viewport halfViewport = new Viewport(CUR);
         halfViewport.top = fullViewport.top;
