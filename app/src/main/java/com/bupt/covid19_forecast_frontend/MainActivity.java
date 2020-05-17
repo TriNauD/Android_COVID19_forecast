@@ -51,19 +51,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myswitch.setOnCheckedChangeListener(this);
     }
 
-    /**
-    切换按钮的监听函数
-     */
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Log.i(TAG, "onCheckedChanged 进入函数");
 
-        if (isChecked) {
-            Log.i(TAG, "onCheckedChanged 开关状态：开启");
-        } else {
-            Log.i(TAG, "onCheckedChanged 开关状态：关闭");
-        }
-    }
 
     /*————————————绘图相关————————————*/
 
@@ -227,4 +215,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "onNothingSelected 进入函数");
     }
 
+    /*————————————spinner相关————————————*/
+
+    /**
+     * @Description 重载CompoundButton.OnCheckedChangeListener的函数，监听switch按钮有没有被选中
+     * @author lym
+     * @version 1.0
+     */
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        Log.i(TAG, "onCheckedChanged 进入函数");
+
+        if (isChecked) {
+            Log.i(TAG, "onCheckedChanged 开关状态：开启");
+        } else {
+            Log.i(TAG, "onCheckedChanged 开关状态：关闭");
+        }
+    }
 }
