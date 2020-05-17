@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
     //日志TAG，调试用，默认使用类名
     private static final String TAG = "MainActivity";
@@ -44,6 +46,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //spinner
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
+        //switch
+        Switch myswitch = (Switch) findViewById(R.id.forecast_switch);
+        myswitch.setOnCheckedChangeListener(this);
+    }
+
+    /**
+    切换按钮的监听函数
+     */
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        Log.i(TAG, "onCheckedChanged 进入函数");
+
+        if (isChecked) {
+            Log.i(TAG, "onCheckedChanged 开关状态：开启");
+        } else {
+            Log.i(TAG, "onCheckedChanged 开关状态：关闭");
+        }
     }
 
     /*————————————绘图相关————————————*/
