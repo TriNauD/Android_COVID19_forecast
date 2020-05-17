@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int numOfForecastPoints = 12;//“预测线”的节点数
     private float[][] realLineData = new float[numOfRealLines][numOfRealPoints];//“真实线”的数据存放到二维数组中
     private float[][] forecastLineData = new float[numOfForecastLines][numOfRealPoints];//“预测线”的数据存放到二维数组中
+    //另外一个参考方案：也可以放到一个数组里：private int[] numOfLines = {4, 1};//“真实线”与“预测线”的线数量
     private List<Line> lines = new ArrayList<>(); //所有线
     private LineChartData myLineData = new LineChartData(lines); //当前显示数据
     private LineChartView myLineChartView; //折线图的view
