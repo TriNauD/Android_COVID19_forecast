@@ -193,11 +193,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         final Viewport fullViewport = new Viewport(MAX);
         final Viewport halfViewport = new Viewport(CUR);
 
-        //TODO “调参师”
         if(isForecast){
             fullViewport.top = 300;
-            fullViewport.bottom = -20;//最下面显示的y轴坐标值
-            fullViewport.left = -1;//最左边显示的x轴坐标值
+            fullViewport.bottom = 0;//最下面显示的y轴坐标值
+            fullViewport.left = 0;//最左边显示的x轴坐标值
             fullViewport.right = numOfForecastPoints;
             halfViewport.top = fullViewport.top;
             halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
@@ -206,8 +205,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         else{
             fullViewport.top = 300;
-            fullViewport.bottom = -20;//最下面显示的y轴坐标值
-            fullViewport.left = -1;//最左边显示的x轴坐标值
+            fullViewport.bottom = 0;//最下面显示的y轴坐标值
+            fullViewport.left = 0;//最左边显示的x轴坐标值
             fullViewport.right = numOfRealPoints;
             halfViewport.top = fullViewport.top;
             halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
