@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private LineChartData myLineData = new LineChartData(lines); //当前显示数据
     private LineChartView myLineChartView; //折线图的view
     private int curLineIndex = 0;//当前显示的线是几号
+    private boolean isForecast = false;//是否处于预测状态
 
     /**
      * 初始化所有数据，包括“数”和“线”
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @param pos 选项的位置，0 ~ n-1
      * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
      * @author lym
-     * @version 2.2
+     * @version 2.3
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view,
@@ -224,12 +225,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
         if (pos != 0) {
             myswitch.setVisibility(View.INVISIBLE);//隐藏，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
+            curLineIndex = pos;
         }
         else{
-            myswitch.setChecked(false);//回来的时候应该是默认没有在预测的
             myswitch.setVisibility(View.VISIBLE);//显示
+            if(isForecast){
+                curLineIndex = numOfRealLines;//因为在我们的线系统中，跟在真实后面的就是预测线了
+            }
+            else{
+                curLineIndex = 0;//因为在我们的线系统中，跟在真实后面的就是预测线了
+            }
         }
-        curLineIndex = pos;
+        //刷新 线
         initChart();
         initAxis();
         showPartOfChart();
@@ -255,12 +262,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @Description 重载CompoundButton.OnCheckedChangeListener的函数，监听switch按钮有没有被选中
      * @author lym
-     * @version 2.0
+     * @version 2.1
      */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         Log.i(TAG, "onCheckedChanged 进入函数");
-
+        isForecast = isChecked;//改变预测状态
         if (isChecked) {
             Log.i(TAG, "onCheckedChanged 开关状态：开启");
             curLineIndex = numOfRealLines;//因为在我们的线系统中，跟在真实后面的就是预测线了
