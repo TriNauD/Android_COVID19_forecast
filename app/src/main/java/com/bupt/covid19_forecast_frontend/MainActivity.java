@@ -198,36 +198,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /**
      * 设置显示范围
      *
-     * @param top   y轴最大坐标值（指的是最大的那个值，因为上下不能滑动）
-     * @param right x轴最大坐标值（指的是显示的那个值，因为左右可以滑动）
-     * @Description 设置当前图表的显示范围
+     * @param top   y轴最大坐标值
+     * @param right x轴最大坐标值
+     * @Description 设置当前图表的显示范围，其中最大坐标指的是显示窗口的那个值，因为可以滑动
      * @author lym
-     * @version 1.0
+     * @version 2.0
      */
     private void setChartShow(int top, int right) {
-        final Viewport fullViewport = new Viewport(myLineChartView.getMaximumViewport());
         final Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
-
-        fullViewport.bottom = 0;
-        halfViewport.bottom = fullViewport.bottom;
-
-        fullViewport.top = top;
-        halfViewport.top = fullViewport.top;
-
-        fullViewport.left = 0;
-        halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
-
+        halfViewport.bottom = 0;
+        //TODO 是时候考虑y轴的步长问题了
+        halfViewport.top = top;
+        halfViewport.left = 0;
         if (isForecast) {
             //如果在预测
-            fullViewport.right = numOfForecastPoints - 1;
-            halfViewport.right = fullViewport.right;//预测的就不用滑动了吧
+            halfViewport.right = numOfForecastPoints - 1;
         } else {
-            fullViewport.right = numOfRealPoints;
             halfViewport.right = right;
         }
-
-        myLineChartView.setMaximumViewport(fullViewport);   //给最大的视图设置 相当于原图
-        myLineChartView.setCurrentViewport(halfViewport);   //给当前的视图设置 相当于当前展示的图
+        myLineChartView.setCurrentViewport(halfViewport);
     }
 
     /*————————————控件相关————————————*/
