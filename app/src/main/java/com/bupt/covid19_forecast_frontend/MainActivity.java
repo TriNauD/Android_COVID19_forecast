@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (day > 30) {
                     day %= 30;
                 }
-                String s = "5" + "/" + day;
+                String s = (i + 1) + "/" + day;
                 strings.add(s);
             }
             axisLableList.add(strings);
