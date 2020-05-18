@@ -182,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private void draw() {
         Log.i(TAG, "draw 进入函数");
+        Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
 
         List<Line> curLines = lines.subList(curLineIndex, curLineIndex + 1);//去除不需要的条数
         LineChartData myLineData = new LineChartData(curLines);//设置为显示的条数
@@ -193,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         final Viewport fullViewport = new Viewport(MAX);
         final Viewport halfViewport = new Viewport(CUR);
 
-        if(isForecast){
+        if (isForecast) {
             fullViewport.top = 300;
             fullViewport.bottom = 0;//最下面显示的y轴坐标值
             fullViewport.left = 0;//最左边显示的x轴坐标值
@@ -202,8 +203,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
             halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
             halfViewport.right = 15;
-        }
-        else{
+        } else {
             fullViewport.top = 300;
             fullViewport.bottom = 0;//最下面显示的y轴坐标值
             fullViewport.left = 0;//最左边显示的x轴坐标值
