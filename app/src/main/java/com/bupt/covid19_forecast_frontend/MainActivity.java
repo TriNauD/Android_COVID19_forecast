@@ -197,14 +197,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         final Viewport halfViewport = new Viewport(CUR);
 
         //TODO “调参师”
-        fullViewport.top = 300;
-        fullViewport.bottom = -20;//最下面显示的y轴坐标值
-        fullViewport.left = -1;//最左边显示的x轴坐标值
-        fullViewport.right = numOfRealPoints;
-        halfViewport.top = fullViewport.top;
-        halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
-        halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
-        halfViewport.right = 15;
+        if(isForecast){
+            fullViewport.top = 300;
+            fullViewport.bottom = -20;//最下面显示的y轴坐标值
+            fullViewport.left = -1;//最左边显示的x轴坐标值
+            fullViewport.right = numOfForecastPoints;
+            halfViewport.top = fullViewport.top;
+            halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
+            halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
+            halfViewport.right = 15;
+        }
+        else{
+            fullViewport.top = 300;
+            fullViewport.bottom = -20;//最下面显示的y轴坐标值
+            fullViewport.left = -1;//最左边显示的x轴坐标值
+            fullViewport.right = numOfRealPoints;
+            halfViewport.top = fullViewport.top;
+            halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
+            halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
+            halfViewport.right = 15;
+        }
 
         myLineChartView.setMaximumViewport(fullViewport);   //给最大的视图设置 相当于原图
         myLineChartView.setCurrentViewport(halfViewport);   //给当前的视图设置 相当于当前展示的图
