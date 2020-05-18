@@ -215,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             halfViewport.right = 15;
         }
 
+        myLineChartView.setLineChartData(myLineData);
         myLineChartView.setMaximumViewport(fullViewport);   //给最大的视图设置 相当于原图
         myLineChartView.setCurrentViewport(halfViewport);   //给当前的视图设置 相当于当前展示的图
     }
