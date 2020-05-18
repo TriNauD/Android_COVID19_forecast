@@ -187,20 +187,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
 
-        //线
-        List<Line> curLines = lines.subList(curLineIndex, curLineIndex + 1);//去除不需要的条数
-        //数
-        LineChartData myLineData = new LineChartData(curLines);
-        //坐标轴
+        //设置数据
+        LineChartData myLineData = new LineChartData(lines.subList(curLineIndex, curLineIndex + 1));
         myLineData.setAxisXBottom(axesList.get(curLineIndex)[0]); //设置X轴位置 下方
         myLineData.setAxisYLeft(axesList.get(curLineIndex)[1]); //设置Y轴位置 左边
+        myLineChartView.setLineChartData(myLineData);
 
-        final Viewport MAX = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
-        final Viewport CUR = new Viewport(myLineChartView.getCurrentViewport());
-        final Viewport fullViewport = new Viewport(MAX);
-        final Viewport halfViewport = new Viewport(CUR);
-
+        //设置显示范围
+        final Viewport fullViewport = new Viewport(myLineChartView.getMaximumViewport());
+        final Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
         if (isForecast) {
+            //如果在预测
             fullViewport.top = 300;
             fullViewport.bottom = 0;//最下面显示的y轴坐标值
             fullViewport.left = 0;//最左边显示的x轴坐标值
@@ -219,8 +216,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
             halfViewport.right = 15;
         }
-
-        myLineChartView.setLineChartData(myLineData);
         myLineChartView.setMaximumViewport(fullViewport);   //给最大的视图设置 相当于原图
         myLineChartView.setCurrentViewport(halfViewport);   //给当前的视图设置 相当于当前展示的图
     }
