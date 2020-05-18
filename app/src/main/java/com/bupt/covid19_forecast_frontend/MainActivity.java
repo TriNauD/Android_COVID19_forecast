@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int numOfRealLines = 4;//“真实线”的数量
     private int numOfRealPoints = 120;//“真实线”的节点数
     private int numOfForecastLines = 1;//“预测线”的数量
-    private int numOfForecastPoints = 12;//“预测线”的节点数
+    private int numOfForecastPoints = 15;//“预测线”的节点数
     //TODO 把data也做成先真实后预测得了
     private float[][] realLineData = new float[numOfRealLines][numOfRealPoints];//“真实线”的数据存放到二维数组中
     private float[][] forecastLineData = new float[numOfForecastLines][numOfRealPoints];//“预测线”的数据存放到二维数组中
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @Description 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
      * @author lym
-     * @version 2.2
+     * @version 3.0
      */
     private void drawChart() {
         Log.i(TAG, "draw 进入函数");
@@ -192,30 +192,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myLineData.setAxisXBottom(axesList.get(curLineIndex)[0]); //设置X轴位置 下方
         myLineData.setAxisYLeft(axesList.get(curLineIndex)[1]); //设置Y轴位置 左边
         myLineChartView.setLineChartData(myLineData);
+        setChartShow(300, 25);//为“调参师”专门准备
+    }
 
-        //设置显示范围
+    /**
+     * 设置显示范围
+     *
+     * @param top   y轴最大坐标值（指的是最大的那个值，因为上下不能滑动）
+     * @param right x轴最大坐标值（指的是显示的那个值，因为左右可以滑动）
+     * @Description 设置当前图表的显示范围
+     * @author lym
+     * @version 1.0
+     */
+    private void setChartShow(int top, int right) {
         final Viewport fullViewport = new Viewport(myLineChartView.getMaximumViewport());
         final Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
+
+        fullViewport.bottom = 0;
+        halfViewport.bottom = fullViewport.bottom;
+
+        fullViewport.top = top;
+        halfViewport.top = fullViewport.top;
+
+        fullViewport.left = 0;
+        halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
+
         if (isForecast) {
             //如果在预测
-            fullViewport.top = 300;
-            fullViewport.bottom = 0;//最下面显示的y轴坐标值
-            fullViewport.left = 0;//最左边显示的x轴坐标值
-            fullViewport.right = numOfForecastPoints;
-            halfViewport.top = fullViewport.top;
-            halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
-            halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
-            halfViewport.right = 15;
+            fullViewport.right = numOfForecastPoints - 1;
+            halfViewport.right = fullViewport.right;//预测的就不用滑动了吧
         } else {
-            fullViewport.top = 300;
-            fullViewport.bottom = 0;//最下面显示的y轴坐标值
-            fullViewport.left = 0;//最左边显示的x轴坐标值
             fullViewport.right = numOfRealPoints;
-            halfViewport.top = fullViewport.top;
-            halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
-            halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
-            halfViewport.right = 15;
+            halfViewport.right = right;
         }
+
         myLineChartView.setMaximumViewport(fullViewport);   //给最大的视图设置 相当于原图
         myLineChartView.setCurrentViewport(halfViewport);   //给当前的视图设置 相当于当前展示的图
     }
