@@ -71,23 +71,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @Description 初始化数据，目前就先用随机数；初始化线
      * @author lym
-     * @version 2.0
+     * @version 2.1
      */
     private void initData() {
         Log.i(TAG, "initData 进入函数");
 
-        //————数————
-        //真实
+        //————真实————
+        //数
         for (int i = 0; i < numOfRealLines; ++i) {
             for (int j = 0; j < numOfRealPoints; ++j) {
                 Random random = new Random();
                 realLineData[i][j] = random.nextInt(50) + j * 10;
             }
         }
-        //TODO:预测
-
-        //————线————
-        //真实
+        //线
         for (int i = 0; i < numOfRealLines; i++) {
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
             for (int j = 0; j < numOfRealPoints; j++) {
@@ -102,8 +99,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             line.setCubic(false);//不要曲线
             lines.add(line);
         }
-        //TODO:预测
-
+        //————预测————
+        //数
+        for (int i = 0; i < numOfForecastLines; ++i) {
+            for (int j = 0; j < numOfForecastPoints; ++j) {
+                Random random = new Random();
+                forecastLineData[i][j] = random.nextInt(50) + j * 10;
+            }
+        }
+        //线
+        for (int i = 0; i < numOfForecastLines; i++) {
+            List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
+            for (int j = 0; j < numOfForecastPoints; j++) {
+                tempArrayList.add(new PointValue(j, forecastLineData[i][j]));
+            }
+            Line line = new Line(tempArrayList);//根据值来创建一条线
+            //line.setColor(Color.rgb(126, 185, 236));//线的颜色
+            line.setColor(Color.rgb(255, 0, 0));//线的颜色
+            line.setPointColor(Color.rgb(255,255,255));//点的颜色 这个是白色
+            line.setPointRadius(5);//点的大小
+            line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
+            line.setFilled(false);//下方填充就不要了吧
+            line.setCubic(false);//不要曲线
+            lines.add(line);
+        }
     }
 
     /**
@@ -136,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //增加“日期”系列x轴
         List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
         int day = 0;
+        //TODO:numOfRealPoints这里应该根据线的节点数变化，不知道如何完成？
         for (int i = 0; i < numOfRealPoints; i++) {
             AxisValue valueX = new AxisValue(i);//这里的数字是float，作为坐标的数值
             day++;
@@ -219,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /**
      * @Description 重载CompoundButton.OnCheckedChangeListener的函数，监听switch按钮有没有被选中
      * @author lym
-     * @version 1.0
+     * @version 2.0
      */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -227,8 +247,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         if (isChecked) {
             Log.i(TAG, "onCheckedChanged 开关状态：开启");
+            curLineIndex = numOfRealLines;//因为在我们的线系统中，跟在真实后面的就是预测线了
+            initChart();
+            initAxis();
+            showPartOfChart();
         } else {
             Log.i(TAG, "onCheckedChanged 开关状态：关闭");
+            curLineIndex = 0;//因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
+            initChart();
+            initAxis();
+            showPartOfChart();
         }
     }
 }
