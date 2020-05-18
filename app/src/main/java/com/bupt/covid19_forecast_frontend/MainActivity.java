@@ -30,21 +30,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //一些控件
     private Switch myswitch;
     private Spinner spinner;
+    private LineChartView myLineChartView;//折线图
 
     /**
      * 活动生命周期：“创建”
      *
      * @param savedInstanceState ？？？系统使用参数
      * @author lym
-     * @version 1.2
+     * @version 1.3
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //初始化数据
+        //chart
         initData();
-        //刷新图表
+        myLineChartView = findViewById(R.id.chart);
         draw();
         //spinner
         spinner = (Spinner) findViewById(R.id.spinner);
@@ -60,12 +61,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int numOfRealPoints = 120;//“真实线”的节点数
     private int numOfForecastLines = 1;//“预测线”的数量
     private int numOfForecastPoints = 12;//“预测线”的节点数
+    //TODO 把data也做成先真实后预测得了
     private float[][] realLineData = new float[numOfRealLines][numOfRealPoints];//“真实线”的数据存放到二维数组中
     private float[][] forecastLineData = new float[numOfForecastLines][numOfRealPoints];//“预测线”的数据存放到二维数组中
     //另外一个参考方案：也可以放到一个数组里：private int[] numOfLines = {4, 1};//“真实线”与“预测线”的线数量
     private List<Line> lines = new ArrayList<>(); //所有线，里面是按照先“真实”后“预测”的顺序
-    private LineChartData myLineData = new LineChartData(lines); //当前显示数据
-    private LineChartView myLineChartView; //折线图的view
+    private List<Axis[]> axesList = new ArrayList<>(); //所有坐标轴，里面是按照先“真实”后“预测”的顺序
     private int curLineIndex = 0;//当前显示的线是几号
     private boolean isForecast = false;//是否处于预测状态
 
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @Description 初始化数据，目前就先用随机数；初始化线
      * @author lym
-     * @version 2.1
+     * @version 2.2
      */
     private void initData() {
         Log.i(TAG, "initData 进入函数");
@@ -127,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             lines.add(line);
         }
 
-        myLineChartView = findViewById(R.id.chart); //绑定视图
 
         //给坐标轴赋值
         //“真实”
@@ -173,21 +173,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    private List<Axis[]> axesList = new ArrayList<>(); //所有坐标轴，里面是按照先“真实”后“预测”的顺序
-
     /**
      * 刷新图像
      *
      * @Description 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
      * @author lym
-     * @version 2.0
+     * @version 2.1
      */
     private void draw() {
         Log.i(TAG, "draw 进入函数");
 
         List<Line> curLines = lines.subList(curLineIndex, curLineIndex + 1);//去除不需要的条数
-        myLineData = new LineChartData(curLines);//设置为显示的条数
-        myLineChartView.setLineChartData(myLineData);//设置图表控件
+        LineChartData myLineData = new LineChartData(curLines);//设置为显示的条数
         myLineData.setAxisXBottom(axesList.get(curLineIndex)[0]); //设置X轴位置 下方
         myLineData.setAxisYLeft(axesList.get(curLineIndex)[1]); //设置Y轴位置 左边
 
