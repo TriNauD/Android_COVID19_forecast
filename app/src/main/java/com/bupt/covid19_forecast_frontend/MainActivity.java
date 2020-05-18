@@ -126,7 +126,54 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             line.setCubic(false);//不要曲线
             lines.add(line);
         }
+
+        myLineChartView = findViewById(R.id.chart); //绑定视图
+
+        //给坐标轴赋值
+        //“真实”
+        for (int j = 0; j < numOfRealLines; j++) {
+            //增加“日期”系列x轴
+            Axis axisX = new Axis();//新建一个x轴
+            List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
+            int day = 0;
+            for (int i = 0; i < numOfRealPoints; i++) {
+                AxisValue valueX = new AxisValue(i);//这里的数字是float，作为坐标的数值
+                day++;
+                if (day > 30) {
+                    day %= 30;
+                }
+                valueX.setLabel("5" + "/" + day);//将数值和文字标签绑定起来
+                valueListX.add(valueX);//添加一个值
+            }
+            axisX.setValues(valueListX);//将列表设置到x轴上面
+            Axis axisY = new Axis();//Y轴没有任何设定，就初始化
+            Axis[] axisXY = {axisX, axisY};//把XY放到一起
+            axesList.add(axisXY);//加入总的坐标轴列表
+        }
+        //“预测”
+        for (int j = 0; j < numOfForecastLines; j++) {
+            //增加“日期”系列x轴
+            Axis axisX = new Axis();//新建一个x轴
+            List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
+            int day = 0;
+            for (int i = 0; i < numOfForecastPoints; i++) {
+                AxisValue valueX = new AxisValue(i);//这里的数字是float，作为坐标的数值
+                day++;
+                if (day > 30) {
+                    day %= 30;
+                }
+                valueX.setLabel("6" + "/" + day);//将数值和文字标签绑定起来
+                valueListX.add(valueX);//添加一个值
+            }
+            axisX.setValues(valueListX);//将列表设置到x轴上面
+            Axis axisY = new Axis();//Y轴没有任何设定，就初始化
+            Axis[] axisXY = {axisX, axisY};//把XY放到一起
+            axesList.add(axisXY);//加入总的坐标轴列表
+        }
+
     }
+
+    private List<Axis[]> axesList = new ArrayList<>(); //所有坐标轴，里面是按照先“真实”后“预测”的顺序
 
     /**
      * 刷新图像
@@ -138,46 +185,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void draw() {
         Log.i(TAG, "draw 进入函数");
 
-        //initChart()
-        myLineChartView = findViewById(R.id.chart); //绑定视图
         List<Line> curLines = lines.subList(curLineIndex, curLineIndex + 1);//去除不需要的条数
         myLineData = new LineChartData(curLines);//设置为显示的条数
         myLineChartView.setLineChartData(myLineData);//设置图表控件
+        myLineData.setAxisXBottom(axesList.get(curLineIndex)[0]); //设置X轴位置 下方
+        myLineData.setAxisYLeft(axesList.get(curLineIndex)[1]); //设置Y轴位置 左边
 
-        //initAxis()
-        //坐标轴
-        Axis axisX = new Axis();
-        Axis axisY = new Axis();
-        //增加“日期”系列x轴
-        List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
-        int day = 0;
-        //TODO:numOfRealPoints这里应该根据线的节点数变化，不知道如何完成？
-        for (int i = 0; i < numOfRealPoints; i++) {
-            AxisValue valueX = new AxisValue(i);//这里的数字是float，作为坐标的数值
-            day++;
-            if (day > 30) {
-                day %= 30;
-            }
-            valueX.setLabel("5" + "/" + day);//将数值和文字标签绑定起来
-            valueListX.add(valueX);//添加一个值
-        }
-        axisX.setValues(valueListX);//将列表设置到x轴上面
-        myLineData.setAxisXBottom(axisX); //设置X轴位置 下方
-        myLineData.setAxisYLeft(axisY); //设置Y轴位置 左边
-
-        //showPartOfChart()
         final Viewport MAX = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
         final Viewport CUR = new Viewport(myLineChartView.getCurrentViewport());
         final Viewport fullViewport = new Viewport(MAX);
+        final Viewport halfViewport = new Viewport(CUR);
+
+        //TODO “调参师”
         fullViewport.top = 300;
         fullViewport.bottom = -20;//最下面显示的y轴坐标值
         fullViewport.left = -1;//最左边显示的x轴坐标值
         fullViewport.right = numOfRealPoints;
-        final Viewport halfViewport = new Viewport(CUR);
         halfViewport.top = fullViewport.top;
         halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
         halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
         halfViewport.right = 15;
+
         myLineChartView.setMaximumViewport(fullViewport);   //给最大的视图设置 相当于原图
         myLineChartView.setCurrentViewport(halfViewport);   //给当前的视图设置 相当于当前展示的图
     }
