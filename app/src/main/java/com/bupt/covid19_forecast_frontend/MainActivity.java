@@ -182,8 +182,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myLineChartView.setCurrentViewport(halfViewport);   //给当前的视图设置 相当于当前展示的图
     }
 
-
-    /*————————————spinner相关————————————*/
+    /*————————————控件相关————————————*/
 
     /**
      * 下拉菜单，选项控制事件
@@ -208,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             if (isForecast) {
                 curLineIndex = numOfRealLines;//因为在我们的线系统中，跟在真实后面的就是预测线了
             } else {
-                curLineIndex = 0;//因为在我们的线系统中，跟在真实后面的就是预测线了
+                curLineIndex = 0;//如果没在预测就正常0
             }
         }
         //刷新 线
@@ -227,8 +226,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Another interface callback
         Log.i(TAG, "onNothingSelected 进入函数");
     }
-
-    /*————————————spinner相关————————————*/
 
     /**
      * 预测开关，监听开关事件
