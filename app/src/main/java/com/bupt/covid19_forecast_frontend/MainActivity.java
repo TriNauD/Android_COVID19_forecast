@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @param pos 选项的位置，0 ~ n-1
      * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
      * @author lym
-     * @version 2.1
+     * @version 2.2
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view,
@@ -226,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             myswitch.setVisibility(View.INVISIBLE);//隐藏，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
         }
         else{
+            myswitch.setChecked(false);//回来的时候应该是默认没有在预测的
             myswitch.setVisibility(View.VISIBLE);//显示
         }
         curLineIndex = pos;
