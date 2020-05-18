@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         for (int i = 0; i < numOfForecastLines; ++i) {
             for (int j = 0; j < numOfForecastPoints; ++j) {
                 Random random = new Random();
-                forecastLineData[i][j] = random.nextInt(50) + j * 10;
+                forecastLineData[i][j] = numOfForecastPoints * numOfForecastPoints - j * j;
             }
         }
         //线
@@ -159,10 +159,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 tempArrayList.add(new PointValue(j, forecastLineData[i][j]));
             }
             Line line = new Line(tempArrayList);//根据值来创建一条线
-            //line.setColor(Color.rgb(126, 185, 236));//线的颜色
             line.setColor(Color.rgb(255, 0, 0));//线的颜色
             line.setPointColor(Color.rgb(255, 255, 255));//点的颜色 这个是白色
-            line.setPointRadius(5);//点的大小
+            line.setPointRadius(3);//点的大小
             line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
             line.setFilled(false);//下方填充就不要了吧
             line.setCubic(false);//不要曲线
