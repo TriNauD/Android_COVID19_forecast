@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Spinner spinner;
 
     /**
-     * 重载AppCompatActivity的函数，在活动创建时调用
+     * 活动生命周期：“创建”
      *
      * @param savedInstanceState ？？？系统使用参数
      * @author lym
@@ -53,8 +53,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myswitch = (Switch) findViewById(R.id.forecast_switch);
         myswitch.setOnCheckedChangeListener(this);
     }
-
-
 
     /*————————————绘图相关————————————*/
 
@@ -208,6 +206,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /*————————————spinner相关————————————*/
 
     /**
+     * 下拉菜单，选项控制事件
+     *
      * @param pos 选项的位置，0 ~ n-1
      * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
      * @author lym
@@ -232,6 +232,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
+     * 下拉菜单，无选择时默认事件
+     *
      * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单没有任何选择时调用
      * @author lym
      * @version 1.0
@@ -245,6 +247,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /*————————————spinner相关————————————*/
 
     /**
+     * 预测开关，监听开关事件
+     *
      * @Description 重载CompoundButton.OnCheckedChangeListener的函数，监听switch按钮有没有被选中
      * @author lym
      * @version 2.0
