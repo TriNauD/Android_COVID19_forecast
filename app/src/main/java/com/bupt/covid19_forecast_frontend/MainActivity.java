@@ -27,12 +27,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //日志TAG，调试用，默认使用类名
     private static final String TAG = "MainActivity";
 
+    //一些控件
+    private Switch myswitch;
+    private Spinner spinner;
+
     /**
-     * 重载AppCompatActivity的函数，在活动创建时调用
+     * 活动生命周期：“创建”
      *
      * @param savedInstanceState ？？？系统使用参数
      * @author lym
-     * @version 1.0
+     * @version 1.1
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +47,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         initAxis();
         showPartOfChart();
         //spinner
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
         //switch
-        Switch myswitch = (Switch) findViewById(R.id.forecast_switch);
+        myswitch = (Switch) findViewById(R.id.forecast_switch);
         myswitch.setOnCheckedChangeListener(this);
     }
-
-
 
     /*————————————绘图相关————————————*/
 
@@ -116,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Line line = new Line(tempArrayList);//根据值来创建一条线
             //line.setColor(Color.rgb(126, 185, 236));//线的颜色
             line.setColor(Color.rgb(255, 0, 0));//线的颜色
-            line.setPointColor(Color.rgb(255,255,255));//点的颜色 这个是白色
+            line.setPointColor(Color.rgb(255, 255, 255));//点的颜色 这个是白色
             line.setPointRadius(5);//点的大小
             line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
             line.setFilled(false);//下方填充就不要了吧
@@ -204,10 +206,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /*————————————spinner相关————————————*/
 
     /**
+     * 下拉菜单，选项控制事件
+     *
      * @param pos 选项的位置，0 ~ n-1
      * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
      * @author lym
-     * @version 1.0
+     * @version 2.1
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view,
@@ -217,6 +221,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
+        //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
+        if (pos != 0) {
+            myswitch.setVisibility(View.INVISIBLE);//隐藏，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
+        }
+        else{
+            myswitch.setVisibility(View.VISIBLE);//显示
+        }
         curLineIndex = pos;
         initChart();
         initAxis();
@@ -224,6 +235,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
+     * 下拉菜单，无选择时默认事件
+     *
      * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单没有任何选择时调用
      * @author lym
      * @version 1.0
@@ -237,6 +250,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /*————————————spinner相关————————————*/
 
     /**
+     * 预测开关，监听开关事件
+     *
      * @Description 重载CompoundButton.OnCheckedChangeListener的函数，监听switch按钮有没有被选中
      * @author lym
      * @version 2.0
