@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //chart
-        initData();
         myLineChartView = findViewById(R.id.chart);
-        draw();
+        initChart();
+        drawChart();
         //spinner
         spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
@@ -72,14 +72,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private boolean isForecast = false;//是否处于预测状态
 
     /**
-     * 初始化所有数据，包括“数”和“线”
+     * 初始化
      *
-     * @Description 初始化数据，目前就先用随机数；初始化线
+     * @Description 初始化，包括数据、线、轴；数据先用随机数
      * @author lym
-     * @version 2.2
+     * @version 2.3
      */
-    private void initData() {
-        Log.i(TAG, "initData 进入函数");
+    private void initChart() {
+        Log.i(TAG, "initChart 进入函数");
 
         //总体的代码结构：
         /*
@@ -181,9 +181,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @Description 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
      * @author lym
-     * @version 2.1
+     * @version 2.2
      */
-    private void draw() {
+    private void drawChart() {
         Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
 
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         }
         //刷新 线
-        draw();
+        drawChart();
     }
 
     /**
@@ -279,11 +279,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (isChecked) {
             Log.i(TAG, "onCheckedChanged 开关状态：开启");
             curLineIndex = numOfRealLines;//因为在我们的线系统中，跟在真实后面的就是预测线了
-            draw();
+            drawChart();
         } else {
             Log.i(TAG, "onCheckedChanged 开关状态：关闭");
             curLineIndex = 0;//因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
-            draw();
+            drawChart();
         }
     }
 }
