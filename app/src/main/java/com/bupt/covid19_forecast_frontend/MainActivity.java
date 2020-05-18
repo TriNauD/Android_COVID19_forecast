@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //chart
-        initData();
         myLineChartView = findViewById(R.id.chart);
-        draw();
+        initChart();
+        drawChart();
         //spinner
         spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
@@ -60,25 +60,34 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int numOfRealLines = 4;//“真实线”的数量
     private int numOfRealPoints = 120;//“真实线”的节点数
     private int numOfForecastLines = 1;//“预测线”的数量
-    private int numOfForecastPoints = 12;//“预测线”的节点数
+    private int numOfForecastPoints = 15;//“预测线”的节点数
     //TODO 把data也做成先真实后预测得了
     private float[][] realLineData = new float[numOfRealLines][numOfRealPoints];//“真实线”的数据存放到二维数组中
     private float[][] forecastLineData = new float[numOfForecastLines][numOfRealPoints];//“预测线”的数据存放到二维数组中
     //另外一个参考方案：也可以放到一个数组里：private int[] numOfLines = {4, 1};//“真实线”与“预测线”的线数量
     private List<Line> lines = new ArrayList<>(); //所有线，里面是按照先“真实”后“预测”的顺序
     private List<Axis[]> axesList = new ArrayList<>(); //所有坐标轴，里面是按照先“真实”后“预测”的顺序
+    private List<List<String>> axisLableList = new ArrayList<>(); //所有坐标轴的标签信息，里面是按照先“真实”后“预测”的顺序
     private int curLineIndex = 0;//当前显示的线是几号
     private boolean isForecast = false;//是否处于预测状态
 
     /**
-     * 初始化所有数据，包括“数”和“线”
+     * 初始化
      *
-     * @Description 初始化数据，目前就先用随机数；初始化线
+     * @Description 初始化，包括数据、线、轴；数据先用随机数
      * @author lym
-     * @version 2.2
+     * @version 2.3
      */
-    private void initData() {
-        Log.i(TAG, "initData 进入函数");
+    private void initChart() {
+        Log.i(TAG, "initChart 进入函数");
+
+        //总体的代码结构：
+        /*
+        * for (int i = 0; i < numOfXXXLines; i++) {
+            for (int j = 0; j < numOfXXXPoints; j++) {
+            }
+        }
+        * */
 
         //————真实————
         //数
@@ -103,6 +112,38 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             line.setCubic(false);//不要曲线
             lines.add(line);
         }
+        //轴
+        //字符串部分
+        for (int i = 0; i < numOfRealLines; i++) {
+            List<String> strings = new ArrayList<>(numOfRealPoints);
+            int day = 0;
+            for (int j = 0; j < numOfRealPoints; j++) {
+                day++;
+                if (day > 30) {
+                    day %= 30;
+                }
+                String s = (i + 1) + "/" + day;
+                strings.add(s);
+            }
+            axisLableList.add(strings);
+        }
+        //绑定轴部分
+        //每条线
+        for (int i = 0; i < numOfRealLines; i++) {
+            Axis axisX = new Axis();//新建一个x轴
+            List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
+            //每个点
+            for (int j = 0; j < numOfRealPoints; j++) {
+                AxisValue valueX = new AxisValue(j);//这里的数字是坐标的数值，比如第一个坐标就是0
+                valueX.setLabel(axisLableList.get(i).get(j));//将坐标的数值和对应的文字标签绑定起来
+                valueListX.add(valueX);//添加一个值
+            }
+            axisX.setValues(valueListX);//将列表设置到x轴上面
+            Axis axisY = new Axis();//Y轴没有任何设定，就初始化
+            Axis[] axisXY = {axisX, axisY};//把XY放到一起
+            axesList.add(axisXY);//加入总的坐标轴列表
+        }
+
         //————预测————
         //数
         for (int i = 0; i < numOfForecastLines; ++i) {
@@ -127,96 +168,55 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             line.setCubic(false);//不要曲线
             lines.add(line);
         }
-
-
-        //给坐标轴赋值
-        //“真实”
-        for (int j = 0; j < numOfRealLines; j++) {
-            //增加“日期”系列x轴
-            Axis axisX = new Axis();//新建一个x轴
-            List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
-            int day = 0;
-            for (int i = 0; i < numOfRealPoints; i++) {
-                AxisValue valueX = new AxisValue(i);//这里的数字是float，作为坐标的数值
-                day++;
-                if (day > 30) {
-                    day %= 30;
-                }
-                valueX.setLabel("5" + "/" + day);//将数值和文字标签绑定起来
-                valueListX.add(valueX);//添加一个值
-            }
-            axisX.setValues(valueListX);//将列表设置到x轴上面
-            Axis axisY = new Axis();//Y轴没有任何设定，就初始化
-            Axis[] axisXY = {axisX, axisY};//把XY放到一起
-            axesList.add(axisXY);//加入总的坐标轴列表
-        }
-        //“预测”
-        for (int j = 0; j < numOfForecastLines; j++) {
-            //增加“日期”系列x轴
-            Axis axisX = new Axis();//新建一个x轴
-            List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
-            int day = 0;
-            for (int i = 0; i < numOfForecastPoints; i++) {
-                AxisValue valueX = new AxisValue(i);//这里的数字是float，作为坐标的数值
-                day++;
-                if (day > 30) {
-                    day %= 30;
-                }
-                valueX.setLabel("6" + "/" + day);//将数值和文字标签绑定起来
-                valueListX.add(valueX);//添加一个值
-            }
-            axisX.setValues(valueListX);//将列表设置到x轴上面
-            Axis axisY = new Axis();//Y轴没有任何设定，就初始化
-            Axis[] axisXY = {axisX, axisY};//把XY放到一起
-            axesList.add(axisXY);//加入总的坐标轴列表
-        }
-
+        //轴
+        Axis axisX = new Axis();//新建一个x轴
+        Axis axisY = new Axis();//Y轴没有任何设定，就初始化
+        Axis[] axisXY = {axisX, axisY};//把XY放到一起
+        axesList.add(axisXY);//加入总的坐标轴列表
     }
+
 
     /**
      * 刷新图像
      *
      * @Description 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
      * @author lym
-     * @version 2.1
+     * @version 3.0
      */
-    private void draw() {
+    private void drawChart() {
         Log.i(TAG, "draw 进入函数");
+        Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
 
-        List<Line> curLines = lines.subList(curLineIndex, curLineIndex + 1);//去除不需要的条数
-        LineChartData myLineData = new LineChartData(curLines);//设置为显示的条数
+        //设置数据
+        LineChartData myLineData = new LineChartData(lines.subList(curLineIndex, curLineIndex + 1));
         myLineData.setAxisXBottom(axesList.get(curLineIndex)[0]); //设置X轴位置 下方
         myLineData.setAxisYLeft(axesList.get(curLineIndex)[1]); //设置Y轴位置 左边
-
-        final Viewport MAX = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
-        final Viewport CUR = new Viewport(myLineChartView.getCurrentViewport());
-        final Viewport fullViewport = new Viewport(MAX);
-        final Viewport halfViewport = new Viewport(CUR);
-
-        if(isForecast){
-            fullViewport.top = 300;
-            fullViewport.bottom = 0;//最下面显示的y轴坐标值
-            fullViewport.left = 0;//最左边显示的x轴坐标值
-            fullViewport.right = numOfForecastPoints;
-            halfViewport.top = fullViewport.top;
-            halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
-            halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
-            halfViewport.right = 15;
-        }
-        else{
-            fullViewport.top = 300;
-            fullViewport.bottom = 0;//最下面显示的y轴坐标值
-            fullViewport.left = 0;//最左边显示的x轴坐标值
-            fullViewport.right = numOfRealPoints;
-            halfViewport.top = fullViewport.top;
-            halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
-            halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
-            halfViewport.right = 15;
-        }
-
         myLineChartView.setLineChartData(myLineData);
-        myLineChartView.setMaximumViewport(fullViewport);   //给最大的视图设置 相当于原图
-        myLineChartView.setCurrentViewport(halfViewport);   //给当前的视图设置 相当于当前展示的图
+        setChartShow(300, 25);//为“调参师”专门准备
+    }
+
+    /**
+     * 设置显示范围
+     *
+     * @param top   y轴最大坐标值
+     * @param right x轴最大坐标值
+     * @Description 设置当前图表的显示范围，其中最大坐标指的是显示窗口的那个值，因为可以滑动
+     * @author lym
+     * @version 2.0
+     */
+    private void setChartShow(int top, int right) {
+        final Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
+        halfViewport.bottom = 0;
+        //TODO 是时候考虑y轴的步长问题了
+        halfViewport.top = top;
+        halfViewport.left = 0;
+        if (isForecast) {
+            //如果在预测
+            halfViewport.right = numOfForecastPoints - 1;
+        } else {
+            halfViewport.right = right;
+        }
+        myLineChartView.setCurrentViewport(halfViewport);
     }
 
     /*————————————控件相关————————————*/
@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         }
         //刷新 线
-        draw();
+        drawChart();
     }
 
     /**
@@ -278,11 +278,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (isChecked) {
             Log.i(TAG, "onCheckedChanged 开关状态：开启");
             curLineIndex = numOfRealLines;//因为在我们的线系统中，跟在真实后面的就是预测线了
-            draw();
+            drawChart();
         } else {
             Log.i(TAG, "onCheckedChanged 开关状态：关闭");
             curLineIndex = 0;//因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
-            draw();
+            drawChart();
         }
     }
 }
