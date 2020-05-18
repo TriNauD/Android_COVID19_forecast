@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //另外一个参考方案：也可以放到一个数组里：private int[] numOfLines = {4, 1};//“真实线”与“预测线”的线数量
     private List<Line> lines = new ArrayList<>(); //所有线，里面是按照先“真实”后“预测”的顺序
     private List<Axis[]> axesList = new ArrayList<>(); //所有坐标轴，里面是按照先“真实”后“预测”的顺序
+    private List<List<String>> axisLableList = new ArrayList<>(); //所有坐标轴的标签信息，里面是按照先“真实”后“预测”的顺序
     private int curLineIndex = 0;//当前显示的线是几号
     private boolean isForecast = false;//是否处于预测状态
 
@@ -79,6 +80,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private void initData() {
         Log.i(TAG, "initData 进入函数");
+
+        //总体的代码结构：
+        /*
+        * for (int i = 0; i < numOfXXXLines; i++) {
+            for (int j = 0; j < numOfXXXPoints; j++) {
+            }
+        }
+        * */
 
         //————真实————
         //数
@@ -103,6 +112,38 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             line.setCubic(false);//不要曲线
             lines.add(line);
         }
+        //轴
+        //字符串部分
+        for (int i = 0; i < numOfRealLines; i++) {
+            List<String> strings = new ArrayList<>(numOfRealPoints);
+            int day = 0;
+            for (int j = 0; j < numOfRealPoints; j++) {
+                day++;
+                if (day > 30) {
+                    day %= 30;
+                }
+                String s = "5" + "/" + day;
+                strings.add(s);
+            }
+            axisLableList.add(strings);
+        }
+        //绑定轴部分
+        //每条线
+        for (int i = 0; i < numOfRealLines; i++) {
+            Axis axisX = new Axis();//新建一个x轴
+            List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
+            //每个点
+            for (int j = 0; j < numOfRealPoints; j++) {
+                AxisValue valueX = new AxisValue(j);//这里的数字是坐标的数值，比如第一个坐标就是0
+                valueX.setLabel(axisLableList.get(i).get(j));//将坐标的数值和对应的文字标签绑定起来
+                valueListX.add(valueX);//添加一个值
+            }
+            axisX.setValues(valueListX);//将列表设置到x轴上面
+            Axis axisY = new Axis();//Y轴没有任何设定，就初始化
+            Axis[] axisXY = {axisX, axisY};//把XY放到一起
+            axesList.add(axisXY);//加入总的坐标轴列表
+        }
+
         //————预测————
         //数
         for (int i = 0; i < numOfForecastLines; ++i) {
@@ -127,51 +168,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             line.setCubic(false);//不要曲线
             lines.add(line);
         }
-
-
-        //给坐标轴赋值
-        //“真实”
-        for (int j = 0; j < numOfRealLines; j++) {
-            //增加“日期”系列x轴
-            Axis axisX = new Axis();//新建一个x轴
-            List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
-            int day = 0;
-            for (int i = 0; i < numOfRealPoints; i++) {
-                AxisValue valueX = new AxisValue(i);//这里的数字是float，作为坐标的数值
-                day++;
-                if (day > 30) {
-                    day %= 30;
-                }
-                valueX.setLabel("5" + "/" + day);//将数值和文字标签绑定起来
-                valueListX.add(valueX);//添加一个值
-            }
-            axisX.setValues(valueListX);//将列表设置到x轴上面
-            Axis axisY = new Axis();//Y轴没有任何设定，就初始化
-            Axis[] axisXY = {axisX, axisY};//把XY放到一起
-            axesList.add(axisXY);//加入总的坐标轴列表
-        }
-        //“预测”
-        for (int j = 0; j < numOfForecastLines; j++) {
-            //增加“日期”系列x轴
-            Axis axisX = new Axis();//新建一个x轴
-            List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
-            int day = 0;
-            for (int i = 0; i < numOfForecastPoints; i++) {
-                AxisValue valueX = new AxisValue(i);//这里的数字是float，作为坐标的数值
-                day++;
-                if (day > 30) {
-                    day %= 30;
-                }
-                valueX.setLabel("6" + "/" + day);//将数值和文字标签绑定起来
-                valueListX.add(valueX);//添加一个值
-            }
-            axisX.setValues(valueListX);//将列表设置到x轴上面
-            Axis axisY = new Axis();//Y轴没有任何设定，就初始化
-            Axis[] axisXY = {axisX, axisY};//把XY放到一起
-            axesList.add(axisXY);//加入总的坐标轴列表
-        }
-
+        //轴
+        Axis axisX = new Axis();//新建一个x轴
+        Axis axisY = new Axis();//Y轴没有任何设定，就初始化
+        Axis[] axisXY = {axisX, axisY};//把XY放到一起
+        axesList.add(axisXY);//加入总的坐标轴列表
     }
+
 
     /**
      * 刷新图像
@@ -184,8 +187,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
 
+        //线
         List<Line> curLines = lines.subList(curLineIndex, curLineIndex + 1);//去除不需要的条数
-        LineChartData myLineData = new LineChartData(curLines);//设置为显示的条数
+        //数
+        LineChartData myLineData = new LineChartData(curLines);
+        //坐标轴
         myLineData.setAxisXBottom(axesList.get(curLineIndex)[0]); //设置X轴位置 下方
         myLineData.setAxisYLeft(axesList.get(curLineIndex)[1]); //设置Y轴位置 左边
 
