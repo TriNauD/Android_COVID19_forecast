@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private boolean isForecast = false;//是否处于预测状态
 
     /**
-     * 初始化
+     * 初始化图表相关
      *
      * @Description 初始化，包括数据、线、轴；数据先用随机数
      * @author lym
@@ -174,24 +174,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         axesList.add(axisXY);//加入总的坐标轴列表
     }
 
-
     /**
      * 刷新图像
      *
      * @Description 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
      * @author lym
-     * @version 3.0
+     * @version 3.1
      */
     private void drawChart() {
         Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
 
-        //设置数据
-        LineChartData myLineData = new LineChartData(lines.subList(curLineIndex, curLineIndex + 1));
-        myLineData.setAxisXBottom(axesList.get(curLineIndex)[0]); //设置X轴位置 下方
-        myLineData.setAxisYLeft(axesList.get(curLineIndex)[1]); //设置Y轴位置 左边
-        myLineChartView.setLineChartData(myLineData);
-        setChartShow(300, 25);//为“调参师”专门准备
+        LineChartData myLineData = new LineChartData(lines.subList(curLineIndex, curLineIndex + 1));//把没用的线去掉
+        myLineData.setAxisXBottom(axesList.get(curLineIndex)[0]);//设置X轴
+        myLineData.setAxisYLeft(axesList.get(curLineIndex)[1]);//设置Y轴
+        myLineChartView.setLineChartData(myLineData);//把这个设置好的数据放到view里面
+        boolean isOnForecast = (curLineIndex > numOfRealLines ? true : false);//如果索引大于“真实线”数目，就表示是在预测
+        setChartShow(300, 25, isOnForecast);//设置显示图表的范围，为“调参师”专门准备
     }
 
     /**
@@ -199,11 +198,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @param top   y轴最大坐标值
      * @param right x轴最大坐标值
+     * @param isForecast 是不是真的在显示预测图表
      * @Description 设置当前图表的显示范围，其中最大坐标指的是显示窗口的那个值，因为可以滑动
      * @author lym
-     * @version 2.0
+     * @version 2.1
      */
-    private void setChartShow(int top, int right) {
+    private void setChartShow(int top, int right, boolean isForecast) {
         final Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
         halfViewport.bottom = 0;
         //TODO 是时候考虑y轴的步长问题了
