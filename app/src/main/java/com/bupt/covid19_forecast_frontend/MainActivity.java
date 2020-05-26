@@ -1,8 +1,6 @@
 package com.bupt.covid19_forecast_frontend;
 
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,15 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import lecho.lib.hellocharts.model.Axis;
-import lecho.lib.hellocharts.model.AxisValue;
-import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
-import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 
@@ -32,8 +22,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //一些控件
     private Switch myswitch;
     private Spinner spinner;
-    private LineChartView myLineChartView;//折线图
 
+    //折线视图
+    private LineChartView myLineChartView;
+
+    //折线的数据
     LineViewModel lineViewModel;
 
     /**
@@ -45,16 +38,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
-        lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
 
         //chart
         myLineChartView = findViewById(R.id.chart);
+
+        //折线图数据
+        lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
+
         lineViewModel.initChart();
+
         drawChart();
+
         //spinner
         spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
