@@ -27,8 +27,8 @@ public class LineViewModel extends ViewModel {
 
     /**
      * 初始化图表相关
+     * 初始化，包括数据、线、轴；数据先用随机数
      *
-     * @Description 初始化，包括数据、线、轴；数据先用随机数
      * @author lym
      * @version 2.3
      */
@@ -111,7 +111,7 @@ public class LineViewModel extends ViewModel {
         for (int i = 0; i < numOfForecastLines; ++i) {
             float[] linePoints = new float[numOfForecastPoints];//一条线上面的点
             for (int j = 0; j < numOfForecastPoints; ++j) {
-                Random random = new Random();
+                //Random random = new Random();
                 linePoints[j] = numOfForecastPoints * numOfForecastPoints - j * j;
             }
             lineData.add(linePoints);
@@ -143,24 +143,12 @@ public class LineViewModel extends ViewModel {
         return numOfRealLines;
     }
 
-    public void setNumOfRealLines(int numOfRealLines) {
-        this.numOfRealLines = numOfRealLines;
-    }
-
     public List<Line> getLines() {
         return lines;
     }
 
-    public void setLines(List<Line> lines) {
-        this.lines = lines;
-    }
-
     public List<Axis[]> getAxesList() {
         return axesList;
-    }
-
-    public void setAxesList(List<Axis[]> axesList) {
-        this.axesList = axesList;
     }
 
     public boolean isForecast() {
@@ -170,7 +158,6 @@ public class LineViewModel extends ViewModel {
     public void setForecast(boolean forecast) {
         isForecast = forecast;
     }
-
 
     public int getCurLineIndex() {
         return curLineIndex;
