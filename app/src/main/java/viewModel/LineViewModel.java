@@ -17,13 +17,23 @@ public class LineViewModel extends ViewModel {
     //调试使用的日志标签
     private static final String TAG = "LineViewModel";
 
-    private int numOfRealLines = 4;//“真实线”的数量
-    private List<float[]> lineData = new ArrayList<>();//所有线数据，里面是按照先“真实”后“预测”的顺序
-    private List<Line> lines = new ArrayList<>(); //所有线，里面是按照先“真实”后“预测”的顺序
-    private List<Axis[]> axesList = new ArrayList<>(); //所有坐标轴，里面是按照先“真实”后“预测”的顺序
-    private List<List<String>> axisLableList = new ArrayList<>(); //所有坐标轴的标签信息，里面是按照先“真实”后“预测”的顺序
-    private int curLineIndex = 0;//当前显示的线是几号
-    private boolean isForecast = false;//是否处于预测状态
+    //“真实线”的数量
+    private int numOfRealLines = 4;
+
+    //按照先“真实”后“预测”的顺序：
+    //所有线数据
+    private List<float[]> lineData = new ArrayList<>();
+    //所有线
+    private List<Line> lines = new ArrayList<>();
+    //所有坐标轴
+    private List<Axis[]> axesList = new ArrayList<>();
+    //所有坐标轴的标签信息
+    private List<List<String>> axisLableList = new ArrayList<>();
+
+    //当前显示的线是几号
+    private int curLineIndex = 0;
+    //是否处于预测状态，默认是否
+    private boolean isForecast = false;
 
     /**
      * 初始化图表相关
