@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //一些控件
     private Switch myswitch;
-    private Spinner spinner;
 
     //折线视图
     private LineChartView myLineChartView;
@@ -54,18 +53,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         drawChart();
 
         //spinner
-        spinner = (Spinner) findViewById(R.id.spinner);
+        Spinner spinner = findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
         //switch
-        myswitch = (Switch) findViewById(R.id.forecast_switch);
+        myswitch = findViewById(R.id.forecast_switch);
         myswitch.setOnCheckedChangeListener(this);
     }
 
 
     /**
-     * 刷新图像
+     * 刷新图像。
+     * 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
      *
-     * @Description 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
      * @author lym
      * @version 3.1
      */
@@ -78,32 +77,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myLineData.setAxisXBottom(lineViewModel.getAxesList().get(lineViewModel.getCurLineIndex())[0]);//设置X轴
         myLineData.setAxisYLeft(lineViewModel.getAxesList().get(lineViewModel.getCurLineIndex())[1]);//设置Y轴
         myLineChartView.setLineChartData(myLineData);//把这个设置好的数据放到view里面
-        boolean isOnForecast = (lineViewModel.getCurLineIndex() > lineViewModel.getNumOfRealLines() ? true : false);//如果索引大于“真实线”数目，就表示是在预测
-        setChartShow(300, 25, isOnForecast);//设置显示图表的范围，为“调参师”专门准备
+        boolean isOnForecast = (lineViewModel.getCurLineIndex() > lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
+        setChartShow(isOnForecast);//设置显示图表的范围，为“调参师”专门准备
     }
 
     /**
      * 设置显示范围
+     * 设置当前图表的显示范围，其中最大坐标指的是显示窗口的那个值，因为可以滑动
      *
-     * @param top        y轴最大坐标值
-     * @param right      x轴最大坐标值
      * @param isForecast 是不是真的在显示预测图表
-     * @Description 设置当前图表的显示范围，其中最大坐标指的是显示窗口的那个值，因为可以滑动
      * @author lym
      * @version 2.1
      */
-    private void setChartShow(int top, int right, boolean isForecast) {
+    private void setChartShow(boolean isForecast) {
         final Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
         halfViewport.bottom = 0;
-        //TODO 是时候考虑y轴的步长问题了
-        halfViewport.top = top;
+        //TODO step of y ? 是时候考虑y轴的步长问题了
+        halfViewport.top = 300;//y轴最大坐标值
         halfViewport.left = 0;
         if (isForecast) {
             //如果在预测
             int numOfForecastPoints = 15;
             halfViewport.right = numOfForecastPoints - 1;
         } else {
-            halfViewport.right = right;
+            halfViewport.right = 25;//x轴最大坐标值
         }
         myLineChartView.setCurrentViewport(halfViewport);
     }
@@ -111,10 +108,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /*————————————控件相关————————————*/
 
     /**
-     * 下拉菜单，选项控制事件
+     * 下拉菜单，选项控制事件。
+     * 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
      *
      * @param pos 选项的位置，0 ~ n-1
-     * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
      * @author lym
      * @version 2.4
      */
@@ -143,9 +140,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
-     * 下拉菜单，无选择时默认事件
+     * 下拉菜单，无选择时默认事件。
+     * 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单没有任何选择时调用
      *
-     * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单没有任何选择时调用
      * @author lym
      * @version 1.0
      */
@@ -156,9 +153,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
-     * 预测开关，监听开关事件
+     * 预测开关，监听开关事件。
+     * 重载CompoundButton.OnCheckedChangeListener的函数，监听switch按钮有没有被选中
      *
-     * @Description 重载CompoundButton.OnCheckedChangeListener的函数，监听switch按钮有没有被选中
      * @author lym
      * @version 2.2
      */
