@@ -58,13 +58,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /*————————————绘图相关————————————*/
 
     private int numOfRealLines = 4;//“真实线”的数量
-    private int numOfRealPoints = 120;//“真实线”的节点数
-    private int numOfForecastLines = 1;//“预测线”的数量
-    private int numOfForecastPoints = 15;//“预测线”的节点数
     //TODO 把data也做成先真实后预测得了
-    private float[][] realLineData = new float[numOfRealLines][numOfRealPoints];//“真实线”的数据存放到二维数组中
-    private float[][] forecastLineData = new float[numOfForecastLines][numOfRealPoints];//“预测线”的数据存放到二维数组中
-    //另外一个参考方案：也可以放到一个数组里：private int[] numOfLines = {4, 1};//“真实线”与“预测线”的线数量
+    private List<float[]> lineData = new ArrayList<>();//所有线数据，里面是按照先“真实”后“预测”的顺序
     private List<Line> lines = new ArrayList<>(); //所有线，里面是按照先“真实”后“预测”的顺序
     private List<Axis[]> axesList = new ArrayList<>(); //所有坐标轴，里面是按照先“真实”后“预测”的顺序
     private List<List<String>> axisLableList = new ArrayList<>(); //所有坐标轴的标签信息，里面是按照先“真实”后“预测”的顺序
@@ -91,17 +86,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //————真实————
         //数
+        //“真实线”的节点数
+        int numOfRealPoints = 120;
         for (int i = 0; i < numOfRealLines; ++i) {
+            float[] linePoints = new float[numOfRealPoints];//一条线上面的点
             for (int j = 0; j < numOfRealPoints; ++j) {
                 Random random = new Random();
-                realLineData[i][j] = random.nextInt(50) + j * 10;
+                linePoints[j] = random.nextInt(50) + j * 10;
             }
+            lineData.add(linePoints);
         }
         //线
         for (int i = 0; i < numOfRealLines; i++) {
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
             for (int j = 0; j < numOfRealPoints; j++) {
-                tempArrayList.add(new PointValue(j, realLineData[i][j]));
+                tempArrayList.add(new PointValue(j, lineData.get(i)[j]));
             }
             Line line = new Line(tempArrayList);//根据值来创建一条线
             line.setColor(Color.rgb(126, 185, 236));//线的颜色
@@ -146,17 +145,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //————预测————
         //数
+        //“预测线”的数量
+        int numOfForecastLines = 1;
+        //“预测线”的节点数
+        int numOfForecastPoints = 15;
         for (int i = 0; i < numOfForecastLines; ++i) {
+            float[] linePoints = new float[numOfForecastPoints];//一条线上面的点
             for (int j = 0; j < numOfForecastPoints; ++j) {
                 Random random = new Random();
-                forecastLineData[i][j] = numOfForecastPoints * numOfForecastPoints - j * j;
+                linePoints[j] = numOfForecastPoints * numOfForecastPoints - j * j;
             }
+            lineData.add(linePoints);
         }
         //线
         for (int i = 0; i < numOfForecastLines; i++) {
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
             for (int j = 0; j < numOfForecastPoints; j++) {
-                tempArrayList.add(new PointValue(j, forecastLineData[i][j]));
+                tempArrayList.add(new PointValue(j, lineData.get(i + numOfRealLines)[j]));//在真实线后面的是预测线
             }
             Line line = new Line(tempArrayList);//根据值来创建一条线
             line.setColor(Color.rgb(255, 0, 0));//线的颜色
@@ -196,8 +201,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /**
      * 设置显示范围
      *
-     * @param top   y轴最大坐标值
-     * @param right x轴最大坐标值
+     * @param top        y轴最大坐标值
+     * @param right      x轴最大坐标值
      * @param isForecast 是不是真的在显示预测图表
      * @Description 设置当前图表的显示范围，其中最大坐标指的是显示窗口的那个值，因为可以滑动
      * @author lym
@@ -211,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         halfViewport.left = 0;
         if (isForecast) {
             //如果在预测
+            int numOfForecastPoints = 15;
             halfViewport.right = numOfForecastPoints - 1;
         } else {
             halfViewport.right = right;
