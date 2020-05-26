@@ -11,68 +11,18 @@ import java.util.Random;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;
-import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
-import lecho.lib.hellocharts.model.Viewport;
-import lecho.lib.hellocharts.view.LineChartView;
 
 public class LineViewModel extends ViewModel {
+    //调试使用的日志标签
     private static final String TAG = "LineViewModel";
-
-
-
-    /*————————————绘图相关————————————*/
-
-    public int getNumOfRealLines() {
-        return numOfRealLines;
-    }
-
-    public void setNumOfRealLines(int numOfRealLines) {
-        this.numOfRealLines = numOfRealLines;
-    }
 
     private int numOfRealLines = 4;//“真实线”的数量
     private List<float[]> lineData = new ArrayList<>();//所有线数据，里面是按照先“真实”后“预测”的顺序
-
-    public List<Line> getLines() {
-        return lines;
-    }
-
-    public void setLines(List<Line> lines) {
-        this.lines = lines;
-    }
-
     private List<Line> lines = new ArrayList<>(); //所有线，里面是按照先“真实”后“预测”的顺序
-
-    public List<Axis[]> getAxesList() {
-        return axesList;
-    }
-
-    public void setAxesList(List<Axis[]> axesList) {
-        this.axesList = axesList;
-    }
-
     private List<Axis[]> axesList = new ArrayList<>(); //所有坐标轴，里面是按照先“真实”后“预测”的顺序
     private List<List<String>> axisLableList = new ArrayList<>(); //所有坐标轴的标签信息，里面是按照先“真实”后“预测”的顺序
-
-    public int getCurLineIndex() {
-        return curLineIndex;
-    }
-
-    public void setCurLineIndex(int curLineIndex) {
-        this.curLineIndex = curLineIndex;
-    }
-
     private int curLineIndex = 0;//当前显示的线是几号
-
-    public boolean isForecast() {
-        return isForecast;
-    }
-
-    public void setForecast(boolean forecast) {
-        isForecast = forecast;
-    }
-
     private boolean isForecast = false;//是否处于预测状态
 
     /**
@@ -188,5 +138,46 @@ public class LineViewModel extends ViewModel {
         axesList.add(axisXY);//加入总的坐标轴列表
     }
 
+    //getter & setter
+    public int getNumOfRealLines() {
+        return numOfRealLines;
+    }
+
+    public void setNumOfRealLines(int numOfRealLines) {
+        this.numOfRealLines = numOfRealLines;
+    }
+
+    public List<Line> getLines() {
+        return lines;
+    }
+
+    public void setLines(List<Line> lines) {
+        this.lines = lines;
+    }
+
+    public List<Axis[]> getAxesList() {
+        return axesList;
+    }
+
+    public void setAxesList(List<Axis[]> axesList) {
+        this.axesList = axesList;
+    }
+
+    public boolean isForecast() {
+        return isForecast;
+    }
+
+    public void setForecast(boolean forecast) {
+        isForecast = forecast;
+    }
+
+
+    public int getCurLineIndex() {
+        return curLineIndex;
+    }
+
+    public void setCurLineIndex(int curLineIndex) {
+        this.curLineIndex = curLineIndex;
+    }
 
 }
