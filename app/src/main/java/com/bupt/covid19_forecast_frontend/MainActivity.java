@@ -21,13 +21,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //日志TAG，调试用，默认使用类名
     private static final String TAG = "MainActivity";
 
-    //一些控件
+    //ui控件
+    //因为切换预测的按钮要根据状态不同显示和隐藏，所以放在外面供全局调用
     private Switch myswitch;
 
     //折线视图
     private LineChartView myLineChartView;
 
-    //折线的数据
+    //折线的数据类
     LineViewModel lineViewModel;
 
     /**
