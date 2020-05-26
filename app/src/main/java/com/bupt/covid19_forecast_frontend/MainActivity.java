@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /*————————————绘图相关————————————*/
 
     private int numOfRealLines = 4;//“真实线”的数量
-    //TODO 把data也做成先真实后预测得了
     private List<float[]> lineData = new ArrayList<>();//所有线数据，里面是按照先“真实”后“预测”的顺序
     private List<Line> lines = new ArrayList<>(); //所有线，里面是按照先“真实”后“预测”的顺序
     private List<Axis[]> axesList = new ArrayList<>(); //所有坐标轴，里面是按照先“真实”后“预测”的顺序
