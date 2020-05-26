@@ -14,6 +14,8 @@ import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 
+import viewModel.LineViewModel;
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
     //日志TAG，调试用，默认使用类名

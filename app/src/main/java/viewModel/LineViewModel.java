@@ -1,4 +1,4 @@
-package com.bupt.covid19_forecast_frontend;
+package viewModel;
 
 import android.arch.lifecycle.ViewModel;
 import android.graphics.Color;
