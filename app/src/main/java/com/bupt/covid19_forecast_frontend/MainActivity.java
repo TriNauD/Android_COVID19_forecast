@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         drawChart();
 
         //spinner
-        Spinner spinner = findViewById(R.id.spinner);
+        Spinner spinner = findViewById(R.id.line_type_spinner);
         spinner.setOnItemSelectedListener(this);
         //switch
         myswitch = findViewById(R.id.forecast_switch);

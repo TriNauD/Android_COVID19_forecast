@@ -1,10 +1,33 @@
 <resources>
     <string name="app_name">COVID19_forecast_frontend</string>
-    <string name="national_forecast">全国疫情趋势</string>
+    <string name="national_title">全国疫情趋势</string>
+    <string name="line_type_label">曲线类型</string>
+    <string name="forecast_switch_label">预测</string>
+    <string name="model_type_label">模型</string>
+    <string name="control_level_label">控制等级</string>
+    <string name="control_start_date_label">控制开始日期</string>
+    <string name="control_duration_label">控制持续时间</string>
+    <string name="day_label">天</string>
+
+
     <string-array name="item_choices">
         <item>现存确诊</item>
         <item>新增确诊</item>
         <item>治愈率</item>
         <item>死亡率</item>
+    </string-array>
+    <string-array name="model_type_choices">
+        <item>控制</item>
+        <item>群体免疫</item>
+    </string-array>
+    <string-array name="control_level_choices">
+        <item>一级控制</item>
+        <item>二级控制</item>
+        <item>三级控制</item>
+        <item>自定义</item>
+    </string-array>
+    <string-array name="control_start_date_choices">
+        <item>5月1日</item>
+        <item>自定义</item>
     </string-array>
 </resources>
