@@ -1,6 +1,6 @@
 package com.bupt.covid19_forecast_frontend;
 
-import android.graphics.Color;
+import android.arch.lifecycle.ViewModelProviders;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,27 +10,26 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import lecho.lib.hellocharts.model.Axis;
-import lecho.lib.hellocharts.model.AxisValue;
-import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
-import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
+
+import viewModel.LineViewModel;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
     //日志TAG，调试用，默认使用类名
     private static final String TAG = "MainActivity";
 
-    //一些控件
+    //ui控件
+    //因为切换预测的按钮要根据状态不同显示和隐藏，所以放在外面供全局调用
     private Switch myswitch;
-    private Spinner spinner;
-    private LineChartView myLineChartView;//折线图
+
+    //折线视图
+    private LineChartView myLineChartView;
+
+    //折线的数据类
+    LineViewModel lineViewModel;
 
     /**
      * 活动生命周期：“创建”
@@ -43,182 +42,66 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //chart
         myLineChartView = findViewById(R.id.chart);
-        initChart();
+
+        //折线图数据
+        lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
+
+        lineViewModel.initChart();
+
         drawChart();
+
         //spinner
-        spinner = (Spinner) findViewById(R.id.spinner);
+        Spinner spinner = findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
         //switch
-        myswitch = (Switch) findViewById(R.id.forecast_switch);
+        myswitch = findViewById(R.id.forecast_switch);
         myswitch.setOnCheckedChangeListener(this);
     }
 
-    /*————————————绘图相关————————————*/
-
-    private int numOfRealLines = 4;//“真实线”的数量
-    private List<float[]> lineData = new ArrayList<>();//所有线数据，里面是按照先“真实”后“预测”的顺序
-    private List<Line> lines = new ArrayList<>(); //所有线，里面是按照先“真实”后“预测”的顺序
-    private List<Axis[]> axesList = new ArrayList<>(); //所有坐标轴，里面是按照先“真实”后“预测”的顺序
-    private List<List<String>> axisLableList = new ArrayList<>(); //所有坐标轴的标签信息，里面是按照先“真实”后“预测”的顺序
-    private int curLineIndex = 0;//当前显示的线是几号
-    private boolean isForecast = false;//是否处于预测状态
 
     /**
-     * 初始化图表相关
+     * 刷新图像。
+     * 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
      *
-     * @Description 初始化，包括数据、线、轴；数据先用随机数
-     * @author lym
-     * @version 2.3
-     */
-    private void initChart() {
-        Log.i(TAG, "initChart 进入函数");
-
-        //总体的代码结构：
-        /*
-        * for (int i = 0; i < numOfXXXLines; i++) {
-            for (int j = 0; j < numOfXXXPoints; j++) {
-            }
-        }
-        * */
-
-        //————真实————
-        //数
-        //“真实线”的节点数
-        int numOfRealPoints = 120;
-        for (int i = 0; i < numOfRealLines; ++i) {
-            float[] linePoints = new float[numOfRealPoints];//一条线上面的点
-            for (int j = 0; j < numOfRealPoints; ++j) {
-                Random random = new Random();
-                linePoints[j] = random.nextInt(50) + j * 10;
-            }
-            lineData.add(linePoints);
-        }
-        //线
-        for (int i = 0; i < numOfRealLines; i++) {
-            List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
-            for (int j = 0; j < numOfRealPoints; j++) {
-                tempArrayList.add(new PointValue(j, lineData.get(i)[j]));
-            }
-            Line line = new Line(tempArrayList);//根据值来创建一条线
-            line.setColor(Color.rgb(126, 185, 236));//线的颜色
-            //line.setPointColor(Color.rgb(255,255,255));//点的颜色 这个是白色
-            line.setPointRadius(5);//点的大小
-            line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
-            line.setFilled(true);//下方填充
-            line.setCubic(false);//不要曲线
-            lines.add(line);
-        }
-        //轴
-        //字符串部分
-        for (int i = 0; i < numOfRealLines; i++) {
-            List<String> strings = new ArrayList<>(numOfRealPoints);
-            int day = 0;
-            for (int j = 0; j < numOfRealPoints; j++) {
-                day++;
-                if (day > 30) {
-                    day %= 30;
-                }
-                String s = (i + 1) + "/" + day;
-                strings.add(s);
-            }
-            axisLableList.add(strings);
-        }
-        //绑定轴部分
-        //每条线
-        for (int i = 0; i < numOfRealLines; i++) {
-            Axis axisX = new Axis();//新建一个x轴
-            List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
-            //每个点
-            for (int j = 0; j < numOfRealPoints; j++) {
-                AxisValue valueX = new AxisValue(j);//这里的数字是坐标的数值，比如第一个坐标就是0
-                valueX.setLabel(axisLableList.get(i).get(j));//将坐标的数值和对应的文字标签绑定起来
-                valueListX.add(valueX);//添加一个值
-            }
-            axisX.setValues(valueListX);//将列表设置到x轴上面
-            Axis axisY = new Axis();//Y轴没有任何设定，就初始化
-            Axis[] axisXY = {axisX, axisY};//把XY放到一起
-            axesList.add(axisXY);//加入总的坐标轴列表
-        }
-
-        //————预测————
-        //数
-        //“预测线”的数量
-        int numOfForecastLines = 1;
-        //“预测线”的节点数
-        int numOfForecastPoints = 15;
-        for (int i = 0; i < numOfForecastLines; ++i) {
-            float[] linePoints = new float[numOfForecastPoints];//一条线上面的点
-            for (int j = 0; j < numOfForecastPoints; ++j) {
-                Random random = new Random();
-                linePoints[j] = numOfForecastPoints * numOfForecastPoints - j * j;
-            }
-            lineData.add(linePoints);
-        }
-        //线
-        for (int i = 0; i < numOfForecastLines; i++) {
-            List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
-            for (int j = 0; j < numOfForecastPoints; j++) {
-                tempArrayList.add(new PointValue(j, lineData.get(i + numOfRealLines)[j]));//在真实线后面的是预测线
-            }
-            Line line = new Line(tempArrayList);//根据值来创建一条线
-            line.setColor(Color.rgb(255, 0, 0));//线的颜色
-            line.setPointColor(Color.rgb(255, 255, 255));//点的颜色 这个是白色
-            line.setPointRadius(3);//点的大小
-            line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
-            line.setFilled(false);//下方填充就不要了吧
-            line.setCubic(false);//不要曲线
-            lines.add(line);
-        }
-        //轴
-        Axis axisX = new Axis();//新建一个x轴
-        Axis axisY = new Axis();//Y轴没有任何设定，就初始化
-        Axis[] axisXY = {axisX, axisY};//把XY放到一起
-        axesList.add(axisXY);//加入总的坐标轴列表
-    }
-
-    /**
-     * 刷新图像
-     *
-     * @Description 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
      * @author lym
      * @version 3.1
      */
     private void drawChart() {
         Log.i(TAG, "draw 进入函数");
-        Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
+        Log.i(TAG, "draw 函数：curLineIndex：" + lineViewModel.getCurLineIndex());
 
-        LineChartData myLineData = new LineChartData(lines.subList(curLineIndex, curLineIndex + 1));//把没用的线去掉
-        myLineData.setAxisXBottom(axesList.get(curLineIndex)[0]);//设置X轴
-        myLineData.setAxisYLeft(axesList.get(curLineIndex)[1]);//设置Y轴
+        LineChartData myLineData = new LineChartData(lineViewModel.getLines().subList(lineViewModel.getCurLineIndex(),
+                lineViewModel.getCurLineIndex() + 1));//把没用的线去掉
+        myLineData.setAxisXBottom(lineViewModel.getAxesList().get(lineViewModel.getCurLineIndex())[0]);//设置X轴
+        myLineData.setAxisYLeft(lineViewModel.getAxesList().get(lineViewModel.getCurLineIndex())[1]);//设置Y轴
         myLineChartView.setLineChartData(myLineData);//把这个设置好的数据放到view里面
-        boolean isOnForecast = (curLineIndex > numOfRealLines ? true : false);//如果索引大于“真实线”数目，就表示是在预测
-        setChartShow(300, 25, isOnForecast);//设置显示图表的范围，为“调参师”专门准备
+        boolean isOnForecast = (lineViewModel.getCurLineIndex() > lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
+        setChartShow(isOnForecast);//设置显示图表的范围，为“调参师”专门准备
     }
 
     /**
      * 设置显示范围
+     * 设置当前图表的显示范围，其中最大坐标指的是显示窗口的那个值，因为可以滑动
      *
-     * @param top        y轴最大坐标值
-     * @param right      x轴最大坐标值
      * @param isForecast 是不是真的在显示预测图表
-     * @Description 设置当前图表的显示范围，其中最大坐标指的是显示窗口的那个值，因为可以滑动
      * @author lym
      * @version 2.1
      */
-    private void setChartShow(int top, int right, boolean isForecast) {
+    private void setChartShow(boolean isForecast) {
         final Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
         halfViewport.bottom = 0;
-        //TODO 是时候考虑y轴的步长问题了
-        halfViewport.top = top;
+        //TODO step of y ? 是时候考虑y轴的步长问题了
+        halfViewport.top = 300;//y轴最大坐标值
         halfViewport.left = 0;
         if (isForecast) {
             //如果在预测
             int numOfForecastPoints = 15;
             halfViewport.right = numOfForecastPoints - 1;
         } else {
-            halfViewport.right = right;
+            halfViewport.right = 25;//x轴最大坐标值
         }
         myLineChartView.setCurrentViewport(halfViewport);
     }
@@ -226,10 +109,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /*————————————控件相关————————————*/
 
     /**
-     * 下拉菜单，选项控制事件
+     * 下拉菜单，选项控制事件。
+     * 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
      *
      * @param pos 选项的位置，0 ~ n-1
-     * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
      * @author lym
      * @version 2.4
      */
@@ -242,13 +125,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
         if (pos != 0) {
             myswitch.setVisibility(View.INVISIBLE);//隐藏，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
-            curLineIndex = pos;
+            lineViewModel.setCurLineIndex(pos);
         } else {
             myswitch.setVisibility(View.VISIBLE);//显示
-            if (isForecast) {
-                curLineIndex = numOfRealLines;//因为在我们的线系统中，跟在真实后面的就是预测线了
+            if (lineViewModel.isForecast()) {
+                //因为在我们的线系统中，跟在真实后面的就是预测线了
+                lineViewModel.setCurLineIndex(lineViewModel.getNumOfRealLines());
             } else {
-                curLineIndex = 0;//如果没在预测就正常0
+                //如果没在预测就正常0
+                lineViewModel.setCurLineIndex(0);
             }
         }
         //刷新 线
@@ -256,9 +141,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
-     * 下拉菜单，无选择时默认事件
+     * 下拉菜单，无选择时默认事件。
+     * 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单没有任何选择时调用
      *
-     * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单没有任何选择时调用
      * @author lym
      * @version 1.0
      */
@@ -269,23 +154,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
-     * 预测开关，监听开关事件
+     * 预测开关，监听开关事件。
+     * 重载CompoundButton.OnCheckedChangeListener的函数，监听switch按钮有没有被选中
      *
-     * @Description 重载CompoundButton.OnCheckedChangeListener的函数，监听switch按钮有没有被选中
      * @author lym
      * @version 2.2
      */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         Log.i(TAG, "onCheckedChanged 进入函数");
-        isForecast = isChecked;//改变预测状态
+        lineViewModel.setForecast(isChecked);
         if (isChecked) {
             Log.i(TAG, "onCheckedChanged 开关状态：开启");
-            curLineIndex = numOfRealLines;//因为在我们的线系统中，跟在真实后面的就是预测线了
+            //因为在我们的线系统中，跟在真实后面的就是预测线了
+            lineViewModel.setCurLineIndex(lineViewModel.getNumOfRealLines());
             drawChart();
         } else {
             Log.i(TAG, "onCheckedChanged 开关状态：关闭");
-            curLineIndex = 0;//因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
+            //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
+            lineViewModel.setCurLineIndex(0);
             drawChart();
         }
     }
