@@ -233,8 +233,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlDurationInput.setFocusable(false);
                     controlDurationInput.setFocusableInTouchMode(false);
                     controlDurationInput.setCursorVisible(false);
-                    controlDurationInput.setText("12");
                     controlDurationInput.setTextColor(Color.GRAY);
+                    //根据选项设置默认持续时间
+                    switch (pos){
+                        //一级
+                        case 0:
+                            controlDurationInput.setText(R.string.control_duration_level1);
+                            break;
+                        //二级
+                        case 1:
+                            controlDurationInput.setText(R.string.control_duration_level2);
+                            break;
+                        //三级
+                        case 2:
+                            controlDurationInput.setText(R.string.control_duration_level3);
+                            break;
+                    }
                 }
                 //选了最后一项（即自定义）
                 else {
