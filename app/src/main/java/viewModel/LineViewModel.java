@@ -30,17 +30,12 @@ public class LineViewModel extends ViewModel {
     //所有坐标轴的标签信息
     private List<List<String>> axisLableList = new ArrayList<>();
 
-    //当前显示的线是几号
-    private int curLineIndex = 0;
-    //是否处于预测状态，默认是否
-    private boolean isForecast = false;
 
     /**
      * 初始化图表相关
      * 初始化，包括数据、线、轴；数据先用随机数
      *
      * @author lym
-     * @version 2.3
      */
     public void initChart() {
         Log.i(TAG, "initChart 进入函数");
@@ -159,22 +154,6 @@ public class LineViewModel extends ViewModel {
 
     public List<Axis[]> getAxesList() {
         return axesList;
-    }
-
-    public boolean isForecast() {
-        return isForecast;
-    }
-
-    public void setForecast(boolean forecast) {
-        isForecast = forecast;
-    }
-
-    public int getCurLineIndex() {
-        return curLineIndex;
-    }
-
-    public void setCurLineIndex(int curLineIndex) {
-        this.curLineIndex = curLineIndex;
     }
 
 }
