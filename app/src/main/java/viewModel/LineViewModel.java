@@ -19,8 +19,6 @@ public class LineViewModel extends ViewModel {
     private static final String TAG = "LineViewModel";
 
     //按照先“真实”后“预测”的顺序：
-    //所有线数据
-    private Repository repository = new Repository();
     //所有线
     private List<Line> lines = new ArrayList<>();
     //所有坐标轴
