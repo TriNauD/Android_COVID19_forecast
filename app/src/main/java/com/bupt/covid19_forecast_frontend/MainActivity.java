@@ -1,8 +1,8 @@
 package com.bupt.covid19_forecast_frontend;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,10 +10,14 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
-
 import viewModel.LineViewModel;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
@@ -31,12 +35,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //折线的数据类
     LineViewModel lineViewModel;
 
+    //当前显示的线是几号
+    private int curLineIndex = 0;
+    //是否处于预测状态，默认是否
+    private boolean isForecast = false;
+
     /**
      * 活动生命周期：“创建”
      *
      * @param savedInstanceState ？？？系统使用参数
      * @author lym
-     * @version 1.3
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,41 +75,63 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
      *
      * @author lym
-     * @version 3.1
      */
     private void drawChart() {
         Log.i(TAG, "draw 进入函数");
-        Log.i(TAG, "draw 函数：curLineIndex：" + lineViewModel.getCurLineIndex());
-
-        LineChartData myLineData = new LineChartData(lineViewModel.getLines().subList(lineViewModel.getCurLineIndex(),
-                lineViewModel.getCurLineIndex() + 1));//把没用的线去掉
-        myLineData.setAxisXBottom(lineViewModel.getAxesList().get(lineViewModel.getCurLineIndex())[0]);//设置X轴
-        myLineData.setAxisYLeft(lineViewModel.getAxesList().get(lineViewModel.getCurLineIndex())[1]);//设置Y轴
-        myLineChartView.setLineChartData(myLineData);//把这个设置好的数据放到view里面
-        boolean isOnForecast = (lineViewModel.getCurLineIndex() > lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
-        setChartShow(isOnForecast);//设置显示图表的范围，为“调参师”专门准备
+        Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
+        //线
+        List<Line> allLines = lineViewModel.getLines();
+        List<Line> showLines = new ArrayList<>();
+        //当前的
+        showLines.add(allLines.get(curLineIndex));
+        if (isForecast) {
+            //如果在预测，加上对应的真实线
+            showLines.add(allLines.get(0));
+        }
+        LineChartData curLineData = new LineChartData(showLines);
+        //轴
+        Axis[] showAxisXY = lineViewModel.getAxesList().get(curLineIndex);
+        curLineData.setAxisXBottom(showAxisXY[0]);//设置X轴
+        curLineData.setAxisYLeft(showAxisXY[1]);//设置Y轴
+        //视图
+        myLineChartView.setLineChartData(curLineData);//把这个设置好的数据放到view里面
+        setChartShow();//设置显示图表的范围，为“调参师”专门准备
     }
 
     /**
      * 设置显示范围
      * 设置当前图表的显示范围，其中最大坐标指的是显示窗口的那个值，因为可以滑动
      *
-     * @param isForecast 是不是真的在显示预测图表
      * @author lym
-     * @version 2.1
      */
-    private void setChartShow(boolean isForecast) {
-        final Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
+    private void setChartShow() {
+        Log.i(TAG, "setChartShow 进入函数");
+
+        //总体的图表范围
+        Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
+        maxViewPort.left = 0;
+        maxViewPort.bottom = 0;
+        //x轴最大坐标值
+        maxViewPort.right = 120 + 150 - 1;
+        //y轴最大坐标值
+        maxViewPort.top = 6000;
+        myLineChartView.setMaximumViewport(maxViewPort);
+
+        //显示的小界面，可以滑动
+        Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
+        halfViewport.top = 1300;
         halfViewport.bottom = 0;
-        //TODO step of y ? 是时候考虑y轴的步长问题了
-        halfViewport.top = 300;//y轴最大坐标值
-        halfViewport.left = 0;
         if (isForecast) {
             //如果在预测
-            int numOfForecastPoints = 15;
-            halfViewport.right = numOfForecastPoints - 1;
+            Log.i(TAG, "setChartShow 函数：【预测】设置当前范围");
+            //真实120预测15
+            int XMax = 120 + 15 - 1;
+            halfViewport.right = XMax;
+            halfViewport.left = 0;
         } else {
-            halfViewport.right = 25;//x轴最大坐标值
+            Log.i(TAG, "setChartShow 函数：【真实】设置当前范围");
+            halfViewport.left = 0;
+            halfViewport.right = 120;
         }
         myLineChartView.setCurrentViewport(halfViewport);
     }
@@ -114,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @param pos 选项的位置，0 ~ n-1
      * @author lym
-     * @version 2.4
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view,
@@ -125,15 +154,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
         if (pos != 0) {
             myswitch.setVisibility(View.INVISIBLE);//隐藏，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
-            lineViewModel.setCurLineIndex(pos);
+            curLineIndex = pos;
         } else {
             myswitch.setVisibility(View.VISIBLE);//显示
-            if (lineViewModel.isForecast()) {
+            if (isForecast) {
                 //因为在我们的线系统中，跟在真实后面的就是预测线了
-                lineViewModel.setCurLineIndex(lineViewModel.getNumOfRealLines());
+                curLineIndex = lineViewModel.getNumOfRealLines();
             } else {
                 //如果没在预测就正常0
-                lineViewModel.setCurLineIndex(0);
+                curLineIndex = 0;
             }
         }
         //刷新 线
@@ -145,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单没有任何选择时调用
      *
      * @author lym
-     * @version 1.0
      */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
@@ -158,21 +186,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * 重载CompoundButton.OnCheckedChangeListener的函数，监听switch按钮有没有被选中
      *
      * @author lym
-     * @version 2.2
      */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         Log.i(TAG, "onCheckedChanged 进入函数");
-        lineViewModel.setForecast(isChecked);
+        isForecast = isChecked;
         if (isChecked) {
-            Log.i(TAG, "onCheckedChanged 开关状态：开启");
+            Log.i(TAG, "onCheckedChanged 开关状态：开启，在预测");
             //因为在我们的线系统中，跟在真实后面的就是预测线了
-            lineViewModel.setCurLineIndex(lineViewModel.getNumOfRealLines());
+            curLineIndex = lineViewModel.getNumOfRealLines();
             drawChart();
         } else {
             Log.i(TAG, "onCheckedChanged 开关状态：关闭");
             //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
-            lineViewModel.setCurLineIndex(0);
+            curLineIndex = 0;
             drawChart();
         }
     }
