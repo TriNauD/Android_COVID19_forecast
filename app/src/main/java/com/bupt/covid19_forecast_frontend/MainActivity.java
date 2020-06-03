@@ -46,12 +46,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private LineChartView myLineChartView;
 
     //折线的数据类
-    LineViewModel lineViewModel;
+    private LineViewModel lineViewModel;
 
     //当前显示的线是几号
     private int curLineIndex = 0;
-    //是否处于预测状态，默认是否
-    private boolean isForecast = false;
+    //预测开关状态（默认关闭）
+    private boolean isForecastSwitchedOn = false;
 
     /**
      * 活动生命周期：“创建”
@@ -115,6 +115,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void drawChart() {
         Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
+        //更新预测状态，这个值是表示显示的线是不是真的预测线
+        boolean isForecast = (curLineIndex >= lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
         //线
         List<Line> allLines = lineViewModel.getLines();
         List<Line> showLines = new ArrayList<>();
@@ -131,17 +133,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         curLineData.setAxisYLeft(showAxisXY[1]);//设置Y轴
         //视图
         myLineChartView.setLineChartData(curLineData);//把这个设置好的数据放到view里面
-        setChartShow();//设置显示图表的范围，为“调参师”专门准备
-    }
 
-    /**
-     * 设置显示范围
-     * 设置当前图表的显示范围，其中最大坐标指的是显示窗口的那个值，因为可以滑动
-     *
-     * @author lym
-     */
-    private void setChartShow() {
-        Log.i(TAG, "setChartShow 进入函数");
+        Log.i(TAG, "drawChart 调参师");
 
         //总体的图表范围
         Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
@@ -195,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     curLineIndex = pos;
                 } else {
                     myswitch.setVisibility(View.VISIBLE);//显示
-                    if (isForecast) {
+                    if (isForecastSwitchedOn) {
                         //因为在我们的线系统中，跟在真实后面的就是预测线了
                         curLineIndex = lineViewModel.getNumOfRealLines();
                     } else {
@@ -294,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         Log.i(TAG, "onCheckedChanged 进入函数");
-        isForecast = isChecked;
+        isForecastSwitchedOn = isChecked;
         if (isChecked) {
             Log.i(TAG, "onCheckedChanged 开关状态：开启，在预测");
             //因为在我们的线系统中，跟在真实后面的就是预测线了
