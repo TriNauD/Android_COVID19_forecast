@@ -38,7 +38,7 @@ public class LineViewModel extends ViewModel {
     //控制增长阶段的时间
     public int raiseLastTime;
     //控制强度
-    int controlGrade;
+    public int controlGrade;
 
     /**
      * 初始化图表相关
@@ -125,8 +125,16 @@ public class LineViewModel extends ViewModel {
         for (int i = 0; i < numOfForecastLines; ++i) {
             float[] linePoints = new float[numOfForecastPoints];//一条线上面的点
             for (int j = 0; j < numOfForecastPoints; ++j) {
-                //Random random = new Random();
-                linePoints[j] = 1200 - j * j;
+                if (hasControl) {
+                    //如果进行控制
+                    Log.i(TAG, "initChart 函数：进行控制");
+                    linePoints[j] = 1200 - j * j;
+                } else {
+                    //群体免疫
+                    Log.i(TAG, "initChart 函数：群体免疫");
+                    float x = j * 1000;
+                    linePoints[j] = 1200 + (float) Math.sqrt(x);
+                }
             }
             lineData.add(linePoints);
         }
