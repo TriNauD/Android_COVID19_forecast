@@ -65,8 +65,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         drawChart();
 
         //spinner
-        Spinner spinner = findViewById(R.id.line_type_spinner);
-        spinner.setOnItemSelectedListener(this);
+        Spinner lineTypeSpinner = findViewById(R.id.line_type_spinner);
+        lineTypeSpinner.setOnItemSelectedListener(this);
         //switch
         myswitch = findViewById(R.id.forecast_switch);
         myswitch.setOnCheckedChangeListener(this);
@@ -153,17 +153,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "onItemSelected 进入函数");
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
         //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
-        if (pos != 0) {
-            myswitch.setVisibility(View.INVISIBLE);//隐藏，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
-            curLineIndex = pos;
-        } else {
-            myswitch.setVisibility(View.VISIBLE);//显示
-            if (isForecast) {
-                //因为在我们的线系统中，跟在真实后面的就是预测线了
-                curLineIndex = lineViewModel.getNumOfRealLines();
+        if (parent.getId() == R.id.line_type_spinner){
+            if (pos != 0 ) {
+                myswitch.setVisibility(View.INVISIBLE);//隐藏，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
+                curLineIndex = pos;
             } else {
-                //如果没在预测就正常0
-                curLineIndex = 0;
+                myswitch.setVisibility(View.VISIBLE);//显示
+                if (isForecast) {
+                    //因为在我们的线系统中，跟在真实后面的就是预测线了
+                    curLineIndex = lineViewModel.getNumOfRealLines();
+                } else {
+                    //如果没在预测就正常0
+                    curLineIndex = 0;
+                }
             }
         }
         //刷新 线
