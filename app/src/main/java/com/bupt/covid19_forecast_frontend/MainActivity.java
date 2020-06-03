@@ -1,6 +1,7 @@
 package com.bupt.covid19_forecast_frontend;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,6 +36,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Spinner controlStartDateSpinner;
     private Switch myswitch;
     private EditText controlDurationInput;
+    private TextView lineTypeLabel;
+    private TextView modelTypeLabel;
+    private TextView controlLevelLabel;
+    private TextView controlStartDateLabel;
+    private TextView controlDurationLabel;
+    private TextView dayLabel;
     //折线视图
     private LineChartView myLineChartView;
 
@@ -89,6 +96,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //edit text
         controlDurationInput = findViewById(R.id.control_duration_input);
 
+        //static element
+        lineTypeLabel = findViewById(R.id.line_type_label);
+        modelTypeLabel = findViewById(R.id.model_type_label);
+        controlLevelLabel = findViewById(R.id.control_level_label);
+        controlStartDateLabel = findViewById(R.id.control_start_date_label);
+        controlDurationLabel = findViewById(R.id.control_duration_label);
+        dayLabel = findViewById(R.id.day_label);
     }
 
 
@@ -197,12 +211,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
                     //第三行和控制等级spinner应该保持出现
                     controlLevelSpinner.setVisibility(View.VISIBLE);
+                    controlLevelLabel.setVisibility(View.VISIBLE);
+                    controlStartDateSpinner.setVisibility(View.VISIBLE);
+                    controlStartDateLabel.setVisibility(View.VISIBLE);
+                    controlDurationInput.setVisibility(View.VISIBLE);
+                    controlDurationLabel.setVisibility(View.VISIBLE);
+                    dayLabel.setVisibility(View.VISIBLE);
                 }
                 //选了第2个选项：群体免疫
                 else {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
                     //第三行和控制等级spinner应该隐藏
                     controlLevelSpinner.setVisibility(View.GONE);
+                    controlLevelLabel.setVisibility(View.GONE);
+                    controlStartDateSpinner.setVisibility(View.GONE);
+                    controlStartDateLabel.setVisibility(View.GONE);
+                    controlDurationInput.setVisibility(View.GONE);
+                    controlDurationLabel.setVisibility(View.GONE);
+                    dayLabel.setVisibility(View.GONE);
                 }
                 break;
             //第3个spinner 控制等级
@@ -211,11 +237,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (pos != 3) {
                     Log.i(TAG, "onItemSelected 选了第3个spinner的前3个选项");
                     //天数输入框不可编辑&灰色
+                    controlDurationInput.setFocusable(false);
+                    controlDurationInput.setFocusableInTouchMode(false);
+                    controlDurationInput.setCursorVisible(false);
+                    controlDurationInput.setText("12");
+                    controlDurationInput.setTextColor(Color.GRAY);
                 }
                 //选了最后一项（即自定义）
                 else {
                     Log.i(TAG, "onItemSelected 选了第3个spinner的最后一个选项");
-                    //天数输入框可以编辑&正常颜色
+                    //天数输入框可以编辑&正常颜色 清空内容
+                    controlDurationInput.setFocusable(true);
+                    controlDurationInput.setFocusableInTouchMode(true);
+                    controlDurationInput.setCursorVisible(true);
+                    controlDurationInput.getText().clear();
+                    controlDurationInput.setTextColor(Color.BLACK);
+
                 }
                 break;
             //第4个spinner 控制开始日期
