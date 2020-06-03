@@ -64,16 +64,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //画折线图
         drawChart();
 
-        //页面的四个spinner 并绑定listener
+        //页面的4个spinner 并绑定listener
         Spinner lineTypeSpinner = findViewById(R.id.line_type_spinner);
         Spinner modelTypeSpinner = findViewById(R.id.model_type_spinner);
         Spinner controlLevelSpinner = findViewById(R.id.control_level_spinner);
         Spinner controlStartDateSpinner = findViewById(R.id.control_start_date_spinner);
+
         lineTypeSpinner.setOnItemSelectedListener(this);
         modelTypeSpinner.setOnItemSelectedListener(this);
-        ;
         controlLevelSpinner.setOnItemSelectedListener(this);
         controlStartDateSpinner.setOnItemSelectedListener(this);
+
+
         //switch
         myswitch = findViewById(R.id.forecast_switch);
         myswitch.setOnCheckedChangeListener(this);
@@ -182,12 +184,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.model_type_spinner:
                 //选了第1个选项：控制
                 if (pos == 0) {
-                    Log.i(TAG, "选了第2个spinner的第1个选项");
+                    Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
                     //第三行和控制等级spinner应该保持出现
                 }
                 //选了第2个选项：群体免疫
                 else {
-                    Log.i(TAG, "选了第2个spinner的其他选项");
+                    Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
                     //第三行和控制等级spinner应该隐藏
                 }
                 break;
@@ -195,12 +197,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.control_level_spinner:
                 //选了非最后一项（即1～3级控制）
                 if (pos != 3) {
-                    Log.i(TAG, "选了第3个spinner的前3个选项");
+                    Log.i(TAG, "onItemSelected 选了第3个spinner的前3个选项");
                     //天数输入框不可编辑&灰色
                 }
                 //选了最后一项（即自定义）
                 else {
-                    Log.i(TAG, "选了第3个spinner的最后一个选项");
+                    Log.i(TAG, "onItemSelected 选了第3个spinner的最后一个选项");
                     //天数输入框可以编辑&正常颜色
                 }
                 break;
@@ -208,23 +210,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.control_start_date_spinner:
                 //选了非最后一项
                 if (pos != 3) {
-                    Log.i(TAG, "选了第4个spinner的前3个选项");
+                    Log.i(TAG, "onItemSelected 选了第4个spinner的前3个选项");
                     //天数输入框不可编辑&灰色
                 }
                 //选了最后一项
                 else {
-                    Log.i(TAG, "选了第4个spinner的最后一个选项");
+                    Log.i(TAG, "onItemSelected 选了第4个spinner的最后一个选项");
                     //天数输入框可以编辑&正常颜色
                 }
                 break;
         }
-        /*//只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
-        if (parent.getId() == R.id.line_type_spinner){
-
-        }
-        else {
-            Log.i(TAG,"选了另一个spinner");
-        }*/
         //刷新 线
         drawChart();
     }
