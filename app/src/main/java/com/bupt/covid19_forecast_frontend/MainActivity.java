@@ -57,8 +57,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //折线图数据
         lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
 
-        lineViewModel.initChart();
+        //初始化折线图数据
+        lineViewModel.initRealChart();
+        lineViewModel.initForecastChart();
 
+        //画折线图
         drawChart();
 
         //spinner
