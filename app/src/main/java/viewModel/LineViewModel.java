@@ -76,7 +76,7 @@ public class LineViewModel extends ViewModel {
             lines.add(line);
         }
         //轴
-        //字符串部分
+        //建立标签
         for (int i = 0; i < numOfRealLines; i++) {
             List<String> strings = new ArrayList<>(numOfRealPoints);
             int day = 0;
@@ -90,8 +90,7 @@ public class LineViewModel extends ViewModel {
             }
             axisLableList.add(strings);
         }
-        //绑定轴部分
-        //每条线
+        //绑定标签和轴
         for (int i = 0; i < numOfRealLines; i++) {
             Axis axisX = new Axis();//新建一个x轴
             List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
@@ -137,10 +136,50 @@ public class LineViewModel extends ViewModel {
             lines.add(line);
         }
         //轴
-        Axis axisX = new Axis();//新建一个x轴
-        Axis axisY = new Axis();//Y轴没有任何设定，就初始化
-        Axis[] axisXY = {axisX, axisY};//把XY放到一起
-        axesList.add(axisXY);//加入总的坐标轴列表
+        //todo 预测的坐标轴应该是真实轴的延申
+        //建立预测标签
+        for (int i = 0; i < numOfForecastLines; i++) {
+            //对于每一条预测线
+            List<String> strings = new ArrayList<>();
+            //todo 需要接着真实线来做日期标签
+            int day = 0;
+            for (int j = 0; j < numOfForecastPoints; j++) {
+                day++;
+                if (day > 30) {
+                    day %= 30;
+                }
+                String s = (i + 1) + "/" + day;
+                strings.add(s);
+            }
+            axisLableList.add(strings);
+        }
+        //绑定标签和轴
+        for (int i = 0; i < numOfForecastLines; i++) {
+            //每条线
+            Axis axisX = new Axis();//新建一个x轴
+            List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
+            //每个点，包括前面真实和后面预测
+            for (int p = 0; p < numOfRealPoints + numOfForecastPoints; p++) {
+                AxisValue valueX = new AxisValue(p);//这里的数字是坐标的数值，比如第一个坐标就是0
+                //将坐标的数值和对应的文字标签绑定起来
+                //分为前（真实）后（预测）
+                if (p < numOfRealPoints)
+                    //前，是真实线0的标签
+                    valueX.setLabel(axisLableList.get(0).get(p));
+                else
+                //后，是预测线i的标签，此时的点值应该剪掉前面的真实点总数
+                {
+                    int thisLineIndex = i + numOfRealLines;
+                    int thisP = p - numOfRealPoints;
+                    valueX.setLabel(axisLableList.get(thisLineIndex).get(thisP));
+                }
+                valueListX.add(valueX);//添加一个值
+            }
+            axisX.setValues(valueListX);//将列表设置到x轴上面
+            Axis axisY = new Axis();//Y轴没有任何设定，就初始化
+            Axis[] axisXY = {axisX, axisY};//把XY放到一起
+            axesList.add(axisXY);//加入总的坐标轴列表
+        }
     }
 
     //getter & setter
