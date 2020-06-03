@@ -10,6 +10,11 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
@@ -74,13 +79,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void drawChart() {
         Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
-
-        LineChartData myLineData = new LineChartData(lineViewModel.getLines().subList(curLineIndex,
-                curLineIndex + 1));//把没用的线去掉
-        myLineData.setAxisXBottom(lineViewModel.getAxesList().get(curLineIndex)[0]);//设置X轴
-        myLineData.setAxisYLeft(lineViewModel.getAxesList().get(curLineIndex)[1]);//设置Y轴
-        myLineChartView.setLineChartData(myLineData);//把这个设置好的数据放到view里面
-        boolean isOnForecast = (curLineIndex > lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
+        //线
+        List<Line> allLines = lineViewModel.getLines();
+        List<Line> showLines = new ArrayList<>();
+        //当前的
+        showLines.add(allLines.get(curLineIndex));
+        if (isForecast) {
+            //如果在预测，加上对应的真实线
+            showLines.add(allLines.get(0));
+        }
+        LineChartData curLineData = new LineChartData(showLines);
+        //轴
+        Axis[] showAxisXY = lineViewModel.getAxesList().get(curLineIndex);
+        curLineData.setAxisXBottom(showAxisXY[0]);//设置X轴
+        curLineData.setAxisYLeft(showAxisXY[1]);//设置Y轴
+        //视图
+        myLineChartView.setLineChartData(curLineData);//把这个设置好的数据放到view里面
+        isForecast = (curLineIndex > lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
         setChartShow();//设置显示图表的范围，为“调参师”专门准备
     }
 
