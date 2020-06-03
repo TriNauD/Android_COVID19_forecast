@@ -81,28 +81,36 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myLineData.setAxisYLeft(lineViewModel.getAxesList().get(curLineIndex)[1]);//设置Y轴
         myLineChartView.setLineChartData(myLineData);//把这个设置好的数据放到view里面
         boolean isOnForecast = (curLineIndex > lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
-        setChartShow(isOnForecast);//设置显示图表的范围，为“调参师”专门准备
+        setChartShow();//设置显示图表的范围，为“调参师”专门准备
     }
 
     /**
      * 设置显示范围
      * 设置当前图表的显示范围，其中最大坐标指的是显示窗口的那个值，因为可以滑动
      *
-     * @param isForecast 是不是真的在显示预测图表
      * @author lym
      */
-    private void setChartShow(boolean isForecast) {
-        final Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
+    private void setChartShow() {
+        //总体的图表范围
+        Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
+        maxViewPort.left = 0;
+        maxViewPort.bottom = 0;
+        //x轴最大坐标值
+        maxViewPort.right = 120 + 150 - 1;
+        //y轴最大坐标值
+        maxViewPort.top = 6000;
+        myLineChartView.setMaximumViewport(maxViewPort);
+
+        //显示的小界面，可以滑动
+        Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
         halfViewport.bottom = 0;
-        //TODO step of y ? 是时候考虑y轴的步长问题了
-        halfViewport.top = 300;//y轴最大坐标值
         halfViewport.left = 0;
+        halfViewport.top = 1300;
         if (isForecast) {
             //如果在预测
-            int numOfForecastPoints = 15;
-            halfViewport.right = numOfForecastPoints - 1;
+            halfViewport.right = 120 + 15 - 1;//真实120预测15
         } else {
-            halfViewport.right = 25;//x轴最大坐标值
+            halfViewport.right = 120;
         }
         myLineChartView.setCurrentViewport(halfViewport);
     }

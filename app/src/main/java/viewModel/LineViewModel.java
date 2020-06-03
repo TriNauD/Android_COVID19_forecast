@@ -101,6 +101,7 @@ public class LineViewModel extends ViewModel {
                 valueListX.add(valueX);//添加一个值
             }
             axisX.setValues(valueListX);//将列表设置到x轴上面
+            //TODO step of y ? 是时候考虑y轴的步长问题了
             Axis axisY = new Axis();//Y轴没有任何设定，就初始化
             Axis[] axisXY = {axisX, axisY};//把XY放到一起
             axesList.add(axisXY);//加入总的坐标轴列表
@@ -116,19 +117,24 @@ public class LineViewModel extends ViewModel {
             float[] linePoints = new float[numOfForecastPoints];//一条线上面的点
             for (int j = 0; j < numOfForecastPoints; ++j) {
                 //Random random = new Random();
-                linePoints[j] = numOfForecastPoints * numOfForecastPoints - j * j;
+                linePoints[j] = 1200 - j * j;
             }
             lineData.add(linePoints);
         }
         //线
         for (int i = 0; i < numOfForecastLines; i++) {
+            //绑定数据
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
-            for (int j = 0; j < numOfForecastPoints; j++) {
-                tempArrayList.add(new PointValue(j, lineData.get(i + numOfRealLines)[j]));//在真实线后面的是预测线
+            for (int p = 0; p < numOfForecastPoints; p++) {
+                int x = p + numOfRealPoints;//预测点接在真实后面
+                float y = lineData.get(i + numOfRealLines)[p];
+                tempArrayList.add(new PointValue(x, y));//在真实线后面的是预测线
             }
+            //设置样式
             Line line = new Line(tempArrayList);//根据值来创建一条线
             line.setColor(Color.rgb(255, 0, 0));//线的颜色
-            line.setPointColor(Color.rgb(255, 255, 255));//点的颜色 这个是白色
+//            line.setPointColor(Color.rgb(255, 255, 255));//点的颜色 这个是白色
+            line.setPointColor(Color.rgb(255, 0, 0));//点的颜色 红色
             line.setPointRadius(3);//点的大小
             line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
             line.setFilled(false);//下方填充就不要了吧
@@ -141,14 +147,14 @@ public class LineViewModel extends ViewModel {
         for (int i = 0; i < numOfForecastLines; i++) {
             //对于每一条预测线
             List<String> strings = new ArrayList<>();
-            //todo 需要接着真实线来做日期标签
             int day = 0;
             for (int j = 0; j < numOfForecastPoints; j++) {
                 day++;
                 if (day > 30) {
                     day %= 30;
                 }
-                String s = (i + 1) + "/" + day;
+                //todo 需要接着真实线来做日期标签
+                String s = (i + 6) + "/" + day;
                 strings.add(s);
             }
             axisLableList.add(strings);
