@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         curLineData.setAxisYLeft(showAxisXY[1]);//设置Y轴
         //视图
         myLineChartView.setLineChartData(curLineData);//把这个设置好的数据放到view里面
-        isForecast = (curLineIndex > lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
         setChartShow();//设置显示图表的范围，为“调参师”专门准备
     }
 
@@ -106,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @author lym
      */
     private void setChartShow() {
+        Log.i(TAG, "setChartShow 进入函数");
+
         //总体的图表范围
         Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
         maxViewPort.left = 0;
@@ -118,13 +119,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //显示的小界面，可以滑动
         Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
-        halfViewport.bottom = 0;
-        halfViewport.left = 0;
         halfViewport.top = 1300;
+        halfViewport.bottom = 0;
         if (isForecast) {
             //如果在预测
-            halfViewport.right = 120 + 15 - 1;//真实120预测15
+            Log.i(TAG, "setChartShow 函数：【预测】设置当前范围");
+            //真实120预测15
+            int XMax = 120 + 15 - 1;
+            halfViewport.right = XMax;
+            halfViewport.left = 0;
         } else {
+            Log.i(TAG, "setChartShow 函数：【真实】设置当前范围");
+            halfViewport.left = 0;
             halfViewport.right = 120;
         }
         myLineChartView.setCurrentViewport(halfViewport);
@@ -186,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "onCheckedChanged 进入函数");
         isForecast = isChecked;
         if (isChecked) {
-            Log.i(TAG, "onCheckedChanged 开关状态：开启");
+            Log.i(TAG, "onCheckedChanged 开关状态：开启，在预测");
             //因为在我们的线系统中，跟在真实后面的就是预测线了
             curLineIndex = lineViewModel.getNumOfRealLines();
             drawChart();
