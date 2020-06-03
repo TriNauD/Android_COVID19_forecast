@@ -13,13 +13,14 @@
         android:background="#fffefe"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme">
+
         <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/national_title"
-            android:textSize="18dp"/>
+            android:textSize="18dp" />
     </android.support.v7.widget.Toolbar>
     <!--scroll-->
     <ScrollView
@@ -28,6 +29,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:layout_marginTop="10dp">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -36,26 +38,26 @@
                 android:id="@+id/line_type_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/line_type_label"
-                android:layout_marginLeft="15dp"/>
+                android:layout_marginLeft="15dp"
+                android:text="@string/line_type_label" />
+
             <Spinner
                 android:id="@+id/line_type_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/line_type_label"
-                android:layout_marginLeft="10dp"
                 android:layout_alignBaseline="@+id/line_type_label"
-                android:entries="@array/item_choices">
-            </Spinner>
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/line_type_label"
+                android:entries="@array/item_choices"></Spinner>
             <!--forecast switch-->
             <Switch
                 android:id="@+id/forecast_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/forecast_switch_label"
                 android:layout_alignBaseline="@+id/line_type_label"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"/>
+                android:layout_marginRight="20dp"
+                android:text="@string/forecast_switch_label" />
             <!--model type spinner-->
             <TextView
                 android:id="@+id/model_type_label"
@@ -65,6 +67,7 @@
                 android:layout_below="@+id/line_type_spinner"
                 android:layout_marginTop="4dp"
                 android:text="@string/model_type_label" />
+
             <Spinner
                 android:id="@+id/model_type_spinner"
                 android:layout_width="wrap_content"
@@ -72,76 +75,79 @@
                 android:layout_below="@+id/forecast_switch"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/model_type_label"
-                android:entries="@array/model_type_choices">
-            </Spinner>
+                android:entries="@array/model_type_choices"></Spinner>
             <!--control level spinner-->
             <TextView
                 android:id="@+id/control_level_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/model_type_label"
-                android:layout_toRightOf="@+id/model_type_spinner"
                 android:layout_marginLeft="10dp"
-                android:text="@string/control_level_label"/>
+                android:layout_toRightOf="@+id/model_type_spinner"
+                android:text="@string/control_level_label" />
+
             <Spinner
                 android:id="@+id/control_level_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/forecast_switch"
-                android:layout_toRightOf="@+id/control_level_label"
                 android:layout_marginLeft="10dp"
-                android:entries="@array/control_level_choices">
-            </Spinner>
+                android:layout_toRightOf="@+id/control_level_label"
+                android:entries="@array/control_level_choices"></Spinner>
             <!--control start date spinner-->
             <TextView
                 android:id="@+id/control_start_date_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/model_type_label"
                 android:layout_alignLeft="@+id/model_type_label"
+                android:layout_below="@+id/model_type_label"
                 android:layout_marginTop="4dp"
-                android:text="@string/control_start_date_label"/>
+                android:text="@string/control_start_date_label" />
+
             <Spinner
                 android:id="@+id/control_start_date_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/model_type_label"
-                android:layout_toRightOf="@+id/control_start_date_label"
                 android:layout_marginLeft="10dp"
-                android:entries="@array/control_level_choices">
-            </Spinner>
+                android:layout_toRightOf="@+id/control_start_date_label"
+                android:entries="@array/control_level_choices"></Spinner>
             <!--control duration input-->
             <TextView
                 android:id="@+id/control_duration_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/control_start_date_label"
-                android:layout_toRightOf="@+id/control_start_date_spinner"
                 android:layout_marginLeft="10dp"
-                android:text="@string/control_duration_label"/>
+                android:layout_toRightOf="@+id/control_start_date_spinner"
+                android:text="@string/control_duration_label" />
+
             <EditText
                 android:id="@+id/control_duration_input"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:layout_alignBaseline="@+id/control_start_date_label"
                 android:layout_below="@id/model_type_label"
-                android:textSize="10dp"
-                android:layout_toRightOf="@+id/control_duration_label"/>
+                android:layout_toRightOf="@+id/control_duration_label"
+                android:maxLines="1"
+                android:textSize="15dp" />
+
             <TextView
                 android:id="@+id/day_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/control_start_date_label"
                 android:layout_toRightOf="@+id/control_duration_input"
-                android:text="@string/day_label"/>
+                android:text="@string/day_label" />
             <!--chart-->
             <lecho.lib.hellocharts.view.LineChartView
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
                 android:layout_below="@+id/control_start_date_label"
-                android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"/>
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp" />
 
             <!--comment area-->
             <LinearLayout
@@ -150,15 +156,16 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/chart"
                 android:layout_marginTop="20dp"
-                android:orientation="vertical"
-                android:background="@color/blue">
+                android:background="@color/blue"
+                android:orientation="vertical">
+
                 <View
                     android:id="@+id/comment1"
                     android:layout_width="350dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="100dp"
-                    android:background="#FFFFFF"/>
+                    android:background="#FFFFFF" />
 
                 <View
                     android:id="@+id/comment2"
@@ -166,7 +173,7 @@
                     android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="20dp"
-                    android:background="#FFFFFF"/>
+                    android:background="#FFFFFF" />
 
                 <View
                     android:id="@+id/comment3"
@@ -174,7 +181,7 @@
                     android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="20dp"
-                    android:background="#FFFFFF"/>
+                    android:background="#FFFFFF" />
             </LinearLayout>
         </RelativeLayout>
 

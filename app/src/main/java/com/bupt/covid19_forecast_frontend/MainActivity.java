@@ -1,14 +1,17 @@
 package com.bupt.covid19_forecast_frontend;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,18 +30,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //ui控件
     //因为切换预测的按钮要根据状态不同显示和隐藏，所以放在外面供全局调用
+    private Spinner lineTypeSpinner;
+    private Spinner modelTypeSpinner;
+    private Spinner controlLevelSpinner;
+    private Spinner controlStartDateSpinner;
     private Switch myswitch;
-
+    private EditText controlDurationInput;
+    private TextView lineTypeLabel;
+    private TextView modelTypeLabel;
+    private TextView controlLevelLabel;
+    private TextView controlStartDateLabel;
+    private TextView controlDurationLabel;
+    private TextView dayLabel;
     //折线视图
     private LineChartView myLineChartView;
 
     //折线的数据类
-    LineViewModel lineViewModel;
+    private LineViewModel lineViewModel;
 
     //当前显示的线是几号
     private int curLineIndex = 0;
-    //是否处于预测状态，默认是否
-    private boolean isForecast = false;
+    //预测开关状态（默认关闭）
+    private boolean isForecastSwitchedOn = false;
 
     /**
      * 活动生命周期：“创建”
@@ -64,12 +77,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //画折线图
         drawChart();
 
-        //spinner
-        Spinner spinner = findViewById(R.id.line_type_spinner);
-        spinner.setOnItemSelectedListener(this);
+        //spinner 页面的4个spinner并绑定listener
+        lineTypeSpinner = findViewById(R.id.line_type_spinner);
+        modelTypeSpinner = findViewById(R.id.model_type_spinner);
+        controlLevelSpinner = findViewById(R.id.control_level_spinner);
+        controlStartDateSpinner = findViewById(R.id.control_start_date_spinner);
+
+        lineTypeSpinner.setOnItemSelectedListener(this);
+        modelTypeSpinner.setOnItemSelectedListener(this);
+        controlLevelSpinner.setOnItemSelectedListener(this);
+        controlStartDateSpinner.setOnItemSelectedListener(this);
+
+
         //switch
         myswitch = findViewById(R.id.forecast_switch);
         myswitch.setOnCheckedChangeListener(this);
+
+        //edit text
+        controlDurationInput = findViewById(R.id.control_duration_input);
+
+        //static element
+        lineTypeLabel = findViewById(R.id.line_type_label);
+        modelTypeLabel = findViewById(R.id.model_type_label);
+        controlLevelLabel = findViewById(R.id.control_level_label);
+        controlStartDateLabel = findViewById(R.id.control_start_date_label);
+        controlDurationLabel = findViewById(R.id.control_duration_label);
+        dayLabel = findViewById(R.id.day_label);
     }
 
 
@@ -82,6 +115,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void drawChart() {
         Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
+        //更新预测状态，这个值是表示显示的线是不是真的预测线
+        boolean isForecast = (curLineIndex >= lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
         //线
         List<Line> allLines = lineViewModel.getLines();
         List<Line> showLines = new ArrayList<>();
@@ -98,17 +133,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         curLineData.setAxisYLeft(showAxisXY[1]);//设置Y轴
         //视图
         myLineChartView.setLineChartData(curLineData);//把这个设置好的数据放到view里面
-        setChartShow();//设置显示图表的范围，为“调参师”专门准备
-    }
 
-    /**
-     * 设置显示范围
-     * 设置当前图表的显示范围，其中最大坐标指的是显示窗口的那个值，因为可以滑动
-     *
-     * @author lym
-     */
-    private void setChartShow() {
-        Log.i(TAG, "setChartShow 进入函数");
+        Log.i(TAG, "drawChart 调参师");
 
         //总体的图表范围
         Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
@@ -152,19 +178,103 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //日志调试
         Log.i(TAG, "onItemSelected 进入函数");
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
-        //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
-        if (pos != 0) {
-            myswitch.setVisibility(View.INVISIBLE);//隐藏，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
-            curLineIndex = pos;
-        } else {
-            myswitch.setVisibility(View.VISIBLE);//显示
-            if (isForecast) {
-                //因为在我们的线系统中，跟在真实后面的就是预测线了
-                curLineIndex = lineViewModel.getNumOfRealLines();
-            } else {
-                //如果没在预测就正常0
-                curLineIndex = 0;
-            }
+        //判断是哪个spinner
+        switch (parent.getId()) {
+            //第1个spinner 曲线类型
+            case R.id.line_type_spinner:
+                //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
+                if (pos != 0) {
+                    myswitch.setVisibility(View.INVISIBLE);//隐藏，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
+                    curLineIndex = pos;
+                } else {
+                    myswitch.setVisibility(View.VISIBLE);//显示
+                    if (isForecastSwitchedOn) {
+                        //因为在我们的线系统中，跟在真实后面的就是预测线了
+                        curLineIndex = lineViewModel.getNumOfRealLines();
+                    } else {
+                        //如果没在预测就正常0
+                        curLineIndex = 0;
+                    }
+                }
+                break;
+            //第2个spinner 模型类型
+            case R.id.model_type_spinner:
+                //选了第1个选项：控制
+                if (pos == 0) {
+                    Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
+                    //第三行和控制等级spinner应该保持出现
+                    controlLevelSpinner.setVisibility(View.VISIBLE);
+                    controlLevelLabel.setVisibility(View.VISIBLE);
+                    controlStartDateSpinner.setVisibility(View.VISIBLE);
+                    controlStartDateLabel.setVisibility(View.VISIBLE);
+                    controlDurationInput.setVisibility(View.VISIBLE);
+                    controlDurationLabel.setVisibility(View.VISIBLE);
+                    dayLabel.setVisibility(View.VISIBLE);
+                }
+                //选了第2个选项：群体免疫
+                else {
+                    Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
+                    //第三行和控制等级spinner应该隐藏
+                    controlLevelSpinner.setVisibility(View.GONE);
+                    controlLevelLabel.setVisibility(View.GONE);
+                    controlStartDateSpinner.setVisibility(View.GONE);
+                    controlStartDateLabel.setVisibility(View.GONE);
+                    controlDurationInput.setVisibility(View.GONE);
+                    controlDurationLabel.setVisibility(View.GONE);
+                    dayLabel.setVisibility(View.GONE);
+                }
+                break;
+            //第3个spinner 控制等级
+            case R.id.control_level_spinner:
+                //选了非最后一项（即1～3级控制）
+                if (pos != 3) {
+                    Log.i(TAG, "onItemSelected 选了第3个spinner的前3个选项");
+                    //天数输入框不可编辑&灰色
+                    controlDurationInput.setFocusable(false);
+                    controlDurationInput.setFocusableInTouchMode(false);
+                    controlDurationInput.setCursorVisible(false);
+                    controlDurationInput.setTextColor(Color.GRAY);
+                    //根据选项设置默认持续时间
+                    switch (pos){
+                        //一级
+                        case 0:
+                            controlDurationInput.setText(R.string.control_duration_level1);
+                            break;
+                        //二级
+                        case 1:
+                            controlDurationInput.setText(R.string.control_duration_level2);
+                            break;
+                        //三级
+                        case 2:
+                            controlDurationInput.setText(R.string.control_duration_level3);
+                            break;
+                    }
+                }
+                //选了最后一项（即自定义）
+                else {
+                    Log.i(TAG, "onItemSelected 选了第3个spinner的最后一个选项");
+                    //天数输入框可以编辑&正常颜色 清空内容
+                    controlDurationInput.setFocusable(true);
+                    controlDurationInput.setFocusableInTouchMode(true);
+                    controlDurationInput.setCursorVisible(true);
+                    controlDurationInput.getText().clear();
+                    controlDurationInput.setTextColor(Color.BLACK);
+
+                }
+                break;
+            //第4个spinner 控制开始日期
+            case R.id.control_start_date_spinner:
+                //选了非最后一项
+                if (pos != 3) {
+                    Log.i(TAG, "onItemSelected 选了第4个spinner的前3个选项");
+                    //天数输入框不可编辑&灰色
+                }
+                //选了最后一项
+                else {
+                    Log.i(TAG, "onItemSelected 选了第4个spinner的最后一个选项");
+                    //天数输入框可以编辑&正常颜色
+                }
+                break;
         }
         //刷新 线
         drawChart();
@@ -191,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         Log.i(TAG, "onCheckedChanged 进入函数");
-        isForecast = isChecked;
+        isForecastSwitchedOn = isChecked;
         if (isChecked) {
             Log.i(TAG, "onCheckedChanged 开关状态：开启，在预测");
             //因为在我们的线系统中，跟在真实后面的就是预测线了

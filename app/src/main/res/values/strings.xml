@@ -8,7 +8,9 @@
     <string name="control_start_date_label">控制开始日期</string>
     <string name="control_duration_label">控制持续时间</string>
     <string name="day_label">天</string>
-
+    <string name="control_duration_level1">7</string>
+    <string name="control_duration_level2">14</string>
+    <string name="control_duration_level3">21</string>
 
     <string-array name="item_choices">
         <item>现存确诊</item>
