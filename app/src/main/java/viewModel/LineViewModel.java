@@ -21,7 +21,6 @@ public class LineViewModel extends ViewModel {
     //按照先“真实”后“预测”的顺序：
     //所有线数据
     private Repository repository = new Repository();
-    private List<float[]> lineData = repository.lineData;
     //所有线
     private List<Line> lines = new ArrayList<>();
     //所有坐标轴
@@ -38,14 +37,14 @@ public class LineViewModel extends ViewModel {
      */
     public void initForecastChart() {
         Log.i(TAG, "initForecastChart 进入函数");
-        //————预测————
+        Repository.initForecast();
         //线
         for (int i = 0; i < Repository.numOfForecastLines; i++) {
             //绑定数据
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
             for (int p = 0; p < Repository.numOfForecastPoints; p++) {
                 int x = p + Repository.numOfRealPoints;//预测点接在真实后面
-                float y = lineData.get(i + Repository.numOfRealLines)[p];
+                float y = Repository.getLineData().get(i + Repository.numOfRealLines)[p];
                 tempArrayList.add(new PointValue(x, y));//在真实线后面的是预测线
             }
             //设置样式
@@ -57,7 +56,12 @@ public class LineViewModel extends ViewModel {
             line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
             line.setFilled(true);//下方填充
             line.setCubic(false);//不要曲线
-            lines.add(line);
+            if (lines.size() >= Repository.numOfRealLines + Repository.numOfForecastLines) {
+                //如果已经有这条线了
+                lines.set(i + Repository.numOfRealLines, line);
+            } else {
+                lines.add(line);
+            }
         }
         //轴
         //todo 预测的坐标轴应该是真实轴的延申
@@ -115,11 +119,12 @@ public class LineViewModel extends ViewModel {
      */
     public void initRealChart() {
         Log.i(TAG, "initRealChart 进入函数");
+        Repository.initReal();
         //线
         for (int i = 0; i < Repository.numOfRealLines; i++) {
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
             for (int j = 0; j < Repository.numOfRealPoints; j++) {
-                tempArrayList.add(new PointValue(j, lineData.get(i)[j]));
+                tempArrayList.add(new PointValue(j, Repository.getLineData().get(i)[j]));
             }
             Line line = new Line(tempArrayList);//根据值来创建一条线
             line.setColor(Color.rgb(126, 185, 236));//线的颜色
@@ -174,6 +179,14 @@ public class LineViewModel extends ViewModel {
 
     public List<Axis[]> getAxesList() {
         return axesList;
+    }
+
+    public static boolean isHasControl() {
+        return Repository.isHasControl();
+    }
+
+    public static void setHasControl(boolean hasControl) {
+        Repository.setHasControl(hasControl);
     }
 
 }

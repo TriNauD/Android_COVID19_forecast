@@ -28,16 +28,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //日志TAG，调试用，默认使用类名
     private static final String TAG = "MainActivity";
 
-    //ui控件
-    //因为切换预测的按钮要根据状态不同显示和隐藏，所以放在外面供全局调用
-    private Spinner lineTypeSpinner;
-    private Spinner modelTypeSpinner;
     private Spinner controlLevelSpinner;
     private Spinner controlStartDateSpinner;
     private Switch myswitch;
     private EditText controlDurationInput;
-    private TextView lineTypeLabel;
-    private TextView modelTypeLabel;
     private TextView controlLevelLabel;
     private TextView controlStartDateLabel;
     private TextView controlDurationLabel;
@@ -78,8 +72,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         drawChart();
 
         //spinner 页面的4个spinner并绑定listener
-        lineTypeSpinner = findViewById(R.id.line_type_spinner);
-        modelTypeSpinner = findViewById(R.id.model_type_spinner);
+        //ui控件
+        //因为切换预测的按钮要根据状态不同显示和隐藏，所以放在外面供全局调用
+        Spinner lineTypeSpinner = findViewById(R.id.line_type_spinner);
+        Spinner modelTypeSpinner = findViewById(R.id.model_type_spinner);
         controlLevelSpinner = findViewById(R.id.control_level_spinner);
         controlStartDateSpinner = findViewById(R.id.control_start_date_spinner);
 
@@ -97,8 +93,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationInput = findViewById(R.id.control_duration_input);
 
         //static element
-        lineTypeLabel = findViewById(R.id.line_type_label);
-        modelTypeLabel = findViewById(R.id.model_type_label);
         controlLevelLabel = findViewById(R.id.control_level_label);
         controlStartDateLabel = findViewById(R.id.control_start_date_label);
         controlDurationLabel = findViewById(R.id.control_duration_label);
@@ -117,6 +111,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
         //更新预测状态，这个值是表示显示的线是不是真的预测线
         boolean isForecast = (curLineIndex >= lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
+        if(isForecast){
+            //如果在预测，就重新初始化预测数据
+            lineViewModel.initForecastChart();
+        }
         //线
         List<Line> allLines = lineViewModel.getLines();
         List<Line> showLines = new ArrayList<>();
@@ -197,11 +195,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                 }
                 break;
-            //第2个spinner 模型类型
+            //第2个spinner 模型类型（群体和控制）
             case R.id.model_type_spinner:
                 //选了第1个选项：控制
                 if (pos == 0) {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
+                    LineViewModel.setHasControl(true);//控制：是
                     //第三行和控制等级spinner应该保持出现
                     controlLevelSpinner.setVisibility(View.VISIBLE);
                     controlLevelLabel.setVisibility(View.VISIBLE);
@@ -214,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //选了第2个选项：群体免疫
                 else {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
+                    LineViewModel.setHasControl(false);//控制：否
                     //第三行和控制等级spinner应该隐藏
                     controlLevelSpinner.setVisibility(View.GONE);
                     controlLevelLabel.setVisibility(View.GONE);
