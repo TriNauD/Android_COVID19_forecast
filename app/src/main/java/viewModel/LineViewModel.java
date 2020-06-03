@@ -62,11 +62,11 @@ public class LineViewModel extends ViewModel {
             for (int j = 0; j < numOfForecastPoints; ++j) {
                 if (hasControl) {
                     //如果进行控制
-                    Log.i(TAG, "initChart 函数：进行控制");
+                    Log.i(TAG, "initForecastChart 函数：进行控制");
                     linePoints[j] = 1200 - j * j;
                 } else {
                     //群体免疫
-                    Log.i(TAG, "initChart 函数：群体免疫");
+                    Log.i(TAG, "initForecastChart 函数：群体免疫");
                     float x = j * 1000;
                     linePoints[j] = 1200 + (float) Math.sqrt(x);
                 }
