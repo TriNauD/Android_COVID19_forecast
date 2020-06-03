@@ -160,8 +160,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
         //判断是哪个spinner
         switch ( parent.getId() ){
-            //第一个spinner
+            //第一个spinner 曲线类型spinner
             case R.id.line_type_spinner:
+                //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
                 if (pos != 0 ) {
                     myswitch.setVisibility(View.INVISIBLE);//隐藏，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
                     curLineIndex = pos;
@@ -176,6 +177,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                 }
                 break;
+            case R.id.model_type_spinner:
+                if (pos == 0 ){
+                    Log.i(TAG,"选了第二个spinner的第一个选项");
+                }
+                else {
+                    Log.i(TAG,"选了第二个spinner的其他选项");
+                }
+
             default:
                 Log.i(TAG,"选了另一个spinner");
         }
