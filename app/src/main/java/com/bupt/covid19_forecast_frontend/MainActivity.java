@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +29,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //ui控件
     //因为切换预测的按钮要根据状态不同显示和隐藏，所以放在外面供全局调用
+    private Spinner lineTypeSpinner;
+    private Spinner modelTypeSpinner;
+    private Spinner controlLevelSpinner;
+    private Spinner controlStartDateSpinner;
     private Switch myswitch;
-
+    private EditText controlDurationInput;
     //折线视图
     private LineChartView myLineChartView;
 
@@ -64,11 +70,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //画折线图
         drawChart();
 
-        //页面的4个spinner 并绑定listener
-        Spinner lineTypeSpinner = findViewById(R.id.line_type_spinner);
-        Spinner modelTypeSpinner = findViewById(R.id.model_type_spinner);
-        Spinner controlLevelSpinner = findViewById(R.id.control_level_spinner);
-        Spinner controlStartDateSpinner = findViewById(R.id.control_start_date_spinner);
+        //spinner 页面的4个spinner并绑定listener
+        lineTypeSpinner = findViewById(R.id.line_type_spinner);
+        modelTypeSpinner = findViewById(R.id.model_type_spinner);
+        controlLevelSpinner = findViewById(R.id.control_level_spinner);
+        controlStartDateSpinner = findViewById(R.id.control_start_date_spinner);
 
         lineTypeSpinner.setOnItemSelectedListener(this);
         modelTypeSpinner.setOnItemSelectedListener(this);
@@ -79,6 +85,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //switch
         myswitch = findViewById(R.id.forecast_switch);
         myswitch.setOnCheckedChangeListener(this);
+
+        //edit text
+        controlDurationInput = findViewById(R.id.control_duration_input);
+
     }
 
 
@@ -186,11 +196,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (pos == 0) {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
                     //第三行和控制等级spinner应该保持出现
+                    controlLevelSpinner.setVisibility(View.VISIBLE);
                 }
                 //选了第2个选项：群体免疫
                 else {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
                     //第三行和控制等级spinner应该隐藏
+                    controlLevelSpinner.setVisibility(View.GONE);
                 }
                 break;
             //第3个spinner 控制等级
