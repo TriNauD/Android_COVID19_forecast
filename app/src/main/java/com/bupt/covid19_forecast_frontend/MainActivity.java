@@ -64,9 +64,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //画折线图
         drawChart();
 
-        //spinner
+        //页面的四个spinner 并绑定listener
         Spinner lineTypeSpinner = findViewById(R.id.line_type_spinner);
+        Spinner modelTypeSpinner = findViewById(R.id.model_type_spinner);
+        Spinner controlLevelSpinner = findViewById(R.id.control_level_spinner);
+        Spinner controlStartDateSpinner = findViewById(R.id.control_start_date_spinner);
         lineTypeSpinner.setOnItemSelectedListener(this);
+        modelTypeSpinner.setOnItemSelectedListener(this);;
+        controlLevelSpinner.setOnItemSelectedListener(this);
+        controlStartDateSpinner.setOnItemSelectedListener(this);
         //switch
         myswitch = findViewById(R.id.forecast_switch);
         myswitch.setOnCheckedChangeListener(this);
@@ -152,6 +158,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //日志调试
         Log.i(TAG, "onItemSelected 进入函数");
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
+        //判断是哪个spinner
+
         //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
         if (parent.getId() == R.id.line_type_spinner){
             if (pos != 0 ) {
@@ -167,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     curLineIndex = 0;
                 }
             }
+        }
+        else {
+            Log.i(TAG,"选了另一个spinner");
         }
         //刷新 线
         drawChart();
