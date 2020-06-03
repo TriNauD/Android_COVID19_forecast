@@ -121,16 +121,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
         halfViewport.top = 1300;
         halfViewport.bottom = 0;
+        halfViewport.left = 0;
         if (isForecast) {
             //如果在预测
             Log.i(TAG, "setChartShow 函数：【预测】设置当前范围");
             //真实120预测15
-            int XMax = 120 + 15 - 1;
-            halfViewport.right = XMax;
-            halfViewport.left = 0;
+            halfViewport.right = 120 + 15 - 1;
         } else {
             Log.i(TAG, "setChartShow 函数：【真实】设置当前范围");
-            halfViewport.left = 0;
             halfViewport.right = 120;
         }
         myLineChartView.setCurrentViewport(halfViewport);

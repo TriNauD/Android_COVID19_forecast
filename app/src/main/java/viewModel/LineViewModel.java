@@ -30,6 +30,15 @@ public class LineViewModel extends ViewModel {
     //所有坐标轴的标签信息
     private List<List<String>> axisLableList = new ArrayList<>();
 
+    //预测参数
+    //是否进行控制
+    public boolean hasControl = false;
+    //控制开始时间
+    public String startControlDate;
+    //控制增长阶段的时间
+    public int raiseLastTime;
+    //控制强度
+    int controlGrade;
 
     /**
      * 初始化图表相关
