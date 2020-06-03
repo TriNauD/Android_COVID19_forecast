@@ -21,6 +21,7 @@ import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
+import repository.Repository;
 import viewModel.LineViewModel;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
 
         //初始化折线图数据
+        Repository.web();//调用网络更新
         lineViewModel.initRealChart();
         lineViewModel.initForecastChart();
 
