@@ -29,7 +29,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:layout_marginTop="0dp">
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -37,8 +36,9 @@
             <ImageView
                 android:id="@+id/title_pic"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@color/colorPrimaryDark">
+                android:layout_height="280dp"
+                android:src="@drawable/cov_pic"
+                android:alpha="0.9">
             </ImageView>
             <!--people num bar-->
             <LinearLayout

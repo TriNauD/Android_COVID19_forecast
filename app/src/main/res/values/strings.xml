@@ -13,14 +13,14 @@
     <string name="control_duration_level3">21</string>
     <string name="people_num_bar_head_col1">现存确诊</string>
     <string name="people_num_bar_head_col2">新增确诊</string>
-    <string name="people_num_bar_head_col3">治愈率</string>
-    <string name="people_num_bar_head_col4">死亡率</string>
+    <string name="people_num_bar_head_col3">累计治愈</string>
+    <string name="people_num_bar_head_col4">累计死亡</string>
 
     <string-array name="item_choices">
         <item>现存确诊</item>
         <item>新增确诊</item>
-        <item>治愈率</item>
-        <item>死亡率</item>
+        <item>累计治愈</item>
+        <item>累计死亡</item>
     </string-array>
     <string-array name="model_type_choices">
         <item>控制</item>
