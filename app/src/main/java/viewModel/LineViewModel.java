@@ -4,15 +4,25 @@ import android.arch.lifecycle.ViewModel;
 import android.graphics.Color;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import domain.Alltime_province;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.PointValue;
 
 import repository.Repository;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LineViewModel extends ViewModel {
     //调试使用的日志标签
@@ -25,6 +35,9 @@ public class LineViewModel extends ViewModel {
     private List<Axis[]> axesList = new ArrayList<>();
     //所有坐标轴的标签信息
     private List<List<String>> axisLableList = new ArrayList<>();
+
+    //后端用的国家名
+    private String name;
 
     /**
      * 初始化预测的图表
@@ -186,5 +199,35 @@ public class LineViewModel extends ViewModel {
     public static void setHasControl(boolean hasControl) {
         Repository.setHasControl(hasControl);
     }
+
+    /**
+     * 从后端获取省份疫情数据
+     *
+     * @author qy
+     */
+    public void getProvince() {
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://39.96.80.224:8080/server")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        API api = retrofit.create(API.class);
+        Call<List<Alltime_province>> province_task = api.getProvince(this.name);
+        province_task.enqueue(new Callback<List<Alltime_province>>() {
+            @Override
+            public void onResponse(Call<List<Alltime_province>> call, Response<List<Alltime_province>> response) {
+                Log.d(TAG, "onResponse --> " + response.code());
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    List<Alltime_province> province = response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Alltime_province>> call, Throwable t) {
+                Log.d(TAG, "onFailure..." + t.toString());
+            }
+        });
+    }
+
 
 }
