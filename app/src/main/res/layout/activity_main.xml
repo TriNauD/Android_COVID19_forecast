@@ -33,11 +33,39 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <!--title picture-->
+            <ImageView
+                android:id="@+id/title_pic"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/colorPrimaryDark">
+            </ImageView>
+            <!--people num bar-->
+            <RelativeLayout
+                android:id="@+id/people_num_bar"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_below="@+id/title_pic">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="number"/>
+            </RelativeLayout>
+            <!--chart-->
+            <lecho.lib.hellocharts.view.LineChartView
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_below="@+id/people_num_bar"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp" />
             <!--line type spinner-->
             <TextView
                 android:id="@+id/line_type_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/chart"
                 android:layout_marginLeft="15dp"
                 android:text="@string/line_type_label" />
 
@@ -48,7 +76,8 @@
                 android:layout_alignBaseline="@+id/line_type_label"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/line_type_label"
-                android:entries="@array/item_choices"></Spinner>
+                android:entries="@array/item_choices">
+            </Spinner>
             <!--forecast switch-->
             <Switch
                 android:id="@+id/forecast_switch"
@@ -139,50 +168,42 @@
                 android:layout_alignBaseline="@+id/control_start_date_label"
                 android:layout_toRightOf="@+id/control_duration_input"
                 android:text="@string/day_label" />
-            <!--chart-->
-            <lecho.lib.hellocharts.view.LineChartView
-                android:id="@+id/chart"
-                android:layout_width="match_parent"
-                android:layout_height="280dp"
-                android:layout_below="@+id/control_start_date_label"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp" />
 
-            <!--comment area-->
-            <LinearLayout
-                android:id="@+id/comment_area"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/chart"
-                android:layout_marginTop="20dp"
-                android:background="@color/blue"
-                android:orientation="vertical">
 
-                <View
-                    android:id="@+id/comment1"
-                    android:layout_width="350dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="100dp"
-                    android:background="#FFFFFF" />
+            <!--&lt;!&ndash;comment area&ndash;&gt;-->
+            <!--<LinearLayout-->
+                <!--android:id="@+id/comment_area"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/chart"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:background="@color/blue"-->
+                <!--android:orientation="vertical">-->
 
-                <View
-                    android:id="@+id/comment2"
-                    android:layout_width="350dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:background="#FFFFFF" />
+                <!--<View-->
+                    <!--android:id="@+id/comment1"-->
+                    <!--android:layout_width="350dp"-->
+                    <!--android:layout_height="100dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginTop="100dp"-->
+                    <!--android:background="#FFFFFF" />-->
 
-                <View
-                    android:id="@+id/comment3"
-                    android:layout_width="350dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:background="#FFFFFF" />
-            </LinearLayout>
+                <!--<View-->
+                    <!--android:id="@+id/comment2"-->
+                    <!--android:layout_width="350dp"-->
+                    <!--android:layout_height="100dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginTop="20dp"-->
+                    <!--android:background="#FFFFFF" />-->
+
+                <!--<View-->
+                    <!--android:id="@+id/comment3"-->
+                    <!--android:layout_width="350dp"-->
+                    <!--android:layout_height="100dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginTop="20dp"-->
+                    <!--android:background="#FFFFFF" />-->
+            <!--</LinearLayout>-->
         </RelativeLayout>
 
     </ScrollView>
