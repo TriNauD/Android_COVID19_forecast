@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -54,14 +54,18 @@
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
                     <TextView
+                        android:id="@+id/people_num_bar_col_1_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:text="@string/people_num_bar_head_col1"/>
                     <TextView
+                        android:id="@+id/people_num_bar_col_1_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="11111111111"/>
+                        android:text="19024"
+                        android:textSize="20dp"
+                        android:textColor="@color/red"/>
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/people_num_bar_col_2"
@@ -71,14 +75,18 @@
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
                     <TextView
+                        android:id="@+id/people_num_bar_col_2_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:text="@string/people_num_bar_head_col2"/>
                     <TextView
+                        android:id="@+id/people_num_bar_col_2_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1111111111"/>
+                        android:text="156"
+                        android:textSize="20dp"
+                        android:textColor="@color/orange"/>
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/people_num_bar_col_3"
@@ -88,14 +96,18 @@
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
                     <TextView
+                        android:id="@+id/people_num_bar_col_3_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:text="@string/people_num_bar_head_col3"/>
                     <TextView
+                        android:id="@+id/people_num_bar_col_3_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="111111111"/>
+                        android:text="60%"
+                        android:textSize="20dp"
+                        android:textColor="@color/green"/>
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/people_num_bar_col_4"
@@ -105,14 +117,17 @@
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
                     <TextView
+                        android:id="@+id/people_num_bar_col_4_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:text="@string/people_num_bar_head_col4"/>
                     <TextView
+                        android:id="@+id/people_num_bar_col_4_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1111111111"/>
+                        android:text="5%"
+                        android:textSize="20dp"/>
                 </LinearLayout>
             </LinearLayout>
             <!--chart-->

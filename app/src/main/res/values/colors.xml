@@ -5,4 +5,8 @@
     <color name="colorAccent">#92c0dd</color>
     <color name="deeperBlue">#92c0dd</color>
     <color name="blue">#e7f2f8</color>
+    <color name="red">#ef2424</color>
+    <color name="orange">#ff9d00</color>
+    <color name="green">#47ea5a</color>
+    <color name="black">#000000</color>
 </resources>
