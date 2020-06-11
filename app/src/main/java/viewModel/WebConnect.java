@@ -1,4 +1,4 @@
-package repository;
+package viewModel;
 
 import android.util.Log;
 
@@ -16,9 +16,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import viewModel.API;
 
-public class Repository {
+public class WebConnect {
     //调试使用的日志标签
     private static final String TAG = "Repository";
 
@@ -124,13 +123,13 @@ public class Repository {
         //todo 传出去预测参数
         //这里的局部变量可以用于网络传输
         //是否进行控制
-        boolean hasControl = Repository.hasControl;
+        boolean hasControl = WebConnect.hasControl;
         //控制开始时间
-        String startControlDate = Repository.startControlDate;
+        String startControlDate = WebConnect.startControlDate;
         //控制增长阶段的时间
-        int raiseLastTime = Repository.raiseLastTime;
+        int raiseLastTime = WebConnect.raiseLastTime;
         //控制强度
-        int controlGrade = Repository.controlGrade;
+        int controlGrade = WebConnect.controlGrade;
     }
 
     public static void initReal() {
@@ -198,7 +197,7 @@ public class Repository {
     }
 
     public static void setHasControl(boolean hasControl) {
-        Repository.hasControl = hasControl;
+        WebConnect.hasControl = hasControl;
     }
 
     public static String getStartControlDate() {
@@ -206,7 +205,7 @@ public class Repository {
     }
 
     public static void setStartControlDate(String startControlDate) {
-        Repository.startControlDate = startControlDate;
+        WebConnect.startControlDate = startControlDate;
     }
 
     public static int getRaiseLastTime() {
@@ -214,7 +213,7 @@ public class Repository {
     }
 
     public static void setRaiseLastTime(int raiseLastTime) {
-        Repository.raiseLastTime = raiseLastTime;
+        WebConnect.raiseLastTime = raiseLastTime;
     }
 
     public static int getControlGrade() {
@@ -222,7 +221,7 @@ public class Repository {
     }
 
     public static void setControlGrade(int controlGrade) {
-        Repository.controlGrade = controlGrade;
+        WebConnect.controlGrade = controlGrade;
     }
 
     public static List<float[]> getLineData() {
@@ -230,7 +229,7 @@ public class Repository {
     }
 
     public static void setLineData(List<float[]> lineData) {
-        Repository.lineData = lineData;
+        WebConnect.lineData = lineData;
     }
 
 }
