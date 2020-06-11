@@ -22,13 +22,13 @@ public class WebConnect {
     private static final String TAG = "Repository";
 
     //真实线数
-    public static final int numOfRealLines = 4;
+    private static final int numOfRealLines = 4;
     //预测线数
-    public static final int numOfForecastLines = 1;
+    private static final int numOfForecastLines = 1;
     //“真实线”的节点数
-    public static final int numOfRealPoints = 120;
+    private static final int numOfRealPoints = 120;
     //“预测线”的节点数
-    public static final int numOfForecastPoints = 15;
+    private static final int numOfForecastPoints = 15;
 
 
     //预测参数
@@ -54,7 +54,8 @@ public class WebConnect {
     /**
      * 从后端获取省份疫情数据
      *
-     * @param name 国家名
+     * @param name 传给后端的国家名
+     * @return 一个List，里面的数据格式为Alltime_provice
      * @author qy
      */
     public static List<Alltime_province> getProvince(String name) {
