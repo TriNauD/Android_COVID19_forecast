@@ -65,7 +65,7 @@ public class Repository {
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://39.96.80.224:8080/server")
+                .baseUrl("http://39.96.80.224:8080")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         API api = retrofit.create(API.class);
@@ -96,7 +96,7 @@ public class Repository {
      */
     public static void web() {
         //尝试传一个地区名字
-        name = "Hubei";
+        name = "湖北";
 
         //网络获取数据，得到一个省份的列表
         List<Alltime_province> provinceList = getProvince(name);
