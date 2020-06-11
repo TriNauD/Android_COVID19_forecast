@@ -33,19 +33,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <!--title picture-->
-            <ImageView
-                android:id="@+id/title_pic"
-                android:layout_width="match_parent"
-                android:layout_height="280dp"
-                android:src="@drawable/cov_pic"
-                android:alpha="0.9">
-            </ImageView>
+            <!--<ImageView-->
+                <!--android:id="@+id/title_pic"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="280dp"-->
+                <!--android:src="@drawable/cov_pic"-->
+                <!--android:alpha="0.9">-->
+            <!--</ImageView>-->
             <!--people num bar-->
             <LinearLayout
                 android:id="@+id/people_num_bar"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_below="@+id/title_pic">
+                android:layout_height="100dp">
                 <LinearLayout
                     android:id="@+id/people_num_bar_col_1"
                     android:layout_width="0dp"
