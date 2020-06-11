@@ -135,9 +135,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
                 android:layout_below="@+id/people_num_bar"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp" />
+                android:layout_marginLeft="50dp"
+                android:layout_centerHorizontal="true" />
             <!--line type spinner-->
             <TextView
                 android:id="@+id/line_type_label"
