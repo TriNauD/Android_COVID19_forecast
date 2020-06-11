@@ -145,6 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/chart"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="50dp"
                 android:text="@string/line_type_label" />
 
             <Spinner
@@ -172,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/line_type_label"
                 android:layout_below="@+id/line_type_spinner"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/model_type_label" />
 
             <Spinner
@@ -181,6 +182,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/forecast_switch"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_toRightOf="@+id/model_type_label"
                 android:entries="@array/model_type_choices"></Spinner>
             <!--control level spinner-->
@@ -199,6 +201,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/forecast_switch"
                 android:layout_marginLeft="10dp"
+                android:layout_alignBaseline="@+id/model_type_spinner"
                 android:layout_toRightOf="@+id/control_level_label"
                 android:entries="@array/control_level_choices"></Spinner>
             <!--control start date spinner-->
@@ -208,7 +211,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/model_type_label"
                 android:layout_below="@+id/model_type_label"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/control_start_date_label" />
 
             <Spinner
@@ -217,6 +220,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/model_type_label"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_toRightOf="@+id/control_start_date_label"
                 android:entries="@array/control_level_choices"></Spinner>
             <!--control duration input-->
