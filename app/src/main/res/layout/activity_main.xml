@@ -41,16 +41,80 @@
                 android:background="@color/colorPrimaryDark">
             </ImageView>
             <!--people num bar-->
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/people_num_bar"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_below="@+id/title_pic">
-                <TextView
+                <LinearLayout
+                    android:id="@+id/people_num_bar_col_1"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="number"/>
-            </RelativeLayout>
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/people_num_bar_head_col1"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="11111111111"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/people_num_bar_col_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/people_num_bar_head_col2"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1111111111"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/people_num_bar_col_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/people_num_bar_head_col3"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1111111111"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/people_num_bar_col_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/people_num_bar_head_col4"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1111111111"/>
+                </LinearLayout>
+            </LinearLayout>
             <!--chart-->
             <lecho.lib.hellocharts.view.LineChartView
                 android:id="@+id/chart"
