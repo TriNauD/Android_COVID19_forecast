@@ -1,10 +1,27 @@
 package repository;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import domain.Alltime_province;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import viewModel.API;
+
 public class Repository {
+    //调试使用的日志标签
+    private static final String TAG = "Repository";
+
     //真实线数
     public static final int numOfRealLines = 4;
     //预测线数
@@ -31,10 +48,65 @@ public class Repository {
     //网络传进来的数
     private static float[][] xyReal = new float[4][120];
 
+
+    //后端用的国家名
+    private static String name;
+
+    /**
+     * 从后端获取省份疫情数据
+     *
+     * @param name 国家名
+     * @author qy
+     */
+    public static List<Alltime_province> getProvince(String name) {
+        //返回值
+        final List<Alltime_province>[] provinceList = new List[]{new ArrayList<>()};
+
+        //进行获取
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://39.96.80.224:8080/server")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        API api = retrofit.create(API.class);
+        Call<List<Alltime_province>> province_task = api.getProvince(name);
+        province_task.enqueue(new Callback<List<Alltime_province>>() {
+            @Override
+            public void onResponse(Call<List<Alltime_province>> call, Response<List<Alltime_province>> response) {
+                Log.d(TAG, "onResponse --> " + response.code());
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    List<Alltime_province> province = response.body();
+                    //todo 自动生成的[0]，不懂？ ——by lym
+                    provinceList[0] = province;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Alltime_province>> call, Throwable t) {
+                Log.d(TAG, "onFailure..." + t.toString());
+            }
+        });
+
+        return provinceList[0];
+    }
+
+
     /**
      * 网络
      */
     public static void web() {
+        //尝试传一个地区名字
+        name = "Hubei";
+
+        //网络获取数据，得到一个省份的列表
+        List<Alltime_province> provinceList = getProvince(name);
+
+        //一天的现存确诊
+        Integer a = provinceList.get(0).getPresent_confirm();
+
+        Log.d(TAG, "湖北的现存确诊1： " + a);
+
+
         //真实线，一共4条，每条120个点
         for (int line = 0; line < 4; line++) {
             for (int i = 0; i < 120; i++) {
