@@ -107,7 +107,18 @@ public class LineViewModel extends ViewModel {
                 tempArrayList.add(new PointValue(j, WebConnect.getLineData().get(i)[j]));
             }
             Line line = new Line(tempArrayList);//根据值来创建一条线
-            line.setColor(Color.rgb(126, 185, 236));//线的颜色
+            if(i==0){
+                line.setColor(Color.rgb(255, 0, 0));//第一条线为红色
+            }
+            else if(i==1){
+                line.setColor(Color.rgb(255, 140, 0));//第二条线橙色
+            }
+            else if(i==2){
+                line.setColor(Color.rgb(50, 205, 50));//第三条线绿色
+            }
+            else{
+                line.setColor(Color.rgb(126, 185, 236));//第四条线蓝色
+            }
             //line.setPointColor(Color.rgb(255,255,255));//点的颜色 这个是白色
             line.setPointRadius(1);//点的大小
             line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
@@ -115,7 +126,8 @@ public class LineViewModel extends ViewModel {
             line.setCubic(false);//不要曲线
             lines.add(line);
         }
-        //轴
+
+       //轴
         WebConnect.initRealAxis();
         //绑定标签和轴
         for (int i = 0; i < WebConnect.getNumOfRealLines(); i++) {
