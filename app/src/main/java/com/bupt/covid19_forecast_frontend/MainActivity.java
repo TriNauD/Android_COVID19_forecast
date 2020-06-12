@@ -149,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //初始化折线图数据
         //尝试传一个地区名字
+        Log.i(TAG, "draw 传递地区名字：" + currentNation);
         //调用网络更新
         WebConnect.getWorld(currentNation);
 
@@ -326,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.change_nation_spinner:
                 currentNation = changeNationSpinner.getSelectedItem().toString();
                 Log.i(TAG, "onItemSelected:国家名 " + currentNation);
+                drawChart();
                 break;
 //            //第4个spinner 控制开始日期
 //            case R.id.control_start_date_spinner:
