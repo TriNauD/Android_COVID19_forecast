@@ -224,13 +224,7 @@ public class WebConnect {
         }
     }
 
-    public static List<List<String>> getAxisLableList() {
-        return axisLableList;
-    }
 
-    public static void setAxisLableList(List<List<String>> axisLableList) {
-        WebConnect.axisLableList = axisLableList;
-    }
 
     //所有坐标轴的标签信息
     private static List<List<String>> axisLableList = new ArrayList<>();
@@ -284,7 +278,15 @@ public class WebConnect {
         }
     }
 
-    //getter & setter
+    //----------------------getter & setter---------------------------------------------------------
+
+    public static List<List<String>> getAxisLableList() {
+        return axisLableList;
+    }
+
+    public static void setAxisLableList(List<List<String>> axisLableList) {
+        WebConnect.axisLableList = axisLableList;
+    }
 
     public static int getNumOfRealLines() {
         return numOfRealLines;
