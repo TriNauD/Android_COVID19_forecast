@@ -26,7 +26,7 @@ public class WebConnect {
     //预测线数
     private static final int numOfForecastLines = 1;
     //“真实线”的节点数
-    private static int numOfRealPoints = 120;
+    private static int numOfRealPoints = 9999;
     //“预测线”的节点数
     private static final int numOfForecastPoints = 15;
 
@@ -45,7 +45,7 @@ public class WebConnect {
     private static List<float[]> lineData = new ArrayList<>();
 
     //网络传进来的数
-    private static float[][] xyReal = new float[4][120];
+    private static float[][] xyReal = new float[4][9999];
 
 
     //后端用的国家名
