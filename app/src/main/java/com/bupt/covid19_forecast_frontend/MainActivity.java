@@ -50,8 +50,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private RelativeLayout paramLine3;
 
     //当前国家
-    //todo 不是湖北，换一个
-    private String currentNation = "湖北";
+    private String currentNation = "美国";
 
     //折线视图
     private LineChartView myLineChartView;
