@@ -102,6 +102,8 @@ public class WebConnect {
 
     /**
      * 网络
+     *
+     * @author lym
      */
     public static void web() {
         //尝试传一个地区名字
@@ -179,6 +181,8 @@ public class WebConnect {
     /**
      * 给前端用的 初始化真实线
      * 实际上是用xyReal给lineData赋值
+     *
+     * @author lym
      */
     public static void initReal() {
         for (int i = 0; i < numOfRealLines; ++i) {
@@ -198,6 +202,8 @@ public class WebConnect {
 
     /**
      * 给前端用的 初始化预测线
+     *
+     * @author lym
      */
     public static void initForecast() {
         for (int i = 0; i < numOfForecastLines; ++i) {
@@ -223,7 +229,6 @@ public class WebConnect {
             }
         }
     }
-
 
 
     //所有坐标轴的标签信息
