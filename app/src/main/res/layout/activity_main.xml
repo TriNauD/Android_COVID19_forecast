@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <!--tool bar-->
+    <!--scroll-->
     <ScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
@@ -309,7 +309,8 @@
         </RelativeLayout>
 
     </ScrollView>
-    <!--scroll-->
+
+    <!--tool bar-->
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"

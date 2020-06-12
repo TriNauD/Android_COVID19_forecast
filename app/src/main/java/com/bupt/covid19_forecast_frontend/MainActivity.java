@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private EditText controlDurationInput;
     private EditText controlStartDateMonth;
     private EditText controlStartDateDay;
+    private TextView toolbarTitle;
     private TextView controlLevelLabel;
     private TextView controlStartDateLabel;
     private TextView controlDurationLabel;
@@ -86,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     }
-
     /**
      * 绑定组件。
      * 绑定xml的组件
@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationInput = findViewById(R.id.control_duration_input);
         controlStartDateMonth = findViewById(R.id.control_start_date_month_input);
         controlStartDateDay = findViewById(R.id.control_start_date_day_input);
+        toolbarTitle = findViewById(R.id.toolbar_title);
 
         //people num 4个col对应4个数字 需要改数就setText
         peopleNumBarCol1 = findViewById(R.id.people_num_bar_col_1_num);
@@ -325,7 +326,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 break;
             //选择国家
             case R.id.change_nation_spinner:
+                //从spinner选项得到当前选择的国家
                 currentNation = changeNationSpinner.getSelectedItem().toString();
+                //设置toolbar标题
+                toolbarTitle.setText(currentNation + getResources().getString(R.string.national_title));
                 Log.i(TAG, "onItemSelected:国家名 " + currentNation);
                 break;
 //            //第4个spinner 控制开始日期
