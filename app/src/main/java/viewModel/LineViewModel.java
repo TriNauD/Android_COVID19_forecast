@@ -149,7 +149,7 @@ public class LineViewModel extends ViewModel {
             axisLableList.add(strings);
         }
         //绑定标签和轴
-        for (int i = 0; i < WebConnect.getNumOfRealPoints(); i++) {
+        for (int i = 0; i < WebConnect.getNumOfRealLines(); i++) {
             Axis axisX = new Axis();//新建一个x轴
             List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
             //每个点

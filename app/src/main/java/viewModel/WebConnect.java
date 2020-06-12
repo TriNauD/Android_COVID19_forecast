@@ -19,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WebConnect {
     //调试使用的日志标签
-    private static final String TAG = "Repository";
+    private static final String TAG = "WebConnect";
 
     //真实线数
     private static final int numOfRealLines = 4;
@@ -51,6 +51,12 @@ public class WebConnect {
     //后端用的国家名
     private static String name;
 
+    //返回值
+    private static List<Alltime_province> provinceList = new ArrayList<>();
+
+    //第一天的现存确诊
+    private static Integer a;
+
     /**
      * 从后端获取省份疫情数据
      *
@@ -58,9 +64,8 @@ public class WebConnect {
      * @return 一个List，里面的数据格式为Alltime_provice
      * @author qy
      */
-    public static List<Alltime_province> getProvince(String name) {
-        //返回值
-        final List<Alltime_province>[] provinceList = new List[]{new ArrayList<>()};
+    public static void getProvince(String name) {
+        Log.i(TAG, "进入getProvince");
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -73,21 +78,24 @@ public class WebConnect {
         province_task.enqueue(new Callback<List<Alltime_province>>() {
             @Override
             public void onResponse(Call<List<Alltime_province>> call, Response<List<Alltime_province>> response) {
-                Log.d(TAG, "onResponse --> " + response.code());
+                Log.i(TAG, "onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Alltime_province> province = response.body();
-                    //todo 自动生成的[0]，不懂？ ——by lym
-                    provinceList[0] = province;
-                }
+                    //赋值列表
+                    provinceList = province;
+                    //一天的所有数据
+                    Alltime_province oneDay = provinceList.get(0);
+                    //一天的现存确诊
+                    a = oneDay.getPresent_confirm();
+                 }
             }
 
             @Override
             public void onFailure(Call<List<Alltime_province>> call, Throwable t) {
-                Log.d(TAG, "onFailure..." + t.toString());
+                Log.i(TAG, "onFailure..." + t.toString());
             }
         });
 
-        return provinceList[0];
     }
 
 
@@ -98,13 +106,10 @@ public class WebConnect {
         //尝试传一个地区名字
         name = "湖北";
 
-        //网络获取数据，得到一个省份的列表
-        List<Alltime_province> provinceList = getProvince(name);
+        //获取数据
+        getProvince(name);
 
-        //一天的现存确诊
-        Integer a = provinceList.get(0).getPresent_confirm();
-
-        Log.d(TAG, "湖北的现存确诊1： " + a);
+        Log.i(TAG, "湖北的现存确诊1： " + a);
 
 
         //真实线，一共4条，每条120个点
