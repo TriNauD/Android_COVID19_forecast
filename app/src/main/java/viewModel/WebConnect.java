@@ -217,6 +217,65 @@ public class WebConnect {
         }
     }
 
+    public static List<List<String>> getAxisLableList() {
+        return axisLableList;
+    }
+
+    public static void setAxisLableList(List<List<String>> axisLableList) {
+        WebConnect.axisLableList = axisLableList;
+    }
+
+    //所有坐标轴的标签信息
+    private static List<List<String>> axisLableList = new ArrayList<>();
+
+    /**
+     * 初始化真实坐标轴
+     *
+     * @author lym
+     */
+    public static void initRealAxis() {
+        //真实
+        //建立标签
+        for (int i = 0; i < WebConnect.getNumOfRealLines(); i++) {
+            List<String> strings = new ArrayList<>(WebConnect.getNumOfRealPoints());
+            int day = 0;
+            for (int j = 0; j < WebConnect.getNumOfRealPoints(); j++) {
+                day++;
+                if (day > 30) {
+                    day %= 30;
+                }
+                String s = (i + 1) + "/" + day;
+                strings.add(s);
+            }
+            axisLableList.add(strings);
+        }
+    }
+
+    /**
+     * 初始化预测坐标轴
+     *
+     * @author lym
+     */
+    public static void initForecastAxis() {
+        //预测
+        //todo 预测的坐标轴应该是真实轴的延申
+        //建立预测标签
+        for (int i = 0; i < WebConnect.getNumOfForecastLines(); i++) {
+            //对于每一条预测线
+            List<String> strings = new ArrayList<>();
+            int day = 0;
+            for (int j = 0; j < WebConnect.getNumOfForecastPoints(); j++) {
+                day++;
+                if (day > 30) {
+                    day %= 30;
+                }
+                //todo 需要接着真实线来做日期标签
+                String s = (i + 6) + "/" + day;
+                strings.add(s);
+            }
+            axisLableList.add(strings);
+        }
+    }
 
     //getter & setter
 
