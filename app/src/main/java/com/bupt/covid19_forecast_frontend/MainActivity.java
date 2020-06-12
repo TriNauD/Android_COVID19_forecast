@@ -60,8 +60,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //当前显示的线是几号
     private int curLineIndex = 0;
-    //预测开关状态（默认关闭）
-    private boolean isForecastSwitchedOn = false;
+    //预测开关状态（默认开启）
+    private boolean isForecastSwitchedOn = true;
 
     /**
      * 活动生命周期：“创建”
