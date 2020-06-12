@@ -45,7 +45,15 @@
     </string-array>
 
     <string-array name="nation_name">
-        <item>nation1</item>
-        <item>nation2</item>
+        <item>秘鲁</item>
+        <item>美国</item>
+        <item>英国</item>
+        <item>巴西</item>
+        <item>俄罗斯</item>
+        <item>阿联酋</item>
+        <item>巴基斯坦</item>
+        <item>新加坡</item>
+        <item>瑞典</item>
+
     </string-array>
 </resources>
