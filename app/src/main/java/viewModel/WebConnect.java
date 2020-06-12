@@ -1,18 +1,34 @@
-package repository;
+package viewModel;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Repository {
+import domain.Alltime_province;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class WebConnect {
+    //调试使用的日志标签
+    private static final String TAG = "WebConnect";
+
     //真实线数
-    public static final int numOfRealLines = 4;
+    private static final int numOfRealLines = 4;
     //预测线数
-    public static final int numOfForecastLines = 1;
+    private static final int numOfForecastLines = 1;
     //“真实线”的节点数
-    public static final int numOfRealPoints = 120;
+    private static final int numOfRealPoints = 120;
     //“预测线”的节点数
-    public static final int numOfForecastPoints = 15;
+    private static final int numOfForecastPoints = 15;
 
 
     //预测参数
@@ -31,10 +47,73 @@ public class Repository {
     //网络传进来的数
     private static float[][] xyReal = new float[4][120];
 
+
+    //后端用的国家名
+    private static String name;
+
+    //返回值
+    private static List<Alltime_province> provinceList = new ArrayList<>();
+
+    //第一天的现存确诊
+    private static Integer a;
+
+    /**
+     * 从后端获取省份疫情数据
+     *
+     * @param name 传给后端的国家名
+     * @return 一个List，里面的数据格式为Alltime_provice
+     * @author qy
+     */
+    public static void getProvince(String name) {
+        Log.i(TAG, "进入getProvince");
+
+        //进行获取
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://39.96.80.224:8080")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        API api = retrofit.create(API.class);
+        Call<List<Alltime_province>> province_task = api.getProvince(name);
+        province_task.enqueue(new Callback<List<Alltime_province>>() {
+            @Override
+            public void onResponse(Call<List<Alltime_province>> call, Response<List<Alltime_province>> response) {
+                Log.i(TAG, "onResponse --> " + response.code());
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    List<Alltime_province> province = response.body();
+                    //赋值列表
+                    provinceList = province;
+                    //一天的所有数据
+                    Alltime_province oneDay = provinceList.get(0);
+                    //一天的现存确诊
+                    a = oneDay.getPresent_confirm();
+                    Log.i(TAG, "第一天的的现存确诊： " + a);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Alltime_province>> call, Throwable t) {
+                Log.i(TAG, "onFailure..." + t.toString());
+            }
+        });
+
+    }
+
+
     /**
      * 网络
      */
     public static void web() {
+        //尝试传一个地区名字
+        name = "湖北";
+
+        //获取数据
+        getProvince(name);
+
+        //log一下
+        Log.i(TAG, "湖北的现存确诊1： " + a);
+
+
         //真实线，一共4条，每条120个点
         for (int line = 0; line < 4; line++) {
             for (int i = 0; i < 120; i++) {
@@ -52,13 +131,13 @@ public class Repository {
         //todo 传出去预测参数
         //这里的局部变量可以用于网络传输
         //是否进行控制
-        boolean hasControl = Repository.hasControl;
+        boolean hasControl = WebConnect.hasControl;
         //控制开始时间
-        String startControlDate = Repository.startControlDate;
+        String startControlDate = WebConnect.startControlDate;
         //控制增长阶段的时间
-        int raiseLastTime = Repository.raiseLastTime;
+        int raiseLastTime = WebConnect.raiseLastTime;
         //控制强度
-        int controlGrade = Repository.controlGrade;
+        int controlGrade = WebConnect.controlGrade;
     }
 
     public static void initReal() {
@@ -126,7 +205,7 @@ public class Repository {
     }
 
     public static void setHasControl(boolean hasControl) {
-        Repository.hasControl = hasControl;
+        WebConnect.hasControl = hasControl;
     }
 
     public static String getStartControlDate() {
@@ -134,7 +213,7 @@ public class Repository {
     }
 
     public static void setStartControlDate(String startControlDate) {
-        Repository.startControlDate = startControlDate;
+        WebConnect.startControlDate = startControlDate;
     }
 
     public static int getRaiseLastTime() {
@@ -142,7 +221,7 @@ public class Repository {
     }
 
     public static void setRaiseLastTime(int raiseLastTime) {
-        Repository.raiseLastTime = raiseLastTime;
+        WebConnect.raiseLastTime = raiseLastTime;
     }
 
     public static int getControlGrade() {
@@ -150,7 +229,7 @@ public class Repository {
     }
 
     public static void setControlGrade(int controlGrade) {
-        Repository.controlGrade = controlGrade;
+        WebConnect.controlGrade = controlGrade;
     }
 
     public static List<float[]> getLineData() {
@@ -158,7 +237,7 @@ public class Repository {
     }
 
     public static void setLineData(List<float[]> lineData) {
-        Repository.lineData = lineData;
+        WebConnect.lineData = lineData;
     }
 
 }
