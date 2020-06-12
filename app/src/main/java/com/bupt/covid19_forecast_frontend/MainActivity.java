@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Spinner controlStartDateSpinner;
     private Switch myswitch;
     private EditText controlDurationInput;
+    private EditText controlStartDateMonth;
+    private EditText controlStartDateDay;
     private TextView controlLevelLabel;
     private TextView controlStartDateLabel;
     private TextView controlDurationLabel;
@@ -113,8 +115,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //switch
         myswitch = findViewById(R.id.forecast_switch);
+
         //edit text
         controlDurationInput = findViewById(R.id.control_duration_input);
+        controlStartDateMonth = findViewById(R.id.control_start_date_month_input);
+        controlStartDateDay = findViewById(R.id.control_start_date_day_input);
 
         //people num 4个col对应4个数字 需要改数就setText
         peopleNumBarCol1 = findViewById(R.id.people_num_bar_col_1_num);
