@@ -22,8 +22,6 @@ public class LineViewModel extends ViewModel {
     private List<Line> lines = new ArrayList<>();
     //所有坐标轴
     private List<Axis[]> axesList = new ArrayList<>();
-    //所有坐标轴的标签信息
-    private List<List<String>> axisLableList = new ArrayList<>();
 
 
     /**
@@ -62,23 +60,7 @@ public class LineViewModel extends ViewModel {
             }
         }
         //轴
-        //todo 预测的坐标轴应该是真实轴的延申
-        //建立预测标签
-        for (int i = 0; i < WebConnect.getNumOfForecastLines(); i++) {
-            //对于每一条预测线
-            List<String> strings = new ArrayList<>();
-            int day = 0;
-            for (int j = 0; j < WebConnect.getNumOfForecastPoints(); j++) {
-                day++;
-                if (day > 30) {
-                    day %= 30;
-                }
-                //todo 需要接着真实线来做日期标签
-                String s = (i + 6) + "/" + day;
-                strings.add(s);
-            }
-            axisLableList.add(strings);
-        }
+        WebConnect.initForecastAxis();
         //绑定标签和轴
         for (int i = 0; i < WebConnect.getNumOfForecastLines(); i++) {
             //每条线
@@ -91,13 +73,13 @@ public class LineViewModel extends ViewModel {
                 //分为前（真实）后（预测）
                 if (p < WebConnect.getNumOfRealPoints())
                     //前，是真实线0的标签
-                    valueX.setLabel(axisLableList.get(0).get(p));
+                    valueX.setLabel(WebConnect.getAxisLableList().get(0).get(p));
                 else
                 //后，是预测线i的标签，此时的点值应该剪掉前面的真实点总数
                 {
                     int thisLineIndex = i + WebConnect.getNumOfRealLines();
                     int thisP = p - WebConnect.getNumOfRealPoints();
-                    valueX.setLabel(axisLableList.get(thisLineIndex).get(thisP));
+                    valueX.setLabel(WebConnect.getAxisLableList().get(thisLineIndex).get(thisP));
                 }
                 valueListX.add(valueX);//添加一个值
             }
@@ -134,20 +116,7 @@ public class LineViewModel extends ViewModel {
             lines.add(line);
         }
         //轴
-        //建立标签
-        for (int i = 0; i < WebConnect.getNumOfRealLines(); i++) {
-            List<String> strings = new ArrayList<>(WebConnect.getNumOfRealPoints());
-            int day = 0;
-            for (int j = 0; j < WebConnect.getNumOfRealPoints(); j++) {
-                day++;
-                if (day > 30) {
-                    day %= 30;
-                }
-                String s = (i + 1) + "/" + day;
-                strings.add(s);
-            }
-            axisLableList.add(strings);
-        }
+        WebConnect.initRealAxis();
         //绑定标签和轴
         for (int i = 0; i < WebConnect.getNumOfRealLines(); i++) {
             Axis axisX = new Axis();//新建一个x轴
@@ -155,7 +124,7 @@ public class LineViewModel extends ViewModel {
             //每个点
             for (int j = 0; j < WebConnect.getNumOfRealPoints(); j++) {
                 AxisValue valueX = new AxisValue(j);//这里的数字是坐标的数值，比如第一个坐标就是0
-                valueX.setLabel(axisLableList.get(i).get(j));//将坐标的数值和对应的文字标签绑定起来
+                valueX.setLabel(WebConnect.getAxisLableList().get(i).get(j));//将坐标的数值和对应的文字标签绑定起来
                 valueListX.add(valueX);//添加一个值
             }
             axisX.setValues(valueListX);//将列表设置到x轴上面
