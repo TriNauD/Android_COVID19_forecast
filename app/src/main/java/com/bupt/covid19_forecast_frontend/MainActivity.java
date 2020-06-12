@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -43,6 +44,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView peopleNumBarCol2;
     private TextView peopleNumBarCol3;
     private TextView peopleNumBarCol4;
+    private RelativeLayout paramLine1;
+    private RelativeLayout paramLine2;
+    private RelativeLayout paramLine3;
+
 
     //折线视图
     private LineChartView myLineChartView;
@@ -65,9 +70,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //chart
-        myLineChartView = findViewById(R.id.chart);
+        //绑定组件
+        bindingElements();
 
         //折线图数据
         lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
@@ -79,7 +83,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //画折线图
         drawChart();
+        myswitch.setOnCheckedChangeListener(this);
 
+
+    }
+    /**
+     * 绑定组件。
+     * 绑定xml的组件
+     *
+     * @author xjy
+     */
+    public void bindingElements(){
+        //chart
+        myLineChartView = findViewById(R.id.chart);
         //spinner 页面的4个spinner并绑定listener
         Spinner lineTypeSpinner = findViewById(R.id.line_type_spinner);
         Spinner modelTypeSpinner = findViewById(R.id.model_type_spinner);
@@ -91,11 +107,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlLevelSpinner.setOnItemSelectedListener(this);
 //        controlStartDateButton.setOnItemSelectedListener(this);
 
+        //3行参数
+        paramLine1=findViewById(R.id.param_line_1);
+        paramLine2=findViewById(R.id.param_line_2);
+        paramLine3=findViewById(R.id.param_line_3);
 
         //switch
         myswitch = findViewById(R.id.forecast_switch);
-        myswitch.setOnCheckedChangeListener(this);
-
         //edit text
         controlDurationInput = findViewById(R.id.control_duration_input);
 
@@ -113,8 +131,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationLabel = findViewById(R.id.control_duration_label);
         dayLabel = findViewById(R.id.day_label);
     }
-
-
     /**
      * 刷新图像。
      * 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
@@ -216,27 +232,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (pos == 0) {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
                     LineViewModel.setHasControl(true);//控制：是
-                    //第三行和控制等级spinner应该保持出现
+                    //控制等级spinner应该保持出现
                     controlLevelSpinner.setVisibility(View.VISIBLE);
                     controlLevelLabel.setVisibility(View.VISIBLE);
-                    controlStartDateButton.setVisibility(View.VISIBLE);
-                    controlStartDateLabel.setVisibility(View.VISIBLE);
-                    controlDurationInput.setVisibility(View.VISIBLE);
-                    controlDurationLabel.setVisibility(View.VISIBLE);
-                    dayLabel.setVisibility(View.VISIBLE);
+                    //第三行要看第二行是否出现
+                    if (paramLine2.getVisibility()==View.VISIBLE){
+                        paramLine3.setVisibility(View.VISIBLE);
+                    }
                 }
                 //选了第2个选项：群体免疫
                 else {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
                     LineViewModel.setHasControl(false);//控制：否
                     //第三行和控制等级spinner应该隐藏
-                    controlLevelSpinner.setVisibility(View.GONE);
-                    controlLevelLabel.setVisibility(View.GONE);
-                    controlStartDateButton.setVisibility(View.GONE);
-                    controlStartDateLabel.setVisibility(View.GONE);
-                    controlDurationInput.setVisibility(View.GONE);
-                    controlDurationLabel.setVisibility(View.GONE);
-                    dayLabel.setVisibility(View.GONE);
+                    paramLine3.setVisibility(View.INVISIBLE);
+                    controlLevelSpinner.setVisibility(View.INVISIBLE);
+                    controlLevelLabel.setVisibility(View.INVISIBLE);
                 }
                 break;
             //第3个spinner 控制等级
@@ -321,10 +332,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Log.i(TAG, "onCheckedChanged 开关状态：开启，在预测");
             //因为在我们的线系统中，跟在真实后面的就是预测线了
             curLineIndex = lineViewModel.getNumOfRealLines();
+            paramLine2.setVisibility(View.VISIBLE);
+            paramLine3.setVisibility(View.VISIBLE);
         } else {
             Log.i(TAG, "onCheckedChanged 开关状态：关闭");
             //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
             curLineIndex = 0;
+            paramLine2.setVisibility(View.INVISIBLE);
+            paramLine3.setVisibility(View.INVISIBLE);
         }
         //无论怎样，点击了预测开关就刷新一下线图
         drawChart();
