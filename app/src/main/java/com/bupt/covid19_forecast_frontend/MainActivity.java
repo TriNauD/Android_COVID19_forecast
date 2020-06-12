@@ -126,7 +126,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol2 = findViewById(R.id.people_num_bar_col_2_num);
         peopleNumBarCol3 = findViewById(R.id.people_num_bar_col_3_num);
         peopleNumBarCol4 = findViewById(R.id.people_num_bar_col_4_num);
-        //peopleNumBarCol1.setText("114514");
+        /*peopleNumBarCol1.setText((int) WebConnect.getLineData().get(0)[WebConnect.getNumOfRealPoints()]);
+        peopleNumBarCol2.setText((int) WebConnect.getLineData().get(1)[WebConnect.getNumOfRealPoints()]);
+        peopleNumBarCol3.setText((int) WebConnect.getLineData().get(2)[WebConnect.getNumOfRealPoints()]);
+        peopleNumBarCol4.setText((int) WebConnect.getLineData().get(3)[WebConnect.getNumOfRealPoints()]);*/
+        peopleNumBarCol1.setText("1142777");
+        peopleNumBarCol2.setText("3578240");
+        peopleNumBarCol3.setText("102429");
+        peopleNumBarCol4.setText("6088");
 
 
         //static element
@@ -190,12 +197,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //x轴最大坐标值
         maxViewPort.right = 120 + 15 - 1;
         //y轴最大坐标值
-        maxViewPort.top = 6000;
+        maxViewPort.top = 1200000;
         myLineChartView.setMaximumViewport(maxViewPort);
 
         //显示的小界面，可以滑动
         Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
-        halfViewport.top = 1300;
+        halfViewport.top = 1200000;
         halfViewport.bottom = 0;
         halfViewport.left = 0;
         if (isForecast) {

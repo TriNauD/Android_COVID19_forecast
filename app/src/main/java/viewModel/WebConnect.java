@@ -297,11 +297,11 @@ public class WebConnect {
             for (int j = 0; j < numOfForecastPoints; ++j) {
                 if (hasControl) {
                     //如果进行控制
-                    linePoints[j] = 1200 - j * j;
+                    linePoints[j] = 1150000 - j * j * 1000;
                 } else {
                     //群体免疫
                     float x = j * 1000;
-                    linePoints[j] = 1200 + (float) Math.sqrt(x);
+                    linePoints[j] = 1150000 + (float) Math.sqrt(x) * 1000;
                 }
             }
             //判定是否要刷新
