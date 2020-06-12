@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Random;
 
 import domain.Alltime_province;
-import domain.Alltime_world;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -134,118 +133,6 @@ public class WebConnect {
 
     //拿到的一个地区的列表，里面是所有时间的数据
     private static List<Alltime_province> provinceList = new ArrayList<>();
-
-    /**
-     * 从后端获取国家疫情数据
-     *
-     * @param name 传给后端的国家名
-     * @author qy
-     */
-    public static void getWorld(String name) {
-        Log.i(TAG, "进入getProvince");
-
-        //进行获取
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://39.96.80.224:8080")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        API api = retrofit.create(API.class);
-        Call<List<Alltime_world>> task = api.getWorld(name);
-        task.enqueue(new Callback<List<Alltime_world>>() {
-            @Override
-            public void onResponse(Call<List<Alltime_world>> call, Response<List<Alltime_world>> response) {
-                Log.i(TAG, "onResponse --> " + response.code());
-                if (response.code() == HttpURLConnection.HTTP_OK) {
-                    List<Alltime_world> world = response.body();
-                    //网络拿到的一个地区的列表，里面是所有时间的数据
-                    //赋值列表
-                    provinceList = world;
-                    //一天的所有数据
-                    Alltime_province oneDay = provinceList.get(0);
-                    //一天的现存确诊
-                    a = oneDay.getPresent_confirm();
-                    Log.i(TAG, "onResponse: 第一天的的现存确诊： " + a);
-                    //真实线的数量，要根据传进来的数量啦
-                    numOfRealPoints = provinceList.size();
-                    Log.i(TAG, "onResponse: 真实线的节点数量：" + numOfRealPoints);
-
-                    //真实线，一共4条
-                    for (int i = 0; i < numOfRealPoints; i++) {
-                        //拿到一天的4种数据
-                        Alltime_province oneDay1 = provinceList.get(i);
-                        //因为后面函数不一样所以没法for循环
-                        //现存确诊
-                        xyReal[0][i] = oneDay1.getPresent_confirm();
-                        //累计确诊
-                        xyReal[1][i] = oneDay1.getTotal_confirm();
-                        //累计治愈
-                        xyReal[2][i] = oneDay1.getTotal_heal();
-                        //累计死亡
-                        xyReal[3][i] = oneDay1.getTotal_dead();
-                    }
-
-                    //todo 预测线
-
-                    //todo 传进来坐标轴标签
-                    String[] date = new String[]{"1/1", "1/2", "1/3", "1/4"};
-
-                    //todo 传出去预测参数
-                    //这里的局部变量可以用于网络传输
-                    //是否进行控制
-                    boolean hasControl = WebConnect.hasControl;
-                    //控制开始时间
-                    String startControlDate = WebConnect.startControlDate;
-                    //控制增长阶段的时间
-                    int raiseLastTime = WebConnect.raiseLastTime;
-                    //控制强度
-                    int controlGrade = WebConnect.controlGrade;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Alltime_world>> call, Throwable t) {
-                Log.i(TAG, "onFailure..." + t.toString());
-            }
-        });
-
-    }
-
-    /**
-     * 从后端获取预测数据
-     *
-     * @param name 传给后端的地区名
-     * @author qy
-     */
-    public static void getPredict(String name) {
-        Log.i(TAG, "进入getProvince");
-
-        //进行获取
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://39.96.80.224:8080")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        API api = retrofit.create(API.class);
-        Call<List<Integer>> task = api.getPredict(name,isNation,hasControl,startControlDate,raiseLastTime,controlGrade);
-        task.enqueue(new Callback<List<Integer>>() {
-            @Override
-            public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
-                Log.i(TAG, "onResponse --> " + response.code());
-                if (response.code() == HttpURLConnection.HTTP_OK) {
-                    List<Integer> predict = response.body();
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Integer>> call, Throwable t) {
-                Log.i(TAG, "onFailure..." + t.toString());
-            }
-        });
-
-    }
-
 
     /**
      * 给前端用的 初始化真实线

@@ -16,10 +16,5 @@ public interface API {
     Call<List<Alltime_world>> getWorld(@Query("name") String name);
 
     @GET("/server/getPredict")
-    Call<List<Integer>> getPredict(@Query("name") String name,
-                                   @Query("isNation") Boolean isNation,
-                                   @Query("hasControl") Boolean hasControl,
-                                   @Query("startControlDate") String startControlDate,
-                                   @Query("raiseLastTime") int raiseLastTime,
-                                   @Query("controlGrade") int controlGrade);
+    Call<List<Integer>> getPredict(@Query("name") String name);
 }
