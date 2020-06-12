@@ -85,9 +85,41 @@ public class WebConnect {
                     Alltime_province oneDay = provinceList.get(0);
                     //一天的现存确诊
                     a = oneDay.getPresent_confirm();
-                    Log.i(TAG, "第一天的的现存确诊： " + a);
-                    //todo ?????
-                    web();
+                    Log.i(TAG, "onResponse: 第一天的的现存确诊： " + a);
+                    //真实线的数量，要根据传进来的数量啦
+                    numOfRealPoints = provinceList.size();
+                    Log.i(TAG, "onResponse: 真实线的节点数量：" + numOfRealPoints);
+
+                    //真实线，一共4条
+                    for (int i = 0; i < numOfRealPoints; i++) {
+                        //拿到一天的4种数据
+                        Alltime_province oneDay1 = provinceList.get(i);
+                        //因为后面函数不一样所以没法for循环
+                        //现存确诊
+                        xyReal[0][i] = oneDay1.getPresent_confirm();
+                        //累计确诊
+                        xyReal[1][i] = oneDay1.getTotal_confirm();
+                        //累计治愈
+                        xyReal[2][i] = oneDay1.getTotal_heal();
+                        //累计死亡
+                        xyReal[3][i] = oneDay1.getTotal_dead();
+                    }
+
+                    //todo 预测线
+
+                    //todo 传进来坐标轴标签
+                    String[] date = new String[]{"1/1", "1/2", "1/3", "1/4"};
+
+                    //todo 传出去预测参数
+                    //这里的局部变量可以用于网络传输
+                    //是否进行控制
+                    boolean hasControl = WebConnect.hasControl;
+                    //控制开始时间
+                    String startControlDate = WebConnect.startControlDate;
+                    //控制增长阶段的时间
+                    int raiseLastTime = WebConnect.raiseLastTime;
+                    //控制强度
+                    int controlGrade = WebConnect.controlGrade;
                 }
             }
 
@@ -103,94 +135,29 @@ public class WebConnect {
     private static List<Alltime_province> provinceList = new ArrayList<>();
 
     /**
-     * 网络
-     *
-     * @author lym
-     */
-    public static void web() {
-        //log一下
-        Log.i(TAG, "湖北的现存确诊1： " + a);
-
-
-        /*//假装 网络 传进来 地区列表
-        //todo 其实还是在随机数造假
-        //4种数据都赋值
-        //假装有120个点
-        int tempNumOfPoints = 120;
-        for (int i = 0; i < tempNumOfPoints; i++) {
-            //一天的数据
-            Alltime_province oneDay = new Alltime_province();
-
-            //随机数
-            int tempInt;
-            //4个不一样的，要重新随机
-            tempInt = new Random().nextInt(50) + i * 10;
-            oneDay.setPresent_confirm(tempInt);
-            tempInt = new Random().nextInt(50) + i * 10;
-            oneDay.setTotal_confirm(tempInt);
-            tempInt = new Random().nextInt(50) + i * 10;
-            oneDay.setTotal_heal(tempInt);
-            tempInt = new Random().nextInt(50) + i * 10;
-            oneDay.setTotal_dead(tempInt);
-
-            //加入到总的列表中去
-            provinceList.add(oneDay);
-        }*/
-
-        //真实线的数量，要根据传进来的数量啦
-        numOfRealPoints = provinceList.size();
-
-        //真实线，一共4条
-        //todo 数组越界
-        for (int i = 0; i < numOfRealPoints; i++) {
-            //拿到一天的4种数据
-            Alltime_province oneDay = provinceList.get(i);
-            //因为后面函数不一样所以没法for循环
-            //现存确诊
-            xyReal[0][i] = oneDay.getPresent_confirm();
-            //累计确诊
-            xyReal[1][i] = oneDay.getTotal_confirm();
-            //累计治愈
-            xyReal[2][i] = oneDay.getTotal_heal();
-            //累计死亡
-            xyReal[3][i] = oneDay.getTotal_dead();
-        }
-
-        //todo 预测线
-
-        //todo 传进来坐标轴标签
-        String[] date = new String[]{"1/1", "1/2", "1/3", "1/4"};
-
-        //todo 传出去预测参数
-        //这里的局部变量可以用于网络传输
-        //是否进行控制
-        boolean hasControl = WebConnect.hasControl;
-        //控制开始时间
-        String startControlDate = WebConnect.startControlDate;
-        //控制增长阶段的时间
-        int raiseLastTime = WebConnect.raiseLastTime;
-        //控制强度
-        int controlGrade = WebConnect.controlGrade;
-    }
-
-    /**
      * 给前端用的 初始化真实线
      * 实际上是用xyReal给lineData赋值
      *
      * @author lym
      */
     public static void initReal() {
+        Log.i(TAG, "进入initReal");
+
         for (int i = 0; i < numOfRealLines; ++i) {
             float[] linePoints = new float[numOfRealPoints];//一条线上面的点
             for (int j = 0; j < numOfRealPoints; ++j) {
+                //debug TAG
+                Log.d(TAG, "initReal：xyReal[i][j]: " + xyReal[i][j]);
                 linePoints[j] = xyReal[i][j];
             }
             if (lineData.size() < numOfRealLines) {
                 //如果是空的就初始化
                 lineData.add(linePoints);
+                Log.i(TAG, "initReal： lineData.get(i)[0]" + lineData.get(i)[0]);
             } else {
                 //如果不是空的就应该更新
                 lineData.set(i, linePoints);
+                Log.i(TAG, "initReal： lineData.get(i)[0]" + lineData.get(i)[0]);
             }
         }
     }

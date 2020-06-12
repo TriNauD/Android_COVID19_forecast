@@ -104,6 +104,7 @@ public class LineViewModel extends ViewModel {
         for (int i = 0; i < WebConnect.getNumOfRealLines(); i++) {
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
             for (int j = 0; j < WebConnect.getNumOfRealPoints(); j++) {
+                Log.d(TAG, "initRealChart：拿到仓库的linedata："+WebConnect.getLineData().get(i)[j]);
                 tempArrayList.add(new PointValue(j, WebConnect.getLineData().get(i)[j]));
             }
             Line line = new Line(tempArrayList);//根据值来创建一条线
