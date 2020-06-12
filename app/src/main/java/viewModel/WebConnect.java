@@ -102,6 +102,8 @@ public class WebConnect {
 
     /**
      * 网络
+     *
+     * @author lym
      */
     public static void web() {
         //尝试传一个地区名字
@@ -176,6 +178,12 @@ public class WebConnect {
         int controlGrade = WebConnect.controlGrade;
     }
 
+    /**
+     * 给前端用的 初始化真实线
+     * 实际上是用xyReal给lineData赋值
+     *
+     * @author lym
+     */
     public static void initReal() {
         for (int i = 0; i < numOfRealLines; ++i) {
             float[] linePoints = new float[numOfRealPoints];//一条线上面的点
@@ -192,6 +200,11 @@ public class WebConnect {
         }
     }
 
+    /**
+     * 给前端用的 初始化预测线
+     *
+     * @author lym
+     */
     public static void initForecast() {
         for (int i = 0; i < numOfForecastLines; ++i) {
             float[] linePoints = new float[numOfForecastPoints];//一条线上面的点
@@ -217,19 +230,12 @@ public class WebConnect {
         }
     }
 
-    public static List<List<String>> getAxisLableList() {
-        return axisLableList;
-    }
-
-    public static void setAxisLableList(List<List<String>> axisLableList) {
-        WebConnect.axisLableList = axisLableList;
-    }
 
     //所有坐标轴的标签信息
     private static List<List<String>> axisLableList = new ArrayList<>();
 
     /**
-     * 初始化真实坐标轴
+     * 给前端用的 初始化真实坐标轴
      *
      * @author lym
      */
@@ -252,7 +258,7 @@ public class WebConnect {
     }
 
     /**
-     * 初始化预测坐标轴
+     * 给前端用的 初始化预测坐标轴
      *
      * @author lym
      */
@@ -277,7 +283,15 @@ public class WebConnect {
         }
     }
 
-    //getter & setter
+    //----------------------getter & setter---------------------------------------------------------
+
+    public static List<List<String>> getAxisLableList() {
+        return axisLableList;
+    }
+
+    public static void setAxisLableList(List<List<String>> axisLableList) {
+        WebConnect.axisLableList = axisLableList;
+    }
 
     public static int getNumOfRealLines() {
         return numOfRealLines;
