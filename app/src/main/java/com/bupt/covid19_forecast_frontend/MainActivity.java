@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -33,9 +32,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //控件
     private Spinner controlLevelSpinner;
-    private Button controlStartDateButton;
+    private Spinner changeNationSpinner;
     private Switch myswitch;
     private EditText controlDurationInput;
+    private EditText controlStartDateMonth;
+    private EditText controlStartDateDay;
     private TextView controlLevelLabel;
     private TextView controlStartDateLabel;
     private TextView controlDurationLabel;
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private RelativeLayout paramLine2;
     private RelativeLayout paramLine3;
 
+    //当前国家
+    private String currentNation;
 
     //折线视图
     private LineChartView myLineChartView;
@@ -87,35 +90,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     }
+
     /**
      * 绑定组件。
      * 绑定xml的组件
      *
      * @author xjy
      */
-    public void bindingElements(){
+    public void bindingElements() {
         //chart
         myLineChartView = findViewById(R.id.chart);
         //spinner 页面的4个spinner并绑定listener
         Spinner lineTypeSpinner = findViewById(R.id.line_type_spinner);
         Spinner modelTypeSpinner = findViewById(R.id.model_type_spinner);
         controlLevelSpinner = findViewById(R.id.control_level_spinner);
-        controlStartDateButton = findViewById(R.id.control_start_date_button);
+        changeNationSpinner = findViewById(R.id.change_nation_spinner);
 
         lineTypeSpinner.setOnItemSelectedListener(this);
         modelTypeSpinner.setOnItemSelectedListener(this);
         controlLevelSpinner.setOnItemSelectedListener(this);
+        changeNationSpinner.setOnItemSelectedListener(this);
 //        controlStartDateButton.setOnItemSelectedListener(this);
 
         //3行参数
-        paramLine1=findViewById(R.id.param_line_1);
-        paramLine2=findViewById(R.id.param_line_2);
-        paramLine3=findViewById(R.id.param_line_3);
+        paramLine1 = findViewById(R.id.param_line_1);
+        paramLine2 = findViewById(R.id.param_line_2);
+        paramLine3 = findViewById(R.id.param_line_3);
 
         //switch
         myswitch = findViewById(R.id.forecast_switch);
+
         //edit text
         controlDurationInput = findViewById(R.id.control_duration_input);
+        controlStartDateMonth = findViewById(R.id.control_start_date_month_input);
+        controlStartDateDay = findViewById(R.id.control_start_date_day_input);
 
         //people num 4个col对应4个数字 需要改数就setText
         peopleNumBarCol1 = findViewById(R.id.people_num_bar_col_1_num);
@@ -131,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationLabel = findViewById(R.id.control_duration_label);
         dayLabel = findViewById(R.id.day_label);
     }
+
     /**
      * 刷新图像。
      * 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
@@ -142,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
         //更新预测状态，这个值是表示显示的线是不是真的预测线
         boolean isForecast = (curLineIndex >= lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
-        if(isForecast){
+        if (isForecast) {
             //如果在预测，就重新初始化预测数据
             lineViewModel.initForecastChart();
         }
@@ -236,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlLevelSpinner.setVisibility(View.VISIBLE);
                     controlLevelLabel.setVisibility(View.VISIBLE);
                     //第三行要看第二行是否出现
-                    if (paramLine2.getVisibility()==View.VISIBLE){
+                    if (paramLine2.getVisibility() == View.VISIBLE) {
                         paramLine3.setVisibility(View.VISIBLE);
                     }
                 }
@@ -261,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlDurationInput.setCursorVisible(false);
                     controlDurationInput.setTextColor(Color.GRAY);
                     //根据选项设置默认持续时间
-                    switch (pos){
+                    switch (pos) {
                         //一级
                         case 0:
                             controlDurationInput.setText(R.string.control_duration_level1);
@@ -287,6 +296,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlDurationInput.setTextColor(Color.BLACK);
 
                 }
+                break;
+            //选择国家
+            case R.id.change_nation_spinner:
+                currentNation = changeNationSpinner.getSelectedItem().toString();
+                Log.i(TAG, "onItemSelected:国家名 " + currentNation);
                 break;
 //            //第4个spinner 控制开始日期
 //            case R.id.control_start_date_spinner:

@@ -15,7 +15,11 @@
     <string name="people_num_bar_head_col2">新增确诊</string>
     <string name="people_num_bar_head_col3">累计治愈</string>
     <string name="people_num_bar_head_col4">累计死亡</string>
-    <string name="control_start_date_button_text">选择日期</string>>
+    <string name="control_start_date_button_text">选择日期</string>
+    <string name="control_start_date_year_label">年</string>
+    <string name="control_start_date_month_label">月</string>
+    <string name="control_start_date_day_label">日</string>
+
 
 
     <string-array name="item_choices">
@@ -35,4 +39,13 @@
         <item>自定义</item>
     </string-array>
 
+    <string-array name="control_start_date_year">
+        <item>2019</item>
+        <item>2020</item>
+    </string-array>
+
+    <string-array name="nation_name">
+        <item>nation1</item>
+        <item>nation2</item>
+    </string-array>
 </resources>
