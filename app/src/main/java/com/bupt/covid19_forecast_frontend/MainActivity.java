@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         maxViewPort.left = 0;
         maxViewPort.bottom = 0;
         //x轴最大坐标值
-        maxViewPort.right = 120 + 150 - 1;
+        maxViewPort.right = 120 + 15 - 1;
         //y轴最大坐标值
         maxViewPort.top = 6000;
         myLineChartView.setMaximumViewport(maxViewPort);
