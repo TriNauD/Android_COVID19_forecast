@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
 
 
-
         //画折线图
         drawChart();
         myswitch.setOnCheckedChangeListener(this);
@@ -232,16 +231,33 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.line_type_spinner:
                 //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
                 if (pos != 0) {
-                    myswitch.setVisibility(View.INVISIBLE);//隐藏，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
+                    //如果不是第一条线，也就不应该显示预测
+                    //隐藏预测开关，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
+                    myswitch.setVisibility(View.INVISIBLE);
+                    //同时隐藏参数们
+                    paramLine2.setVisibility(View.INVISIBLE);
+                    paramLine3.setVisibility(View.INVISIBLE);
+                    //线是选择的pos那条
                     curLineIndex = pos;
                 } else {
-                    myswitch.setVisibility(View.VISIBLE);//显示
+                    //如果是第一条线，也就可以看看在没在预测了
+                    //显示预测开关
+                    myswitch.setVisibility(View.VISIBLE);
+                    //bug老朋友
+                    //复现：先开启预测，然后切换到其他线
                     if (isForecastSwitchedOn) {
+                        //如果预测按钮开着
                         //因为在我们的线系统中，跟在真实后面的就是预测线了
                         curLineIndex = lineViewModel.getNumOfRealLines();
+                        //同时显示参数们
+                        paramLine2.setVisibility(View.VISIBLE);
+                        paramLine3.setVisibility(View.VISIBLE);
                     } else {
                         //如果没在预测就正常0
                         curLineIndex = 0;
+                        //同时隐藏参数们
+                        paramLine2.setVisibility(View.INVISIBLE);
+                        paramLine3.setVisibility(View.INVISIBLE);
                     }
                 }
                 break;
