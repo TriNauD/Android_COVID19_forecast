@@ -79,10 +79,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //折线图数据
         lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
 
-        //初始化折线图数据
-        WebConnect.web();//调用网络更新
-        lineViewModel.initRealChart();
-        lineViewModel.initForecastChart();
+
 
         //画折线图
         drawChart();
@@ -149,6 +146,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void drawChart() {
         Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
+
+
+        //初始化折线图数据
+        //尝试传一个地区名字
+        String name = "湖北";
+        //调用网络更新
+        WebConnect.getProvince(name);
+
+        //重新生成线
+        lineViewModel.initRealChart();
+        lineViewModel.initForecastChart();
+
+
         //更新预测状态，这个值是表示显示的线是不是真的预测线
         boolean isForecast = (curLineIndex >= lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
         if (isForecast) {
