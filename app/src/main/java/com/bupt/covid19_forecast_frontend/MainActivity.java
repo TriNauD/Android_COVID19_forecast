@@ -50,7 +50,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private RelativeLayout paramLine3;
 
     //当前国家
-    private String currentNation;
+    //todo 不是湖北，换一个
+    private String currentNation = "湖北";
 
     //折线视图
     private LineChartView myLineChartView;
@@ -149,9 +150,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //初始化折线图数据
         //尝试传一个地区名字
-        String name = "湖北";
         //调用网络更新
-        WebConnect.getProvince(name);
+        WebConnect.getProvince(currentNation);
 
         //重新生成线
         lineViewModel.initRealChart();
