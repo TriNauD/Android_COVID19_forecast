@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //控件
     private Spinner controlLevelSpinner;
-    private Spinner controlStartDateSpinner;
+    private Button controlStartDateButton;
     private Switch myswitch;
     private EditText controlDurationInput;
     private TextView controlLevelLabel;
@@ -85,12 +86,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Spinner lineTypeSpinner = findViewById(R.id.line_type_spinner);
         Spinner modelTypeSpinner = findViewById(R.id.model_type_spinner);
         controlLevelSpinner = findViewById(R.id.control_level_spinner);
-        controlStartDateSpinner = findViewById(R.id.control_start_date_spinner);
+        controlStartDateButton = findViewById(R.id.control_start_date_button);
 
         lineTypeSpinner.setOnItemSelectedListener(this);
         modelTypeSpinner.setOnItemSelectedListener(this);
         controlLevelSpinner.setOnItemSelectedListener(this);
-        controlStartDateSpinner.setOnItemSelectedListener(this);
+//        controlStartDateButton.setOnItemSelectedListener(this);
 
 
         //switch
@@ -220,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     //第三行和控制等级spinner应该保持出现
                     controlLevelSpinner.setVisibility(View.VISIBLE);
                     controlLevelLabel.setVisibility(View.VISIBLE);
-                    controlStartDateSpinner.setVisibility(View.VISIBLE);
+                    controlStartDateButton.setVisibility(View.VISIBLE);
                     controlStartDateLabel.setVisibility(View.VISIBLE);
                     controlDurationInput.setVisibility(View.VISIBLE);
                     controlDurationLabel.setVisibility(View.VISIBLE);
@@ -233,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     //第三行和控制等级spinner应该隐藏
                     controlLevelSpinner.setVisibility(View.GONE);
                     controlLevelLabel.setVisibility(View.GONE);
-                    controlStartDateSpinner.setVisibility(View.GONE);
+                    controlStartDateButton.setVisibility(View.GONE);
                     controlStartDateLabel.setVisibility(View.GONE);
                     controlDurationInput.setVisibility(View.GONE);
                     controlDurationLabel.setVisibility(View.GONE);
@@ -278,19 +279,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 }
                 break;
-            //第4个spinner 控制开始日期
-            case R.id.control_start_date_spinner:
-                //选了非最后一项
-                if (pos != 3) {
-                    Log.i(TAG, "onItemSelected 选了第4个spinner的前3个选项");
-                    //天数输入框不可编辑&灰色
-                }
-                //选了最后一项
-                else {
-                    Log.i(TAG, "onItemSelected 选了第4个spinner的最后一个选项");
-                    //天数输入框可以编辑&正常颜色
-                }
-                break;
+//            //第4个spinner 控制开始日期
+//            case R.id.control_start_date_spinner:
+//                //选了非最后一项
+//                if (pos != 3) {
+//                    Log.i(TAG, "onItemSelected 选了第4个spinner的前3个选项");
+//                    //天数输入框不可编辑&灰色
+//                }
+//                //选了最后一项
+//                else {
+//                    Log.i(TAG, "onItemSelected 选了第4个spinner的最后一个选项");
+//                    //天数输入框可以编辑&正常颜色
+//                }
+//                break;
         }
         //刷新 线
         drawChart();
