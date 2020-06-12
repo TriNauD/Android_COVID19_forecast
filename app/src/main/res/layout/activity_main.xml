@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <!--topbar-->
+    <!--tool bar-->
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -13,7 +13,6 @@
         android:background="#fffefe"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme">
-
         <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
@@ -27,20 +26,13 @@
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
         android:layout_below="@+id/toolbar"
-        android:layout_marginTop="0dp">
+        android:layout_marginTop="0dp"
+        android:fillViewport="true">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <!--title picture-->
-            <!--<ImageView-->
-                <!--android:id="@+id/title_pic"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="280dp"-->
-                <!--android:src="@drawable/cov_pic"-->
-                <!--android:alpha="0.9">-->
-            <!--</ImageView>-->
             <!--people num bar-->
             <LinearLayout
                 android:id="@+id/people_num_bar"
@@ -52,23 +44,23 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
                     <!--table head  -->
                     <TextView
                         android:id="@+id/people_num_bar_col_1_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:text="@string/people_num_bar_head_col1"/>
+                        android:text="@string/people_num_bar_head_col1" />
                     <!--table num-->
                     <TextView
                         android:id="@+id/people_num_bar_col_1_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="19024"
-                        android:textSize="20dp"
-                        android:textColor="@color/red"/>
+                        android:textColor="@color/red"
+                        android:textSize="20dp" />
                 </LinearLayout>
                 <!--bar col2-->
                 <LinearLayout
@@ -76,23 +68,23 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
                     <!--table head-->
                     <TextView
                         android:id="@+id/people_num_bar_col_2_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:text="@string/people_num_bar_head_col2"/>
+                        android:text="@string/people_num_bar_head_col2" />
                     <!--table num-->
                     <TextView
                         android:id="@+id/people_num_bar_col_2_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="156"
-                        android:textSize="20dp"
-                        android:textColor="@color/orange"/>
+                        android:textColor="@color/orange"
+                        android:textSize="20dp" />
                 </LinearLayout>
                 <!--bar col3-->
                 <LinearLayout
@@ -100,23 +92,23 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
                     <!--table head-->
                     <TextView
                         android:id="@+id/people_num_bar_col_3_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:text="@string/people_num_bar_head_col3"/>
+                        android:text="@string/people_num_bar_head_col3" />
                     <!--table num-->
                     <TextView
                         android:id="@+id/people_num_bar_col_3_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="13783"
-                        android:textSize="20dp"
-                        android:textColor="@color/green"/>
+                        android:textColor="@color/green"
+                        android:textSize="20dp" />
                 </LinearLayout>
                 <!--bar col4-->
                 <LinearLayout
@@ -124,22 +116,22 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
                     <!--table head-->
                     <TextView
                         android:id="@+id/people_num_bar_col_4_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:text="@string/people_num_bar_head_col4"/>
+                        android:text="@string/people_num_bar_head_col4" />
                     <!--table num-->
                     <TextView
                         android:id="@+id/people_num_bar_col_4_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1753"
-                        android:textSize="20dp"/>
+                        android:textSize="20dp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -151,127 +143,155 @@
                 android:layout_below="@+id/people_num_bar"
                 android:layout_centerHorizontal="true" />
 
-            <!--line type spinner-->
-            <TextView
-                android:id="@+id/line_type_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <!--param lines-->
+            <LinearLayout
+                android:id="@+id/param_lines"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
                 android:layout_below="@+id/chart"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="50dp"
-                android:text="@string/line_type_label" />
-            <Spinner
-                android:id="@+id/line_type_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/line_type_label"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/line_type_label"
-                android:entries="@array/item_choices">
-            </Spinner>
+                android:orientation="vertical">
+                <!--param line 1-->
+                <RelativeLayout
+                    android:id="@+id/param_line_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+                    <!--line type spinner-->
+                    <Spinner
+                        android:id="@+id/line_type_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/line_type_label"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/line_type_label"
+                        android:entries="@array/item_choices"></Spinner>
 
-            <!--forecast switch-->
-            <Switch
-                android:id="@+id/forecast_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/line_type_label"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:text="@string/forecast_switch_label" />
+                    <Switch
+                        android:id="@+id/forecast_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/line_type_label"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:text="@string/forecast_switch_label" />
+                    <!--forecast switch-->
+                    <TextView
+                        android:id="@+id/line_type_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/line_type_label" />
+                </RelativeLayout>
 
-            <!--model type spinner-->
-            <TextView
-                android:id="@+id/model_type_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/line_type_label"
-                android:layout_below="@+id/line_type_spinner"
-                android:layout_marginTop="10dp"
-                android:text="@string/model_type_label" />
-            <Spinner
-                android:id="@+id/model_type_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/forecast_switch"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@+id/model_type_label"
-                android:entries="@array/model_type_choices"></Spinner>
+                <!--param line 2-->
+                <RelativeLayout
+                    android:id="@+id/param_line_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+                    <!--model type spinner-->
+                    <Spinner
+                        android:id="@+id/model_type_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toRightOf="@+id/model_type_label"
+                        android:entries="@array/model_type_choices"></Spinner>
 
-            <!--control level spinner-->
-            <TextView
-                android:id="@+id/control_level_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/model_type_label"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/model_type_spinner"
-                android:text="@string/control_level_label" />
-            <Spinner
-                android:id="@+id/control_level_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/forecast_switch"
-                android:layout_marginLeft="10dp"
-                android:layout_alignBaseline="@+id/model_type_spinner"
-                android:layout_toRightOf="@+id/control_level_label"
-                android:entries="@array/control_level_choices"></Spinner>
+                    <Spinner
+                        android:id="@+id/control_level_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/model_type_spinner"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/control_level_label"
+                        android:entries="@array/control_level_choices"></Spinner>
+                    <!--control level spinner-->
+                    <TextView
+                        android:id="@+id/control_level_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/model_type_label"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/model_type_spinner"
+                        android:text="@string/control_level_label" />
 
-            <!--control start date spinner-->
-            <TextView
-                android:id="@+id/control_start_date_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/model_type_label"
-                android:layout_below="@+id/model_type_label"
-                android:layout_marginTop="10dp"
-                android:text="@string/control_start_date_label" />
-            <Button
-                android:id="@+id/control_start_date_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/model_type_label"
-                android:layout_toRightOf="@+id/control_start_date_label"
-                android:layout_alignBaseline="@+id/control_start_date_label"
-                android:text="@string/control_start_date_button_text">
-            </Button>
+                    <TextView
+                        android:id="@+id/model_type_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/model_type_label" />
+                </RelativeLayout>
 
-            <!--control duration input-->
-            <TextView
-                android:id="@+id/control_duration_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/control_start_date_label"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/control_start_date_button"
-                android:text="@string/control_duration_label" />
-            <EditText
-                android:id="@+id/control_duration_input"
-                android:layout_width="30dp"
-                android:layout_height="40dp"
-                android:layout_alignBaseline="@+id/control_start_date_label"
-                android:layout_below="@id/model_type_label"
-                android:layout_toRightOf="@+id/control_duration_label"
-                android:maxLines="1"
-                android:textSize="15dp" />
-            <TextView
-                android:id="@+id/day_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/control_start_date_label"
-                android:layout_toRightOf="@+id/control_duration_input"
-                android:text="@string/day_label" />
+                <!--param line 3-->
+                <RelativeLayout
+                    android:id="@+id/param_line_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+                    <!--control start date spinner-->
+                    <Button
+                        android:id="@+id/control_start_date_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/control_start_date_label"
+                        android:layout_toRightOf="@+id/control_start_date_label"
+                        android:text="@string/control_start_date_button_text"></Button>
 
+                    <EditText
+                        android:id="@+id/control_duration_input"
+                        android:layout_width="30dp"
+                        android:layout_height="40dp"
+                        android:layout_alignBaseline="@+id/control_start_date_label"
+                        android:layout_toRightOf="@+id/control_duration_label"
+                        android:maxLines="1"
+                        android:textSize="15dp" />
+                    <!--control duration input-->
+                    <TextView
+                        android:id="@+id/control_duration_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/control_start_date_label"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/control_start_date_button"
+                        android:text="@string/control_duration_label"
+                        android:layout_marginStart="10dp" />
+
+                    <TextView
+                        android:id="@+id/control_start_date_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/control_start_date_label" />
+
+                    <TextView
+                        android:id="@+id/day_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/control_start_date_label"
+                        android:layout_toRightOf="@+id/control_duration_input"
+                        android:text="@string/day_label" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!--calendar-->
             <CalendarView
                 android:id="@+id/control_start_date_calendar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@color/white"
                 android:visibility="invisible">
             </CalendarView>
 
         </RelativeLayout>
 
     </ScrollView>
+
 </RelativeLayout>
