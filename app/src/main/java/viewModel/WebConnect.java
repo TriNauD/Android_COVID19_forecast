@@ -51,8 +51,6 @@ public class WebConnect {
     //后端用的国家名
     private static String name;
 
-    //返回值
-    private static List<Alltime_province> provinceList = new ArrayList<>();
 
     //第一天的现存确诊
     private static Integer a;
@@ -81,6 +79,7 @@ public class WebConnect {
                 Log.i(TAG, "onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Alltime_province> province = response.body();
+                    //网络拿到的一个地区的列表，里面是所有时间的数据
                     //赋值列表
                     provinceList = province;
                     //一天的所有数据
@@ -99,6 +98,8 @@ public class WebConnect {
 
     }
 
+    //拿到的一个地区的列表，里面是所有时间的数据
+    private static List<Alltime_province> provinceList = new ArrayList<>();
 
     /**
      * 网络
@@ -113,10 +114,8 @@ public class WebConnect {
         //log一下
         Log.i(TAG, "湖北的现存确诊1： " + a);
 
-        //假装 拿到的一个地区的列表，里面是所有时间的数据
-        List<Alltime_province> provinceList = new ArrayList<>();
 
-        //假装 网络 传进来 地区列表
+        /*//假装 网络 传进来 地区列表
         //todo 其实还是在随机数造假
         //4种数据都赋值
         //假装有120个点
@@ -139,7 +138,7 @@ public class WebConnect {
 
             //加入到总的列表中去
             provinceList.add(oneDay);
-        }
+        }*/
 
         //真实线的数量，要根据传进来的数量啦
         numOfRealPoints = provinceList.size();
