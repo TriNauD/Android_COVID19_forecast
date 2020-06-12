@@ -33,7 +33,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //控件
     private Spinner controlLevelSpinner;
     private Spinner changeNationSpinner;
-    private Switch myswitch;
+    private Spinner lineTypeSpinner;
+    private Spinner modelTypeSpinner;
+    private Switch forecastSwitch;
     private EditText controlDurationInput;
     private EditText controlStartDateMonth;
     private EditText controlStartDateDay;
@@ -76,14 +78,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         //绑定组件
         bindingElements();
-
+        //设置监听
+        setListener();
         //折线图数据
         lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
 
-
         //画折线图
         drawChart();
-        myswitch.setOnCheckedChangeListener(this);
+
 
 
     }
@@ -97,15 +99,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //chart
         myLineChartView = findViewById(R.id.chart);
         //spinner 页面的4个spinner并绑定listener
-        Spinner lineTypeSpinner = findViewById(R.id.line_type_spinner);
-        Spinner modelTypeSpinner = findViewById(R.id.model_type_spinner);
+        lineTypeSpinner = findViewById(R.id.line_type_spinner);
+        modelTypeSpinner = findViewById(R.id.model_type_spinner);
         controlLevelSpinner = findViewById(R.id.control_level_spinner);
         changeNationSpinner = findViewById(R.id.change_nation_spinner);
 
-        lineTypeSpinner.setOnItemSelectedListener(this);
-        modelTypeSpinner.setOnItemSelectedListener(this);
-        controlLevelSpinner.setOnItemSelectedListener(this);
-        changeNationSpinner.setOnItemSelectedListener(this);
 //        controlStartDateButton.setOnItemSelectedListener(this);
 
         //3行参数
@@ -114,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         paramLine3 = findViewById(R.id.param_line_3);
 
         //switch
-        myswitch = findViewById(R.id.forecast_switch);
+        forecastSwitch = findViewById(R.id.forecast_switch);
 
         //edit text
         controlDurationInput = findViewById(R.id.control_duration_input);
@@ -136,7 +134,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationLabel = findViewById(R.id.control_duration_label);
         dayLabel = findViewById(R.id.day_label);
     }
-
+    public void setListener() {
+        //switch设置listener
+        forecastSwitch.setOnCheckedChangeListener(this);
+        //spinner设置listener
+        lineTypeSpinner.setOnItemSelectedListener(this);
+        modelTypeSpinner.setOnItemSelectedListener(this);
+        controlLevelSpinner.setOnItemSelectedListener(this);
+        changeNationSpinner.setOnItemSelectedListener(this);
+    }
     /**
      * 刷新图像。
      * 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
@@ -234,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (pos != 0) {
                     //如果不是第一条线，也就不应该显示预测
                     //隐藏预测开关，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
-                    myswitch.setVisibility(View.INVISIBLE);
+                    forecastSwitch.setVisibility(View.INVISIBLE);
                     //同时隐藏参数们
                     paramLine2.setVisibility(View.INVISIBLE);
                     paramLine3.setVisibility(View.INVISIBLE);
@@ -243,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 } else {
                     //如果是第一条线，也就可以看看在没在预测了
                     //显示预测开关
-                    myswitch.setVisibility(View.VISIBLE);
+                    forecastSwitch.setVisibility(View.VISIBLE);
                     //bug老朋友
                     //复现：先开启预测，然后切换到其他线
                     if (isForecastSwitchedOn) {
