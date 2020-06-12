@@ -45,6 +45,7 @@
                 android:id="@+id/people_num_bar"
                 android:layout_width="match_parent"
                 android:layout_height="100dp">
+                <!--bar col1-->
                 <LinearLayout
                     android:id="@+id/people_num_bar_col_1"
                     android:layout_width="0dp"
@@ -52,12 +53,14 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
+                    <!--table head  -->
                     <TextView
                         android:id="@+id/people_num_bar_col_1_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:text="@string/people_num_bar_head_col1"/>
+                    <!--table num-->
                     <TextView
                         android:id="@+id/people_num_bar_col_1_num"
                         android:layout_width="wrap_content"
@@ -66,6 +69,7 @@
                         android:textSize="20dp"
                         android:textColor="@color/red"/>
                 </LinearLayout>
+                <!--bar col2-->
                 <LinearLayout
                     android:id="@+id/people_num_bar_col_2"
                     android:layout_width="0dp"
@@ -73,12 +77,14 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
+                    <!--table head-->
                     <TextView
                         android:id="@+id/people_num_bar_col_2_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:text="@string/people_num_bar_head_col2"/>
+                    <!--table num-->
                     <TextView
                         android:id="@+id/people_num_bar_col_2_num"
                         android:layout_width="wrap_content"
@@ -87,6 +93,7 @@
                         android:textSize="20dp"
                         android:textColor="@color/orange"/>
                 </LinearLayout>
+                <!--bar col3-->
                 <LinearLayout
                     android:id="@+id/people_num_bar_col_3"
                     android:layout_width="0dp"
@@ -94,12 +101,14 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
+                    <!--table head-->
                     <TextView
                         android:id="@+id/people_num_bar_col_3_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:text="@string/people_num_bar_head_col3"/>
+                    <!--table num-->
                     <TextView
                         android:id="@+id/people_num_bar_col_3_num"
                         android:layout_width="wrap_content"
@@ -108,6 +117,7 @@
                         android:textSize="20dp"
                         android:textColor="@color/green"/>
                 </LinearLayout>
+                <!--bar col4-->
                 <LinearLayout
                     android:id="@+id/people_num_bar_col_4"
                     android:layout_width="0dp"
@@ -115,12 +125,14 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
+                    <!--table head-->
                     <TextView
                         android:id="@+id/people_num_bar_col_4_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:text="@string/people_num_bar_head_col4"/>
+                    <!--table num-->
                     <TextView
                         android:id="@+id/people_num_bar_col_4_num"
                         android:layout_width="wrap_content"
@@ -146,7 +158,6 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="50dp"
                 android:text="@string/line_type_label" />
-
             <Spinner
                 android:id="@+id/line_type_spinner"
                 android:layout_width="wrap_content"
