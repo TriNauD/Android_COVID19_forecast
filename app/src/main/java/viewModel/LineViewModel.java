@@ -45,9 +45,9 @@ public class LineViewModel extends ViewModel {
             }
             //设置样式
             Line line = new Line(tempArrayList);//根据值来创建一条线
-            line.setColor(Color.rgb(255, 0, 0));//线的颜色
+            line.setColor(Color.rgb(126, 185, 236));//线的颜色 蓝色
 //            line.setPointColor(Color.rgb(255, 255, 255));//点的颜色 白色
-            line.setPointColor(Color.rgb(255, 0, 0));//点的颜色 红色
+            line.setPointColor(Color.rgb(126, 185, 236));//点的颜色 蓝色
             line.setPointRadius(2);//点的大小
             line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
             line.setFilled(true);//下方填充
