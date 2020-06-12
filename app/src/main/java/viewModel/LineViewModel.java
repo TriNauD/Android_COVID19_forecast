@@ -125,7 +125,14 @@ public class LineViewModel extends ViewModel {
             line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
             line.setFilled(true);//下方填充
             line.setCubic(false);//不要曲线
-            lines.add(line);
+            //刷新和初始化
+            if (lines.size() < WebConnect.getNumOfRealLines()) {
+                //如果是空的就初始化
+                lines.add(line);
+            } else {
+                //如果不是空的就应该更新
+                lines.set(i, line);
+            }
         }
 
        //轴
