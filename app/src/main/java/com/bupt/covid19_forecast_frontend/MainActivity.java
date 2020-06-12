@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //控件
     private Spinner controlLevelSpinner;
-    private Button controlStartDateButton;
+    private Spinner controlStartDateSpinner;
     private Switch myswitch;
     private EditText controlDurationInput;
     private TextView controlLevelLabel;
@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Spinner lineTypeSpinner = findViewById(R.id.line_type_spinner);
         Spinner modelTypeSpinner = findViewById(R.id.model_type_spinner);
         controlLevelSpinner = findViewById(R.id.control_level_spinner);
-        controlStartDateButton = findViewById(R.id.control_start_date_button);
 
         lineTypeSpinner.setOnItemSelectedListener(this);
         modelTypeSpinner.setOnItemSelectedListener(this);
