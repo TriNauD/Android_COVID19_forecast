@@ -232,27 +232,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (pos == 0) {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
                     LineViewModel.setHasControl(true);//控制：是
-                    //第三行和控制等级spinner应该保持出现
+                    //控制等级spinner应该保持出现
                     controlLevelSpinner.setVisibility(View.VISIBLE);
                     controlLevelLabel.setVisibility(View.VISIBLE);
-                    controlStartDateButton.setVisibility(View.VISIBLE);
-                    controlStartDateLabel.setVisibility(View.VISIBLE);
-                    controlDurationInput.setVisibility(View.VISIBLE);
-                    controlDurationLabel.setVisibility(View.VISIBLE);
-                    dayLabel.setVisibility(View.VISIBLE);
+                    //第三行要看第二行是否出现
+                    if (paramLine2.getVisibility()==View.VISIBLE){
+                        paramLine3.setVisibility(View.VISIBLE);
+                    }
                 }
                 //选了第2个选项：群体免疫
                 else {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
                     LineViewModel.setHasControl(false);//控制：否
                     //第三行和控制等级spinner应该隐藏
-                    controlLevelSpinner.setVisibility(View.GONE);
-                    controlLevelLabel.setVisibility(View.GONE);
-                    controlStartDateButton.setVisibility(View.GONE);
-                    controlStartDateLabel.setVisibility(View.GONE);
-                    controlDurationInput.setVisibility(View.GONE);
-                    controlDurationLabel.setVisibility(View.GONE);
-                    dayLabel.setVisibility(View.GONE);
+                    paramLine3.setVisibility(View.INVISIBLE);
+                    controlLevelSpinner.setVisibility(View.INVISIBLE);
+                    controlLevelLabel.setVisibility(View.INVISIBLE);
                 }
                 break;
             //第3个spinner 控制等级
@@ -337,10 +332,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Log.i(TAG, "onCheckedChanged 开关状态：开启，在预测");
             //因为在我们的线系统中，跟在真实后面的就是预测线了
             curLineIndex = lineViewModel.getNumOfRealLines();
+            paramLine2.setVisibility(View.VISIBLE);
+            paramLine3.setVisibility(View.VISIBLE);
         } else {
             Log.i(TAG, "onCheckedChanged 开关状态：关闭");
             //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
             curLineIndex = 0;
+            paramLine2.setVisibility(View.INVISIBLE);
+            paramLine3.setVisibility(View.INVISIBLE);
         }
         //无论怎样，点击了预测开关就刷新一下线图
         drawChart();

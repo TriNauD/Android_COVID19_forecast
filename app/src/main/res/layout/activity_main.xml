@@ -189,7 +189,8 @@
                     android:id="@+id/param_line_2"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:visibility="invisible">
                     <!--model type spinner-->
                     <Spinner
                         android:id="@+id/model_type_spinner"
@@ -232,7 +233,8 @@
                     android:id="@+id/param_line_3"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:visibility="invisible">
                     <!--control start date spinner-->
                     <Button
                         android:id="@+id/control_start_date_button"
