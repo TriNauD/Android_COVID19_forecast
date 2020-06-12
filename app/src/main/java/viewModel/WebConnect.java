@@ -51,8 +51,13 @@ public class WebConnect {
 
     //后端用的国家名
     private static String name;
+    //后端用的“是否为国家”
+    private static boolean isNation;
 
-
+    //拿到的一个地区的列表，里面是所有时间的数据
+    private static List<Alltime_province> provinceList = new ArrayList<>();
+    //世界的列表
+    private static List<Alltime_world> nationList = new ArrayList<>();
     //第一天的现存确诊
     private static Integer a;
 
@@ -132,8 +137,7 @@ public class WebConnect {
 
     }
 
-    //拿到的一个地区的列表，里面是所有时间的数据
-    private static List<Alltime_province> provinceList = new ArrayList<>();
+
 
     /**
      * 从后端获取国家疫情数据
@@ -142,7 +146,7 @@ public class WebConnect {
      * @author qy
      */
     public static void getWorld(String name) {
-        Log.i(TAG, "进入getProvince");
+        Log.i(TAG, "进入getWorld");
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -160,20 +164,20 @@ public class WebConnect {
                     List<Alltime_world> world = response.body();
                     //网络拿到的一个地区的列表，里面是所有时间的数据
                     //赋值列表
-                    provinceList = world;
+                    nationList = world;
                     //一天的所有数据
-                    Alltime_province oneDay = provinceList.get(0);
+                    Alltime_world oneDay = nationList.get(0);
                     //一天的现存确诊
                     a = oneDay.getPresent_confirm();
                     Log.i(TAG, "onResponse: 第一天的的现存确诊： " + a);
                     //真实线的数量，要根据传进来的数量啦
-                    numOfRealPoints = provinceList.size();
+                    numOfRealPoints = nationList.size();
                     Log.i(TAG, "onResponse: 真实线的节点数量：" + numOfRealPoints);
 
                     //真实线，一共4条
                     for (int i = 0; i < numOfRealPoints; i++) {
                         //拿到一天的4种数据
-                        Alltime_province oneDay1 = provinceList.get(i);
+                        Alltime_world oneDay1 = nationList.get(i);
                         //因为后面函数不一样所以没法for循环
                         //现存确诊
                         xyReal[0][i] = oneDay1.getPresent_confirm();
@@ -218,7 +222,7 @@ public class WebConnect {
      * @author qy
      */
     public static void getPredict(String name) {
-        Log.i(TAG, "进入getProvince");
+        Log.i(TAG, "进入getPredict");
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -227,7 +231,7 @@ public class WebConnect {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         API api = retrofit.create(API.class);
-        Call<List<Integer>> task = api.getPredict(name,isNation,hasControl,startControlDate,raiseLastTime,controlGrade);
+        Call<List<Integer>> task = api.getPredict(name, isNation, hasControl, startControlDate, raiseLastTime, controlGrade);
         task.enqueue(new Callback<List<Integer>>() {
             @Override
             public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
