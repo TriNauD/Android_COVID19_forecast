@@ -80,8 +80,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         drawChart();
 
         //spinner 页面的4个spinner并绑定listener
-        //ui控件
-        //因为切换预测的按钮要根据状态不同显示和隐藏，所以放在外面供全局调用
         Spinner lineTypeSpinner = findViewById(R.id.line_type_spinner);
         Spinner modelTypeSpinner = findViewById(R.id.model_type_spinner);
         controlLevelSpinner = findViewById(R.id.control_level_spinner);
@@ -322,12 +320,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Log.i(TAG, "onCheckedChanged 开关状态：开启，在预测");
             //因为在我们的线系统中，跟在真实后面的就是预测线了
             curLineIndex = lineViewModel.getNumOfRealLines();
-            drawChart();
         } else {
             Log.i(TAG, "onCheckedChanged 开关状态：关闭");
             //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
             curLineIndex = 0;
-            drawChart();
         }
+        //无论怎样，点击了预测开关就刷新一下线图
+        drawChart();
     }
 }
