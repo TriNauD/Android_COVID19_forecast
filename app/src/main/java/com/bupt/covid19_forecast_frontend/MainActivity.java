@@ -149,9 +149,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //初始化折线图数据
         //尝试传一个地区名字
-        String name = "湖北";
+        String name = "美国";
         //调用网络更新
-        WebConnect.getProvince(name);
+        WebConnect.getWorld(name);
 
         //重新生成线
         lineViewModel.initRealChart();
