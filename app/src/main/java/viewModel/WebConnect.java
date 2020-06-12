@@ -61,7 +61,6 @@ public class WebConnect {
      * 从后端获取省份疫情数据
      *
      * @param name 传给后端的国家名
-     * @return 一个List，里面的数据格式为Alltime_provice
      * @author qy
      */
     public static void getProvince(String name) {
