@@ -5,7 +5,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -37,8 +39,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Spinner modelTypeSpinner;
     private Switch forecastSwitch;
     private EditText controlDurationInput;
-    private EditText controlStartDateMonth;
-    private EditText controlStartDateDay;
+    private EditText controlStartDateMonthInput;
+    private EditText controlStartDateDayInput;
     private TextView toolbarTitle;
     private TextView controlLevelLabel;
     private TextView controlStartDateLabel;
@@ -104,8 +106,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlLevelSpinner = findViewById(R.id.control_level_spinner);
         changeNationSpinner = findViewById(R.id.change_nation_spinner);
 
-//        controlStartDateButton.setOnItemSelectedListener(this);
-
         //3行参数
         paramLine1 = findViewById(R.id.param_line_1);
         paramLine2 = findViewById(R.id.param_line_2);
@@ -116,8 +116,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //edit text
         controlDurationInput = findViewById(R.id.control_duration_input);
-        controlStartDateMonth = findViewById(R.id.control_start_date_month_input);
-        controlStartDateDay = findViewById(R.id.control_start_date_day_input);
+        controlStartDateMonthInput = findViewById(R.id.control_start_date_month_input);
+        controlStartDateDayInput = findViewById(R.id.control_start_date_day_input);
         toolbarTitle = findViewById(R.id.toolbar_title);
 
         //people num 4个col对应4个数字 需要改数就setText
@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         modelTypeSpinner.setOnItemSelectedListener(this);
         controlLevelSpinner.setOnItemSelectedListener(this);
         changeNationSpinner.setOnItemSelectedListener(this);
+        //input设置listener
     }
     /**
      * 刷新图像。

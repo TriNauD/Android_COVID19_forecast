@@ -220,7 +220,8 @@
                         android:layout_height="40dp"
                         android:layout_alignBaseline="@+id/control_start_date_label"
                         android:layout_toRightOf="@+id/control_start_date_label"
-                        android:imeOptions="actionDone"
+                        android:inputType="text"
+                        android:imeOptions="actionSearch"
                         android:maxLength="2"
                         android:maxLines="1"
                         android:textSize="15dp" />
