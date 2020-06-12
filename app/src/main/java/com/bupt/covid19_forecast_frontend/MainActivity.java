@@ -77,7 +77,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
 
         //初始化折线图数据
-        WebConnect.web();//调用网络更新
+        //尝试传一个地区名字
+        String name = "湖北";
+        WebConnect.getProvince(name);//调用网络更新
         lineViewModel.initRealChart();
         lineViewModel.initForecastChart();
 
@@ -87,13 +89,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     }
+
     /**
      * 绑定组件。
      * 绑定xml的组件
      *
      * @author xjy
      */
-    public void bindingElements(){
+    public void bindingElements() {
         //chart
         myLineChartView = findViewById(R.id.chart);
         //spinner 页面的4个spinner并绑定listener
@@ -108,9 +111,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        controlStartDateButton.setOnItemSelectedListener(this);
 
         //3行参数
-        paramLine1=findViewById(R.id.param_line_1);
-        paramLine2=findViewById(R.id.param_line_2);
-        paramLine3=findViewById(R.id.param_line_3);
+        paramLine1 = findViewById(R.id.param_line_1);
+        paramLine2 = findViewById(R.id.param_line_2);
+        paramLine3 = findViewById(R.id.param_line_3);
 
         //switch
         myswitch = findViewById(R.id.forecast_switch);
@@ -131,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationLabel = findViewById(R.id.control_duration_label);
         dayLabel = findViewById(R.id.day_label);
     }
+
     /**
      * 刷新图像。
      * 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
@@ -142,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
         //更新预测状态，这个值是表示显示的线是不是真的预测线
         boolean isForecast = (curLineIndex >= lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
-        if(isForecast){
+        if (isForecast) {
             //如果在预测，就重新初始化预测数据
             lineViewModel.initForecastChart();
         }
@@ -236,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlLevelSpinner.setVisibility(View.VISIBLE);
                     controlLevelLabel.setVisibility(View.VISIBLE);
                     //第三行要看第二行是否出现
-                    if (paramLine2.getVisibility()==View.VISIBLE){
+                    if (paramLine2.getVisibility() == View.VISIBLE) {
                         paramLine3.setVisibility(View.VISIBLE);
                     }
                 }
@@ -261,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlDurationInput.setCursorVisible(false);
                     controlDurationInput.setTextColor(Color.GRAY);
                     //根据选项设置默认持续时间
-                    switch (pos){
+                    switch (pos) {
                         //一级
                         case 0:
                             controlDurationInput.setText(R.string.control_duration_level1);

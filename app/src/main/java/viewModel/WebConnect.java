@@ -86,6 +86,8 @@ public class WebConnect {
                     //一天的现存确诊
                     a = oneDay.getPresent_confirm();
                     Log.i(TAG, "第一天的的现存确诊： " + a);
+                    //todo ?????
+                    web();
                 }
             }
 
@@ -106,12 +108,6 @@ public class WebConnect {
      * @author lym
      */
     public static void web() {
-        //尝试传一个地区名字
-        name = "湖北";
-
-        //获取数据
-        getProvince(name);
-
         //log一下
         Log.i(TAG, "湖北的现存确诊1： " + a);
 
@@ -145,7 +141,8 @@ public class WebConnect {
         numOfRealPoints = provinceList.size();
 
         //真实线，一共4条
-        for (int i = 0; i < provinceList.size(); i++) {
+        //todo 数组越界
+        for (int i = 0; i < numOfRealPoints; i++) {
             //拿到一天的4种数据
             Alltime_province oneDay = provinceList.get(i);
             //因为后面函数不一样所以没法for循环
