@@ -28,19 +28,136 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:layout_marginTop="10dp">
-
+        android:layout_marginTop="0dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <!--title picture-->
+            <!--<ImageView-->
+                <!--android:id="@+id/title_pic"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="280dp"-->
+                <!--android:src="@drawable/cov_pic"-->
+                <!--android:alpha="0.9">-->
+            <!--</ImageView>-->
+            <!--people num bar-->
+            <LinearLayout
+                android:id="@+id/people_num_bar"
+                android:layout_width="match_parent"
+                android:layout_height="100dp">
+                <!--bar col1-->
+                <LinearLayout
+                    android:id="@+id/people_num_bar_col_1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+                    <!--table head  -->
+                    <TextView
+                        android:id="@+id/people_num_bar_col_1_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/people_num_bar_head_col1"/>
+                    <!--table num-->
+                    <TextView
+                        android:id="@+id/people_num_bar_col_1_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="19024"
+                        android:textSize="20dp"
+                        android:textColor="@color/red"/>
+                </LinearLayout>
+                <!--bar col2-->
+                <LinearLayout
+                    android:id="@+id/people_num_bar_col_2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+                    <!--table head-->
+                    <TextView
+                        android:id="@+id/people_num_bar_col_2_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/people_num_bar_head_col2"/>
+                    <!--table num-->
+                    <TextView
+                        android:id="@+id/people_num_bar_col_2_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="156"
+                        android:textSize="20dp"
+                        android:textColor="@color/orange"/>
+                </LinearLayout>
+                <!--bar col3-->
+                <LinearLayout
+                    android:id="@+id/people_num_bar_col_3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+                    <!--table head-->
+                    <TextView
+                        android:id="@+id/people_num_bar_col_3_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/people_num_bar_head_col3"/>
+                    <!--table num-->
+                    <TextView
+                        android:id="@+id/people_num_bar_col_3_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="13783"
+                        android:textSize="20dp"
+                        android:textColor="@color/green"/>
+                </LinearLayout>
+                <!--bar col4-->
+                <LinearLayout
+                    android:id="@+id/people_num_bar_col_4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+                    <!--table head-->
+                    <TextView
+                        android:id="@+id/people_num_bar_col_4_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/people_num_bar_head_col4"/>
+                    <!--table num-->
+                    <TextView
+                        android:id="@+id/people_num_bar_col_4_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1753"
+                        android:textSize="20dp"/>
+                </LinearLayout>
+            </LinearLayout>
+            <!--chart-->
+            <lecho.lib.hellocharts.view.LineChartView
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_below="@+id/people_num_bar"
+                android:layout_marginLeft="50dp"
+                android:layout_centerHorizontal="true" />
             <!--line type spinner-->
             <TextView
                 android:id="@+id/line_type_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/chart"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="50dp"
                 android:text="@string/line_type_label" />
-
             <Spinner
                 android:id="@+id/line_type_spinner"
                 android:layout_width="wrap_content"
@@ -48,7 +165,8 @@
                 android:layout_alignBaseline="@+id/line_type_label"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/line_type_label"
-                android:entries="@array/item_choices"></Spinner>
+                android:entries="@array/item_choices">
+            </Spinner>
             <!--forecast switch-->
             <Switch
                 android:id="@+id/forecast_switch"
@@ -65,7 +183,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/line_type_label"
                 android:layout_below="@+id/line_type_spinner"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/model_type_label" />
 
             <Spinner
@@ -74,6 +192,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/forecast_switch"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_toRightOf="@+id/model_type_label"
                 android:entries="@array/model_type_choices"></Spinner>
             <!--control level spinner-->
@@ -92,6 +211,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/forecast_switch"
                 android:layout_marginLeft="10dp"
+                android:layout_alignBaseline="@+id/model_type_spinner"
                 android:layout_toRightOf="@+id/control_level_label"
                 android:entries="@array/control_level_choices"></Spinner>
             <!--control start date spinner-->
@@ -101,7 +221,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/model_type_label"
                 android:layout_below="@+id/model_type_label"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/control_start_date_label" />
 
             <Spinner
@@ -110,6 +230,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/model_type_label"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_toRightOf="@+id/control_start_date_label"
                 android:entries="@array/control_level_choices"></Spinner>
             <!--control duration input-->
@@ -139,50 +260,42 @@
                 android:layout_alignBaseline="@+id/control_start_date_label"
                 android:layout_toRightOf="@+id/control_duration_input"
                 android:text="@string/day_label" />
-            <!--chart-->
-            <lecho.lib.hellocharts.view.LineChartView
-                android:id="@+id/chart"
-                android:layout_width="match_parent"
-                android:layout_height="280dp"
-                android:layout_below="@+id/control_start_date_label"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp" />
 
-            <!--comment area-->
-            <LinearLayout
-                android:id="@+id/comment_area"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/chart"
-                android:layout_marginTop="20dp"
-                android:background="@color/blue"
-                android:orientation="vertical">
 
-                <View
-                    android:id="@+id/comment1"
-                    android:layout_width="350dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="100dp"
-                    android:background="#FFFFFF" />
+            <!--&lt;!&ndash;comment area&ndash;&gt;-->
+            <!--<LinearLayout-->
+                <!--android:id="@+id/comment_area"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/chart"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:background="@color/blue"-->
+                <!--android:orientation="vertical">-->
 
-                <View
-                    android:id="@+id/comment2"
-                    android:layout_width="350dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:background="#FFFFFF" />
+                <!--<View-->
+                    <!--android:id="@+id/comment1"-->
+                    <!--android:layout_width="350dp"-->
+                    <!--android:layout_height="100dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginTop="100dp"-->
+                    <!--android:background="#FFFFFF" />-->
 
-                <View
-                    android:id="@+id/comment3"
-                    android:layout_width="350dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:background="#FFFFFF" />
-            </LinearLayout>
+                <!--<View-->
+                    <!--android:id="@+id/comment2"-->
+                    <!--android:layout_width="350dp"-->
+                    <!--android:layout_height="100dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginTop="20dp"-->
+                    <!--android:background="#FFFFFF" />-->
+
+                <!--<View-->
+                    <!--android:id="@+id/comment3"-->
+                    <!--android:layout_width="350dp"-->
+                    <!--android:layout_height="100dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginTop="20dp"-->
+                    <!--android:background="#FFFFFF" />-->
+            <!--</LinearLayout>-->
         </RelativeLayout>
 
     </ScrollView>

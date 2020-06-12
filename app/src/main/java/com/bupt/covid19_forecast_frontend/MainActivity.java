@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //日志TAG，调试用，默认使用类名
     private static final String TAG = "MainActivity";
 
+    //控件
     private Spinner controlLevelSpinner;
     private Spinner controlStartDateSpinner;
     private Switch myswitch;
@@ -37,6 +38,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView controlStartDateLabel;
     private TextView controlDurationLabel;
     private TextView dayLabel;
+    private TextView peopleNumBarCol1;
+    private TextView peopleNumBarCol2;
+    private TextView peopleNumBarCol3;
+    private TextView peopleNumBarCol4;
+
     //折线视图
     private LineChartView myLineChartView;
 
@@ -93,6 +99,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //edit text
         controlDurationInput = findViewById(R.id.control_duration_input);
+
+        //people num 4个col对应4个数字 需要改数就setText
+        peopleNumBarCol1 = findViewById(R.id.people_num_bar_col_1_num);
+        peopleNumBarCol2 = findViewById(R.id.people_num_bar_col_2_num);
+        peopleNumBarCol3 = findViewById(R.id.people_num_bar_col_3_num);
+        peopleNumBarCol4 = findViewById(R.id.people_num_bar_col_4_num);
+        //peopleNumBarCol1.setText("114514");
+
 
         //static element
         controlLevelLabel = findViewById(R.id.control_level_label);
