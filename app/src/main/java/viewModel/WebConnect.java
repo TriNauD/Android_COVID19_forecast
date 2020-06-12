@@ -9,9 +9,11 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import domain.Alltime_province;
 import domain.Alltime_world;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -138,7 +140,6 @@ public class WebConnect {
     }
 
 
-
     /**
      * 从后端获取国家疫情数据
      *
@@ -150,8 +151,14 @@ public class WebConnect {
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        //解决超时问题
+        OkHttpClient client = new OkHttpClient.Builder().
+                connectTimeout(60, TimeUnit.SECONDS).
+                readTimeout(60, TimeUnit.SECONDS).
+                writeTimeout(60, TimeUnit.SECONDS).build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://39.96.80.224:8080")
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         API api = retrofit.create(API.class);
