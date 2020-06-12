@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //控件
     private Spinner controlLevelSpinner;
-    private Spinner controlStartDateSpinner;
+    private Spinner changeCountrySpinner;
     private Switch myswitch;
     private EditText controlDurationInput;
     private EditText controlStartDateMonth;
@@ -102,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Spinner lineTypeSpinner = findViewById(R.id.line_type_spinner);
         Spinner modelTypeSpinner = findViewById(R.id.model_type_spinner);
         controlLevelSpinner = findViewById(R.id.control_level_spinner);
+        changeCountrySpinner = findViewById(R.id.change_country_spinner);
 
         lineTypeSpinner.setOnItemSelectedListener(this);
         modelTypeSpinner.setOnItemSelectedListener(this);
