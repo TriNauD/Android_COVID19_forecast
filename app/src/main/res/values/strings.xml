@@ -44,4 +44,8 @@
         <item>2020</item>
     </string-array>
 
+    <string-array name="nation_name">
+        <item>nation1</item>
+        <item>nation2</item>
+    </string-array>
 </resources>

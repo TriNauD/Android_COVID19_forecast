@@ -21,9 +21,10 @@
             android:text="@string/national_title"
             android:textSize="18dp" />
         <Spinner
-            android:id="@+id/change_country_spinner"
+            android:id="@+id/change_nation_spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:entries="@array/nation_name">
         </Spinner>
     </android.support.v7.widget.Toolbar>
     <!--scroll-->
