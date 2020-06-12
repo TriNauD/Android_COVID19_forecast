@@ -26,7 +26,7 @@ public class WebConnect {
     //预测线数
     private static final int numOfForecastLines = 1;
     //“真实线”的节点数
-    private static final int numOfRealPoints = 120;
+    private static int numOfRealPoints = 120;
     //“预测线”的节点数
     private static final int numOfForecastPoints = 15;
 
@@ -113,16 +113,52 @@ public class WebConnect {
         //log一下
         Log.i(TAG, "湖北的现存确诊1： " + a);
 
+        //假装 拿到的一个地区的列表，里面是所有时间的数据
+        List<Alltime_province> provinceList = new ArrayList<>();
 
-        //真实线，一共4条，每条120个点
-        for (int line = 0; line < 4; line++) {
-            for (int i = 0; i < 120; i++) {
-                //todo 传进来历史数据的x和y数组
-                int x = i;//这里网络传进x值。也可以直接用序号，因为x默认就是 0, 1, 2...
-                float y = new Random().nextInt(50) + i * 10;//这里网络传进y值
-                xyReal[line][x] = y;
-            }
+        //假装 网络 传进来 地区列表
+        //todo 其实还是在随机数造假
+        //4种数据都赋值
+        //假装有120个点
+        int tempNumOfPoints = 120;
+        for (int i = 0; i < tempNumOfPoints; i++) {
+            //一天的数据
+            Alltime_province oneDay = new Alltime_province();
+
+            //随机数
+            int tempInt;
+            //4个不一样的，要重新随机
+            tempInt = new Random().nextInt(50) + i * 10;
+            oneDay.setPresent_confirm(tempInt);
+            tempInt = new Random().nextInt(50) + i * 10;
+            oneDay.setTotal_confirm(tempInt);
+            tempInt = new Random().nextInt(50) + i * 10;
+            oneDay.setTotal_heal(tempInt);
+            tempInt = new Random().nextInt(50) + i * 10;
+            oneDay.setTotal_dead(tempInt);
+
+            //加入到总的列表中去
+            provinceList.add(oneDay);
         }
+
+        //真实线的数量，要根据传进来的数量啦
+        numOfRealPoints = provinceList.size();
+
+        //真实线，一共4条
+        for (int i = 0; i < provinceList.size(); i++) {
+            //拿到一天的4种数据
+            Alltime_province oneDay = provinceList.get(i);
+            //因为后面函数不一样所以没法for循环
+            //现存确诊
+            xyReal[0][i] = oneDay.getPresent_confirm();
+            //累计确诊
+            xyReal[1][i] = oneDay.getTotal_confirm();
+            //累计治愈
+            xyReal[2][i] = oneDay.getTotal_heal();
+            //累计死亡
+            xyReal[3][i] = oneDay.getTotal_dead();
+        }
+
         //todo 预测线
 
         //todo 传进来坐标轴标签
