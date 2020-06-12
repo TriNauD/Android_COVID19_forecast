@@ -87,7 +87,8 @@ public class WebConnect {
                     Alltime_province oneDay = provinceList.get(0);
                     //一天的现存确诊
                     a = oneDay.getPresent_confirm();
-                 }
+                    Log.i(TAG, "第一天的的现存确诊： " + a);
+                }
             }
 
             @Override
@@ -109,6 +110,7 @@ public class WebConnect {
         //获取数据
         getProvince(name);
 
+        //log一下
         Log.i(TAG, "湖北的现存确诊1： " + a);
 
 

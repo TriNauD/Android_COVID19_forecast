@@ -9,12 +9,12 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface API {
-    @GET("/getProvince")
-    Call<List<Alltime_province>> getProvince(@Query("name/server") String name);
+    @GET("/server/getProvince")
+    Call<List<Alltime_province>> getProvince(@Query("name") String name);
 
-    @GET("/getWorld")
-    Call<List<Alltime_world>> getWorld(@Query("name/server") String name);
+    @GET("/server/getWorld")
+    Call<List<Alltime_world>> getWorld(@Query("name") String name);
 
-    @GET("/getPredict")
-    Call<List<Integer>> getPredict(@Query("name/server") String name);
+    @GET("/server/getPredict")
+    Call<List<Integer>> getPredict(@Query("name") String name);
 }
