@@ -113,21 +113,6 @@ public class WebConnect {
                         xyReal[3][i] = oneDay1.getTotal_dead();
                     }
 
-                    //todo 预测线
-
-                    //todo 传进来坐标轴标签
-                    String[] date = new String[]{"1/1", "1/2", "1/3", "1/4"};
-
-                    //todo 传出去预测参数
-                    //这里的局部变量可以用于网络传输
-                    //是否进行控制
-                    boolean hasControl = WebConnect.hasControl;
-                    //控制开始时间
-                    String startControlDate = WebConnect.startControlDate;
-                    //控制增长阶段的时间
-                    int raiseLastTime = WebConnect.raiseLastTime;
-                    //控制强度
-                    int controlGrade = WebConnect.controlGrade;
                 }
             }
 
@@ -196,21 +181,7 @@ public class WebConnect {
                         xyReal[3][i] = oneDay1.getTotal_dead();
                     }
 
-                    //todo 预测线
 
-                    //todo 传进来坐标轴标签
-                    String[] date = new String[]{"1/1", "1/2", "1/3", "1/4"};
-
-                    //todo 传出去预测参数
-                    //这里的局部变量可以用于网络传输
-                    //是否进行控制
-                    boolean hasControl = WebConnect.hasControl;
-                    //控制开始时间
-                    String startControlDate = WebConnect.startControlDate;
-                    //控制增长阶段的时间
-                    int raiseLastTime = WebConnect.raiseLastTime;
-                    //控制强度
-                    int controlGrade = WebConnect.controlGrade;
                 }
             }
 
@@ -245,7 +216,27 @@ public class WebConnect {
                 Log.i(TAG, "onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Integer> predict = response.body();
-
+                    float[] linePoints = new float[5];//一条线上面的点
+                    for (int j = 0; j < 5; ++j) {
+//                        if (hasControl) {
+//                            //如果进行控制
+//                            linePoints[j] = 1150000 - j * j * 1000;
+//                        } else {
+//                            //群体免疫
+//                            float x = j * 1000;
+//                            linePoints[j] = 1150000 + (float) Math.sqrt(x) * 1000;
+//                        }
+                        linePoints[j]=predict.get(j);
+                    }
+                    //判定是否要刷新
+                    int size = lineData.size();
+                    if (size < numOfRealLines + numOfForecastLines) {
+                        //如果线组里面还没有预测线，就新添加
+                        lineData.add(linePoints);
+                    } else {
+                        //如果已经有预测线，就更新
+                        lineData.set(numOfRealLines, linePoints);
+                    }
                 }
             }
 
@@ -295,14 +286,14 @@ public class WebConnect {
         for (int i = 0; i < numOfForecastLines; ++i) {
             float[] linePoints = new float[numOfForecastPoints];//一条线上面的点
             for (int j = 0; j < numOfForecastPoints; ++j) {
-                if (hasControl) {
-                    //如果进行控制
-                    linePoints[j] = 1150000 - j * j * 1000;
-                } else {
-                    //群体免疫
-                    float x = j * 1000;
-                    linePoints[j] = 1150000 + (float) Math.sqrt(x) * 1000;
-                }
+//                if (hasControl) {
+//                    //如果进行控制
+//                    linePoints[j] = 1150000 - j * j * 1000;
+//                } else {
+//                    //群体免疫
+//                    float x = j * 1000;
+//                    linePoints[j] = 1150000 + (float) Math.sqrt(x) * 1000;
+//                }
             }
             //判定是否要刷新
             int size = lineData.size();

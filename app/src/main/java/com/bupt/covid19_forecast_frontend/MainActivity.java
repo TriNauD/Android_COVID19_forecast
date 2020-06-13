@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private RelativeLayout paramLine3;
 
     //当前国家
-    private String currentNation = "美国";
+    private String currentNation = "秘鲁";
 
     //折线视图
     private LineChartView myLineChartView;
@@ -159,6 +159,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "draw 传递地区名字：" + currentNation);
         //调用网络更新
         WebConnect.getWorld(currentNation);
+        WebConnect.getPredict(currentNation);
+
 
         //重新生成线
         lineViewModel.initRealChart();
