@@ -1,206 +1,366 @@
 package com.bupt.covid19_forecast_frontend;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import lecho.lib.hellocharts.model.Axis;
-import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
-import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
+import viewModel.WebConnect;
+import viewModel.LineViewModel;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
     //日志TAG，调试用，默认使用类名
     private static final String TAG = "MainActivity";
 
+    //控件
+    private Spinner controlLevelSpinner;
+    private Spinner changeNationSpinner;
+    private Switch myswitch;
+    private EditText controlDurationInput;
+    private EditText controlStartDateMonth;
+    private EditText controlStartDateDay;
+    private TextView controlLevelLabel;
+    private TextView controlStartDateLabel;
+    private TextView controlDurationLabel;
+    private TextView dayLabel;
+    private TextView peopleNumBarCol1;
+    private TextView peopleNumBarCol2;
+    private TextView peopleNumBarCol3;
+    private TextView peopleNumBarCol4;
+    private RelativeLayout paramLine1;
+    private RelativeLayout paramLine2;
+    private RelativeLayout paramLine3;
+
+    //当前国家
+    private String currentNation = "秘鲁";
+
+    //折线视图
+    private LineChartView myLineChartView;
+
+    //折线的数据类
+    private LineViewModel lineViewModel;
+
+    //当前显示的线是几号
+    private int curLineIndex = 0;
+    //预测开关状态（默认开启）
+    private boolean isForecastSwitchedOn = true;
+
     /**
-     * 重载AppCompatActivity的函数，在活动创建时调用
+     * 活动生命周期：“创建”
      *
      * @param savedInstanceState ？？？系统使用参数
      * @author lym
-     * @version 1.0
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initData();
-        initLines();
-        initChart();
-        initAxis();
-        showPartOfChart();
-        //spinner
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setOnItemSelectedListener(this);
+        //绑定组件
+        bindingElements();
+
+        //折线图数据
+        lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
+
+
+        //画折线图
+        drawChart();
+        myswitch.setOnCheckedChangeListener(this);
+
+
     }
 
-    /*————————————绘图相关————————————*/
+    /**
+     * 绑定组件。
+     * 绑定xml的组件
+     *
+     * @author xjy
+     */
+    public void bindingElements() {
+        //chart
+        myLineChartView = findViewById(R.id.chart);
+        //spinner 页面的4个spinner并绑定listener
+        Spinner lineTypeSpinner = findViewById(R.id.line_type_spinner);
+        Spinner modelTypeSpinner = findViewById(R.id.model_type_spinner);
+        controlLevelSpinner = findViewById(R.id.control_level_spinner);
+        changeNationSpinner = findViewById(R.id.change_nation_spinner);
 
-    private int numberOfPoints = 120; //节点数
-    private int maxNumberOfLines = 4; //图上折线/曲线的最多条数
-    private int curLineIndex = 0;//当前显示的线是几号
-    private LineChartView myLineChartView; //折线图的view
-    private float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints]; //将线上的点放在一个数组中
-    private List<Line> lines = new ArrayList<>(); //所有线
-    private LineChartData myLineData = new LineChartData(lines); //当前显示数据
+        lineTypeSpinner.setOnItemSelectedListener(this);
+        modelTypeSpinner.setOnItemSelectedListener(this);
+        controlLevelSpinner.setOnItemSelectedListener(this);
+        changeNationSpinner.setOnItemSelectedListener(this);
+//        controlStartDateButton.setOnItemSelectedListener(this);
 
+        //3行参数
+        paramLine1 = findViewById(R.id.param_line_1);
+        paramLine2 = findViewById(R.id.param_line_2);
+        paramLine3 = findViewById(R.id.param_line_3);
+
+        //switch
+        myswitch = findViewById(R.id.forecast_switch);
+
+        //edit text
+        controlDurationInput = findViewById(R.id.control_duration_input);
+        controlStartDateMonth = findViewById(R.id.control_start_date_month_input);
+        controlStartDateDay = findViewById(R.id.control_start_date_day_input);
+
+        //people num 4个col对应4个数字 需要改数就setText
+        peopleNumBarCol1 = findViewById(R.id.people_num_bar_col_1_num);
+        peopleNumBarCol2 = findViewById(R.id.people_num_bar_col_2_num);
+        peopleNumBarCol3 = findViewById(R.id.people_num_bar_col_3_num);
+        peopleNumBarCol4 = findViewById(R.id.people_num_bar_col_4_num);
+        /*peopleNumBarCol1.setText((int) WebConnect.getLineData().get(0)[WebConnect.getNumOfRealPoints()]);
+        peopleNumBarCol2.setText((int) WebConnect.getLineData().get(1)[WebConnect.getNumOfRealPoints()]);
+        peopleNumBarCol3.setText((int) WebConnect.getLineData().get(2)[WebConnect.getNumOfRealPoints()]);
+        peopleNumBarCol4.setText((int) WebConnect.getLineData().get(3)[WebConnect.getNumOfRealPoints()]);*/
+        peopleNumBarCol1.setText("1142777");
+        peopleNumBarCol2.setText("3578240");
+        peopleNumBarCol3.setText("102429");
+        peopleNumBarCol4.setText("6088");
+
+
+        //static element
+        controlLevelLabel = findViewById(R.id.control_level_label);
+        controlStartDateLabel = findViewById(R.id.control_start_date_label);
+        controlDurationLabel = findViewById(R.id.control_duration_label);
+        dayLabel = findViewById(R.id.day_label);
+    }
 
     /**
-     * 自制-初始化数据
+     * 刷新图像。
+     * 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
      *
-     * @Description 初始化randomNumbersTab数据，目前就先用随机数
      * @author lym
-     * @version 1.0
      */
-    private void initData() {
-        Log.i(TAG, "initData 进入函数");
-        for (int i = 0; i < maxNumberOfLines; ++i) {
-            for (int j = 0; j < numberOfPoints; ++j) {
-                Random random = new Random();
-                randomNumbersTab[i][j] = random.nextInt(50) + j * 10;
-            }
+    private void drawChart() {
+        Log.i(TAG, "draw 进入函数");
+        Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
+
+
+        //初始化折线图数据
+        //尝试传一个地区名字
+        Log.i(TAG, "draw 传递地区名字：" + currentNation);
+        //调用网络更新
+        WebConnect.getWorld(currentNation);
+        WebConnect.getPredict(currentNation);
+
+
+        //重新生成线
+        lineViewModel.initRealChart();
+        lineViewModel.initForecastChart();
+
+
+        //更新预测状态，这个值是表示显示的线是不是真的预测线
+        boolean isForecast = (curLineIndex >= lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
+        if (isForecast) {
+            //如果在预测，就重新初始化预测数据
+            lineViewModel.initForecastChart();
         }
-    }
-
-    /**
-     * 自制-初始化“线”
-     *
-     * @Description 初始化line数组
-     * @author lym
-     * @version 1.0
-     */
-    private void initLines() {
-        Log.i(TAG, "initLines 进入函数");
-        //循环将每条线都设置成对应的属性
-        for (int i = 0; i < maxNumberOfLines; i++) {
-            List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
-            for (int j = 0; j < numberOfPoints; j++) {
-                tempArrayList.add(new PointValue(j, randomNumbersTab[i][j]));
-            }
-            Line line = new Line(tempArrayList);//根据值来创建一条线
-            line.setColor(Color.rgb(126, 185, 236));//线的颜色
-            //line.setPointColor(Color.rgb(255,255,255));//点的颜色 这个是白色
-            line.setPointRadius(5);//点的大小
-            line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
-            line.setFilled(true);//下方填充
-            line.setCubic(false);//不要曲线
-            lines.add(line);
+        //线
+        List<Line> allLines = lineViewModel.getLines();
+        List<Line> showLines = new ArrayList<>();
+        //当前的
+        showLines.add(allLines.get(curLineIndex));
+        if (isForecast) {
+            //如果在预测，加上对应的真实线
+            showLines.add(allLines.get(0));
         }
-    }
+        LineChartData curLineData = new LineChartData(showLines);
+        //轴
+        Axis[] showAxisXY = lineViewModel.getAxesList().get(curLineIndex);
+        curLineData.setAxisXBottom(showAxisXY[0]);//设置X轴
+        curLineData.setAxisYLeft(showAxisXY[1]);//设置Y轴
+        //视图
+        myLineChartView.setLineChartData(curLineData);//把这个设置好的数据放到view里面
 
-    /**
-     * 自制-初始化图表
-     *
-     * @Description 初始化图表信息，包括绑定视图、设置图表控件
-     * @author lym
-     * @version 1.0
-     */
-    private void initChart() {
-        Log.i(TAG, "initChart 进入函数");
-        myLineChartView = findViewById(R.id.chart); //绑定视图
-        List<Line> curLines = lines.subList(curLineIndex, curLineIndex + 1);//去除不需要的条数
-        myLineData = new LineChartData(curLines);//设置为显示的条数
-        myLineChartView.setLineChartData(myLineData);//设置图表控件
-    }
+        Log.i(TAG, "drawChart 调参师");
 
-    /**
-     * 自制-初始化坐标轴
-     *
-     * @author lym
-     * @version 1.0
-     */
-    private void initAxis() {
-        Log.i(TAG, "initAxis 进入函数");
-        //坐标轴
-        Axis axisX = new Axis();
-        Axis axisY = new Axis();
+        //总体的图表范围
+        Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
+        maxViewPort.left = 0;
+        maxViewPort.bottom = 0;
+        //x轴最大坐标值
+        maxViewPort.right = 120 + 15 - 1;
+        //y轴最大坐标值
+        maxViewPort.top = 1200000;
+        myLineChartView.setMaximumViewport(maxViewPort);
 
-        //增加“日期”系列x轴
-        List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
-        int day = 0;
-        for (int i = 0; i < numberOfPoints; i++) {
-            AxisValue valueX = new AxisValue(i);//这里的数字是float，作为坐标的数值
-            day++;
-            if (day > 30) {
-                day %= 30;
-            }
-            valueX.setLabel("5" + "/" + day);//将数值和文字标签绑定起来
-            valueListX.add(valueX);//添加一个值
+        //显示的小界面，可以滑动
+        Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
+        halfViewport.top = 1200000;
+        halfViewport.bottom = 0;
+        halfViewport.left = 0;
+        if (isForecast) {
+            //如果在预测
+            Log.i(TAG, "setChartShow 函数：【预测】设置当前范围");
+            //真实120预测15
+            halfViewport.right = 120 + 15 - 1;
+        } else {
+            Log.i(TAG, "setChartShow 函数：【真实】设置当前范围");
+            halfViewport.right = 120;
         }
-        axisX.setValues(valueListX);//将列表设置到x轴上面
-
-        myLineData.setAxisXBottom(axisX); //设置X轴位置 下方
-        myLineData.setAxisYLeft(axisY); //设置Y轴位置 左边
+        myLineChartView.setCurrentViewport(halfViewport);
     }
 
+    /*————————————控件相关————————————*/
+
     /**
-     * 自制-绘图
+     * 下拉菜单，选项控制事件。
+     * 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
      *
-     * @Description 调整显示的图表的范围
-     * @author lym
-     * @version 1.0
-     */
-    private void showPartOfChart() {
-        Log.i(TAG, "showPartOfChart 进入函数");
-
-        final Viewport MAX = new Viewport(myLineChartView.getMaximumViewport());//创建一个图表视图 大小为控件的最大大小
-        final Viewport CUR = new Viewport(myLineChartView.getCurrentViewport());
-
-        final Viewport fullViewport = new Viewport(MAX);
-        fullViewport.top = 300;
-        fullViewport.bottom = -20;//最下面显示的y轴坐标值
-        fullViewport.left = -1;//最左边显示的x轴坐标值
-        fullViewport.right = numberOfPoints;
-
-        final Viewport halfViewport = new Viewport(CUR);
-        halfViewport.top = fullViewport.top;
-        halfViewport.bottom = fullViewport.bottom;//最下面显示的y轴坐标值
-        halfViewport.left = fullViewport.left;//最左边显示的x轴坐标值
-        halfViewport.right = 15;
-
-        myLineChartView.setMaximumViewport(fullViewport);   //给最大的视图设置 相当于原图
-        myLineChartView.setCurrentViewport(halfViewport);   //给当前的视图设置 相当于当前展示的图
-    }
-
-
-    /*————————————spinner相关————————————*/
-
-    /**
      * @param pos 选项的位置，0 ~ n-1
-     * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
      * @author lym
-     * @version 1.0
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         //日志调试
         Log.i(TAG, "onItemSelected 进入函数");
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
-        curLineIndex = pos;
-        initChart();
-        initAxis();
-        showPartOfChart();
+        //判断是哪个spinner
+        switch (parent.getId()) {
+            //第1个spinner 曲线类型
+            case R.id.line_type_spinner:
+                //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
+                if (pos != 0) {
+                    //如果不是第一条线，也就不应该显示预测
+                    //隐藏预测开关，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
+                    myswitch.setVisibility(View.INVISIBLE);
+                    //同时隐藏参数们
+                    paramLine2.setVisibility(View.INVISIBLE);
+                    paramLine3.setVisibility(View.INVISIBLE);
+                    //线是选择的pos那条
+                    curLineIndex = pos;
+                } else {
+                    //如果是第一条线，也就可以看看在没在预测了
+                    //显示预测开关
+                    myswitch.setVisibility(View.VISIBLE);
+                    //bug老朋友
+                    //复现：先开启预测，然后切换到其他线
+                    if (isForecastSwitchedOn) {
+                        //如果预测按钮开着
+                        //因为在我们的线系统中，跟在真实后面的就是预测线了
+                        curLineIndex = lineViewModel.getNumOfRealLines();
+                        //同时显示参数们
+                        paramLine2.setVisibility(View.VISIBLE);
+                        paramLine3.setVisibility(View.VISIBLE);
+                    } else {
+                        //如果没在预测就正常0
+                        curLineIndex = 0;
+                        //同时隐藏参数们
+                        paramLine2.setVisibility(View.INVISIBLE);
+                        paramLine3.setVisibility(View.INVISIBLE);
+                    }
+                }
+                break;
+            //第2个spinner 模型类型（群体和控制）
+            case R.id.model_type_spinner:
+                //选了第1个选项：控制
+                if (pos == 0) {
+                    Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
+                    LineViewModel.setHasControl(true);//控制：是
+                    //控制等级spinner应该保持出现
+                    controlLevelSpinner.setVisibility(View.VISIBLE);
+                    controlLevelLabel.setVisibility(View.VISIBLE);
+                    //第三行要看第二行是否出现
+                    if (paramLine2.getVisibility() == View.VISIBLE) {
+                        paramLine3.setVisibility(View.VISIBLE);
+                    }
+                }
+                //选了第2个选项：群体免疫
+                else {
+                    Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
+                    LineViewModel.setHasControl(false);//控制：否
+                    //第三行和控制等级spinner应该隐藏
+                    paramLine3.setVisibility(View.INVISIBLE);
+                    controlLevelSpinner.setVisibility(View.INVISIBLE);
+                    controlLevelLabel.setVisibility(View.INVISIBLE);
+                }
+                break;
+            //第3个spinner 控制等级
+            case R.id.control_level_spinner:
+                //选了非最后一项（即1～3级控制）
+                if (pos != 3) {
+                    Log.i(TAG, "onItemSelected 选了第3个spinner的前3个选项");
+                    //天数输入框不可编辑&灰色
+                    controlDurationInput.setFocusable(false);
+                    controlDurationInput.setFocusableInTouchMode(false);
+                    controlDurationInput.setCursorVisible(false);
+                    controlDurationInput.setTextColor(Color.GRAY);
+                    //根据选项设置默认持续时间
+                    switch (pos) {
+                        //一级
+                        case 0:
+                            controlDurationInput.setText(R.string.control_duration_level1);
+                            break;
+                        //二级
+                        case 1:
+                            controlDurationInput.setText(R.string.control_duration_level2);
+                            break;
+                        //三级
+                        case 2:
+                            controlDurationInput.setText(R.string.control_duration_level3);
+                            break;
+                    }
+                }
+                //选了最后一项（即自定义）
+                else {
+                    Log.i(TAG, "onItemSelected 选了第3个spinner的最后一个选项");
+                    //天数输入框可以编辑&正常颜色 清空内容
+                    controlDurationInput.setFocusable(true);
+                    controlDurationInput.setFocusableInTouchMode(true);
+                    controlDurationInput.setCursorVisible(true);
+                    controlDurationInput.getText().clear();
+                    controlDurationInput.setTextColor(Color.BLACK);
+
+                }
+                break;
+            //选择国家
+            case R.id.change_nation_spinner:
+                currentNation = changeNationSpinner.getSelectedItem().toString();
+                Log.i(TAG, "onItemSelected:国家名 " + currentNation);
+                drawChart();
+                break;
+//            //第4个spinner 控制开始日期
+//            case R.id.control_start_date_spinner:
+//                //选了非最后一项
+//                if (pos != 3) {
+//                    Log.i(TAG, "onItemSelected 选了第4个spinner的前3个选项");
+//                    //天数输入框不可编辑&灰色
+//                }
+//                //选了最后一项
+//                else {
+//                    Log.i(TAG, "onItemSelected 选了第4个spinner的最后一个选项");
+//                    //天数输入框可以编辑&正常颜色
+//                }
+//                break;
+        }
+        //刷新 线
+        drawChart();
     }
 
     /**
-     * @Description 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单没有任何选择时调用
+     * 下拉菜单，无选择时默认事件。
+     * 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单没有任何选择时调用
+     *
      * @author lym
-     * @version 1.0
      */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
@@ -208,4 +368,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "onNothingSelected 进入函数");
     }
 
+    /**
+     * 预测开关，监听开关事件。
+     * 重载CompoundButton.OnCheckedChangeListener的函数，监听switch按钮有没有被选中
+     *
+     * @author lym
+     */
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        Log.i(TAG, "onCheckedChanged 进入函数");
+        isForecastSwitchedOn = isChecked;
+        if (isChecked) {
+            Log.i(TAG, "onCheckedChanged 开关状态：开启，在预测");
+            //因为在我们的线系统中，跟在真实后面的就是预测线了
+            curLineIndex = lineViewModel.getNumOfRealLines();
+            paramLine2.setVisibility(View.VISIBLE);
+            paramLine3.setVisibility(View.VISIBLE);
+        } else {
+            Log.i(TAG, "onCheckedChanged 开关状态：关闭");
+            //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
+            curLineIndex = 0;
+            paramLine2.setVisibility(View.INVISIBLE);
+            paramLine3.setVisibility(View.INVISIBLE);
+        }
+        //无论怎样，点击了预测开关就刷新一下线图
+        drawChart();
+    }
 }
