@@ -177,10 +177,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //更新预测状态，这个值是表示显示的线是不是真的预测线
         boolean isForecast = (curLineIndex >= lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
-        if (isForecast) {
-            //如果在预测，就重新初始化预测数据
-            lineViewModel.initForecastChart();
-        }
         //线
         List<Line> allLines = lineViewModel.getLines();
         List<Line> showLines = new ArrayList<>();
