@@ -5,7 +5,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -33,10 +35,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //控件
     private Spinner controlLevelSpinner;
     private Spinner changeNationSpinner;
-    private Switch myswitch;
+    private Spinner lineTypeSpinner;
+    private Spinner modelTypeSpinner;
+    private Switch forecastSwitch;
     private EditText controlDurationInput;
-    private EditText controlStartDateMonth;
-    private EditText controlStartDateDay;
+    private EditText controlStartDateMonthInput;
+    private EditText controlStartDateDayInput;
+    private TextView toolbarTitle;
     private TextView controlLevelLabel;
     private TextView controlStartDateLabel;
     private TextView controlDurationLabel;
@@ -75,18 +80,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         //绑定组件
         bindingElements();
-
+        //设置监听
+        setListener();
         //折线图数据
         lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
 
-
         //画折线图
         drawChart();
-        myswitch.setOnCheckedChangeListener(this);
+
 
 
     }
-
     /**
      * 绑定组件。
      * 绑定xml的组件
@@ -97,16 +101,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //chart
         myLineChartView = findViewById(R.id.chart);
         //spinner 页面的4个spinner并绑定listener
-        Spinner lineTypeSpinner = findViewById(R.id.line_type_spinner);
-        Spinner modelTypeSpinner = findViewById(R.id.model_type_spinner);
+        lineTypeSpinner = findViewById(R.id.line_type_spinner);
+        modelTypeSpinner = findViewById(R.id.model_type_spinner);
         controlLevelSpinner = findViewById(R.id.control_level_spinner);
         changeNationSpinner = findViewById(R.id.change_nation_spinner);
-
-        lineTypeSpinner.setOnItemSelectedListener(this);
-        modelTypeSpinner.setOnItemSelectedListener(this);
-        controlLevelSpinner.setOnItemSelectedListener(this);
-        changeNationSpinner.setOnItemSelectedListener(this);
-//        controlStartDateButton.setOnItemSelectedListener(this);
 
         //3行参数
         paramLine1 = findViewById(R.id.param_line_1);
@@ -114,12 +112,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         paramLine3 = findViewById(R.id.param_line_3);
 
         //switch
-        myswitch = findViewById(R.id.forecast_switch);
+        forecastSwitch = findViewById(R.id.forecast_switch);
 
         //edit text
         controlDurationInput = findViewById(R.id.control_duration_input);
-        controlStartDateMonth = findViewById(R.id.control_start_date_month_input);
-        controlStartDateDay = findViewById(R.id.control_start_date_day_input);
+        controlStartDateMonthInput = findViewById(R.id.control_start_date_month_input);
+        controlStartDateDayInput = findViewById(R.id.control_start_date_day_input);
+        toolbarTitle = findViewById(R.id.toolbar_title);
 
         //people num 4个col对应4个数字 需要改数就setText
         peopleNumBarCol1 = findViewById(R.id.people_num_bar_col_1_num);
@@ -142,7 +141,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationLabel = findViewById(R.id.control_duration_label);
         dayLabel = findViewById(R.id.day_label);
     }
-
+    public void setListener() {
+        //switch设置listener
+        forecastSwitch.setOnCheckedChangeListener(this);
+        //spinner设置listener
+        lineTypeSpinner.setOnItemSelectedListener(this);
+        modelTypeSpinner.setOnItemSelectedListener(this);
+        controlLevelSpinner.setOnItemSelectedListener(this);
+        changeNationSpinner.setOnItemSelectedListener(this);
+        //input设置listener
+    }
     /**
      * 刷新图像。
      * 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
@@ -242,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (pos != 0) {
                     //如果不是第一条线，也就不应该显示预测
                     //隐藏预测开关，参数意义为：INVISIBLE:4 不可见的，但还占着原来的空间
-                    myswitch.setVisibility(View.INVISIBLE);
+                    forecastSwitch.setVisibility(View.INVISIBLE);
                     //同时隐藏参数们
                     paramLine2.setVisibility(View.INVISIBLE);
                     paramLine3.setVisibility(View.INVISIBLE);
@@ -251,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 } else {
                     //如果是第一条线，也就可以看看在没在预测了
                     //显示预测开关
-                    myswitch.setVisibility(View.VISIBLE);
+                    forecastSwitch.setVisibility(View.VISIBLE);
                     //bug老朋友
                     //复现：先开启预测，然后切换到其他线
                     if (isForecastSwitchedOn) {
@@ -334,7 +342,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 break;
             //选择国家
             case R.id.change_nation_spinner:
+                //从spinner选项得到当前选择的国家
                 currentNation = changeNationSpinner.getSelectedItem().toString();
+                //设置toolbar标题
+                toolbarTitle.setText(currentNation + getResources().getString(R.string.national_title));
                 Log.i(TAG, "onItemSelected:国家名 " + currentNation);
                 drawChart();
                 break;
