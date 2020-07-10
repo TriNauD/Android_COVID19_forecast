@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private RelativeLayout paramLine3;
 
     //当前国家
-    private String currentNation;
+    private String currentNation = "秘鲁";
 
     //折线视图
     private LineChartView myLineChartView;
@@ -125,7 +125,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol2 = findViewById(R.id.people_num_bar_col_2_num);
         peopleNumBarCol3 = findViewById(R.id.people_num_bar_col_3_num);
         peopleNumBarCol4 = findViewById(R.id.people_num_bar_col_4_num);
-        //peopleNumBarCol1.setText("114514");
+        /*peopleNumBarCol1.setText((int) WebConnect.getLineData().get(0)[WebConnect.getNumOfRealPoints()]);
+        peopleNumBarCol2.setText((int) WebConnect.getLineData().get(1)[WebConnect.getNumOfRealPoints()]);
+        peopleNumBarCol3.setText((int) WebConnect.getLineData().get(2)[WebConnect.getNumOfRealPoints()]);
+        peopleNumBarCol4.setText((int) WebConnect.getLineData().get(3)[WebConnect.getNumOfRealPoints()]);*/
+        peopleNumBarCol1.setText("1142777");
+        peopleNumBarCol2.setText("3578240");
+        peopleNumBarCol3.setText("102429");
+        peopleNumBarCol4.setText("6088");
 
 
         //static element
@@ -157,9 +164,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //初始化折线图数据
         //尝试传一个地区名字
-        String name = "湖北";
+        Log.i(TAG, "draw 传递地区名字：" + currentNation);
         //调用网络更新
-        WebConnect.getProvince(name);
+        WebConnect.getWorld(currentNation);
+        WebConnect.getPredict(currentNation);
+
 
         //重新生成线
         lineViewModel.initRealChart();
@@ -198,12 +207,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //x轴最大坐标值
         maxViewPort.right = 120 + 15 - 1;
         //y轴最大坐标值
-        maxViewPort.top = 6000;
+        maxViewPort.top = 1200000;
         myLineChartView.setMaximumViewport(maxViewPort);
 
         //显示的小界面，可以滑动
         Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
-        halfViewport.top = 1300;
+        halfViewport.top = 1200000;
         halfViewport.bottom = 0;
         halfViewport.left = 0;
         if (isForecast) {
@@ -338,6 +347,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //设置toolbar标题
                 toolbarTitle.setText(currentNation + getResources().getString(R.string.national_title));
                 Log.i(TAG, "onItemSelected:国家名 " + currentNation);
+                drawChart();
                 break;
 //            //第4个spinner 控制开始日期
 //            case R.id.control_start_date_spinner:

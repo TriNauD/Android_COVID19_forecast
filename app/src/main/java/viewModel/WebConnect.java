@@ -9,8 +9,11 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import domain.Alltime_province;
+import domain.Alltime_world;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,8 +53,13 @@ public class WebConnect {
 
     //后端用的国家名
     private static String name;
+    //后端用的“是否为国家”
+    private static boolean isNation;
 
-
+    //拿到的一个地区的列表，里面是所有时间的数据
+    private static List<Alltime_province> provinceList = new ArrayList<>();
+    //世界的列表
+    private static List<Alltime_world> nationList = new ArrayList<>();
     //第一天的现存确诊
     private static Integer a;
 
@@ -105,21 +113,6 @@ public class WebConnect {
                         xyReal[3][i] = oneDay1.getTotal_dead();
                     }
 
-                    //todo 预测线
-
-                    //todo 传进来坐标轴标签
-                    String[] date = new String[]{"1/1", "1/2", "1/3", "1/4"};
-
-                    //todo 传出去预测参数
-                    //这里的局部变量可以用于网络传输
-                    //是否进行控制
-                    boolean hasControl = WebConnect.hasControl;
-                    //控制开始时间
-                    String startControlDate = WebConnect.startControlDate;
-                    //控制增长阶段的时间
-                    int raiseLastTime = WebConnect.raiseLastTime;
-                    //控制强度
-                    int controlGrade = WebConnect.controlGrade;
                 }
             }
 
@@ -131,8 +124,130 @@ public class WebConnect {
 
     }
 
-    //拿到的一个地区的列表，里面是所有时间的数据
-    private static List<Alltime_province> provinceList = new ArrayList<>();
+
+    /**
+     * 从后端获取国家疫情数据
+     *
+     * @param name 传给后端的国家名
+     * @author qy
+     */
+    public static void getWorld(String name) {
+        Log.i(TAG, "进入getWorld");
+
+        //进行获取
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        //解决超时问题
+        OkHttpClient client = new OkHttpClient.Builder().
+                connectTimeout(60, TimeUnit.SECONDS).
+                readTimeout(60, TimeUnit.SECONDS).
+                writeTimeout(60, TimeUnit.SECONDS).build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://39.96.80.224:8080")
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        API api = retrofit.create(API.class);
+        Call<List<Alltime_world>> task = api.getWorld(name);
+        task.enqueue(new Callback<List<Alltime_world>>() {
+            @Override
+            public void onResponse(Call<List<Alltime_world>> call, Response<List<Alltime_world>> response) {
+                Log.i(TAG, "onResponse --> " + response.code());
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    List<Alltime_world> world = response.body();
+                    //网络拿到的一个地区的列表，里面是所有时间的数据
+                    //赋值列表
+                    nationList = world;
+                    //一天的所有数据
+                    Alltime_world oneDay = nationList.get(0);
+                    //一天的现存确诊
+                    a = oneDay.getPresent_confirm();
+                    Log.i(TAG, "onResponse: 第一天的的现存确诊： " + a);
+                    //真实线的数量，要根据传进来的数量啦
+                    numOfRealPoints = nationList.size();
+                    Log.i(TAG, "onResponse: 真实线的节点数量：" + numOfRealPoints);
+
+                    //真实线，一共4条
+                    for (int i = 0; i < numOfRealPoints; i++) {
+                        //拿到一天的4种数据
+                        Alltime_world oneDay1 = nationList.get(i);
+                        //因为后面函数不一样所以没法for循环
+                        //现存确诊
+                        xyReal[0][i] = oneDay1.getPresent_confirm();
+                        //累计确诊
+                        xyReal[1][i] = oneDay1.getTotal_confirm();
+                        //累计治愈
+                        xyReal[2][i] = oneDay1.getTotal_heal();
+                        //累计死亡
+                        xyReal[3][i] = oneDay1.getTotal_dead();
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Alltime_world>> call, Throwable t) {
+                Log.i(TAG, "onFailure..." + t.toString());
+            }
+        });
+
+    }
+
+    /**
+     * 从后端获取预测数据
+     *
+     * @param name 传给后端的地区名
+     * @author qy
+     */
+    public static void getPredict(String name) {
+        Log.i(TAG, "进入getPredict");
+
+        //进行获取
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://39.96.80.224:8080")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        API api = retrofit.create(API.class);
+        Call<List<Integer>> task = api.getPredict(name, isNation, hasControl, startControlDate, raiseLastTime, controlGrade);
+        task.enqueue(new Callback<List<Integer>>() {
+            @Override
+            public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
+                Log.i(TAG, "onResponse --> " + response.code());
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    List<Integer> predict = response.body();
+                    float[] linePoints = new float[5];//一条线上面的点
+                    for (int j = 0; j < 5; ++j) {
+//                        if (hasControl) {
+//                            //如果进行控制
+//                            linePoints[j] = 1150000 - j * j * 1000;
+//                        } else {
+//                            //群体免疫
+//                            float x = j * 1000;
+//                            linePoints[j] = 1150000 + (float) Math.sqrt(x) * 1000;
+//                        }
+                        linePoints[j]=predict.get(j);
+                    }
+                    //判定是否要刷新
+                    int size = lineData.size();
+                    if (size < numOfRealLines + numOfForecastLines) {
+                        //如果线组里面还没有预测线，就新添加
+                        lineData.add(linePoints);
+                    } else {
+                        //如果已经有预测线，就更新
+                        lineData.set(numOfRealLines, linePoints);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Integer>> call, Throwable t) {
+                Log.i(TAG, "onFailure..." + t.toString());
+            }
+        });
+
+    }
+
 
     /**
      * 给前端用的 初始化真实线
@@ -171,14 +286,14 @@ public class WebConnect {
         for (int i = 0; i < numOfForecastLines; ++i) {
             float[] linePoints = new float[numOfForecastPoints];//一条线上面的点
             for (int j = 0; j < numOfForecastPoints; ++j) {
-                if (hasControl) {
-                    //如果进行控制
-                    linePoints[j] = 1200 - j * j;
-                } else {
-                    //群体免疫
-                    float x = j * 1000;
-                    linePoints[j] = 1200 + (float) Math.sqrt(x);
-                }
+//                if (hasControl) {
+//                    //如果进行控制
+//                    linePoints[j] = 1150000 - j * j * 1000;
+//                } else {
+//                    //群体免疫
+//                    float x = j * 1000;
+//                    linePoints[j] = 1150000 + (float) Math.sqrt(x) * 1000;
+//                }
             }
             //判定是否要刷新
             int size = lineData.size();
