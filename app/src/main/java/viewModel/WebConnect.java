@@ -267,11 +267,9 @@ public class WebConnect {
             if (lineDataList.size() < numOfRealLines) {
                 //如果是空的就初始化
                 lineDataList.add(linePoints);
-                Log.i(TAG, "initReal： lineData.get(i)[0]" + lineDataList.get(i)[0]);
             } else {
                 //如果不是空的就应该更新
                 lineDataList.set(i, linePoints);
-                Log.i(TAG, "initReal： lineData.get(i)[0]" + lineDataList.get(i)[0]);
             }
         }
     }
