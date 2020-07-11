@@ -8,7 +8,6 @@ import com.google.gson.GsonBuilder;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import domain.Alltime_province;
@@ -45,7 +44,7 @@ public class WebConnect {
     private static int controlGrade;
 
     //所有线数据
-    private static List<float[]> lineData = new ArrayList<>();
+    private static List<float[]> lineDataList = new ArrayList<>();
 
     //网络传进来的数
     private static float[][] xyReal = new float[4][9999];
@@ -226,16 +225,16 @@ public class WebConnect {
 //                            float x = j * 1000;
 //                            linePoints[j] = 1150000 + (float) Math.sqrt(x) * 1000;
 //                        }
-                        linePoints[j]=predict.get(j);
+                        linePoints[j] = predict.get(j);
                     }
                     //判定是否要刷新
-                    int size = lineData.size();
+                    int size = lineDataList.size();
                     if (size < numOfRealLines + numOfForecastLines) {
                         //如果线组里面还没有预测线，就新添加
-                        lineData.add(linePoints);
+                        lineDataList.add(linePoints);
                     } else {
                         //如果已经有预测线，就更新
-                        lineData.set(numOfRealLines, linePoints);
+                        lineDataList.set(numOfRealLines, linePoints);
                     }
                 }
             }
@@ -265,14 +264,14 @@ public class WebConnect {
                 Log.d(TAG, "initReal：xyReal[i][j]: " + xyReal[i][j]);
                 linePoints[j] = xyReal[i][j];
             }
-            if (lineData.size() < numOfRealLines) {
+            if (lineDataList.size() < numOfRealLines) {
                 //如果是空的就初始化
-                lineData.add(linePoints);
-                Log.i(TAG, "initReal： lineData.get(i)[0]" + lineData.get(i)[0]);
+                lineDataList.add(linePoints);
+                Log.i(TAG, "initReal： lineData.get(i)[0]" + lineDataList.get(i)[0]);
             } else {
                 //如果不是空的就应该更新
-                lineData.set(i, linePoints);
-                Log.i(TAG, "initReal： lineData.get(i)[0]" + lineData.get(i)[0]);
+                lineDataList.set(i, linePoints);
+                Log.i(TAG, "initReal： lineData.get(i)[0]" + lineDataList.get(i)[0]);
             }
         }
     }
@@ -297,12 +296,12 @@ public class WebConnect {
             }*/
             //判定是否要刷新
 //            int size = lineData.size();
-            if (lineData.size() < numOfRealLines + numOfForecastLines) {
+            if (lineDataList.size() < numOfRealLines + numOfForecastLines) {
                 //如果线组里面还没有预测线，就新添加
-                lineData.add(linePoints);
+                lineDataList.add(linePoints);
             } else {
                 //如果已经有预测线，就更新
-                lineData.set(i + numOfRealLines, linePoints);
+                lineDataList.set(i + numOfRealLines, linePoints);
             }
         }
     }
@@ -418,12 +417,12 @@ public class WebConnect {
         WebConnect.controlGrade = controlGrade;
     }
 
-    public static List<float[]> getLineData() {
-        return lineData;
+    public static List<float[]> getLineDataList() {
+        return lineDataList;
     }
 
-    public static void setLineData(List<float[]> lineData) {
-        WebConnect.lineData = lineData;
+    public static void setLineDataList(List<float[]> lineDataList) {
+        WebConnect.lineDataList = lineDataList;
     }
 
 }

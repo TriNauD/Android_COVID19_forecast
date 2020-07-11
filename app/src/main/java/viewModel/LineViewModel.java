@@ -40,7 +40,7 @@ public class LineViewModel extends ViewModel {
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
             for (int p = 0; p < WebConnect.getNumOfForecastPoints(); p++) {
                 int x = p + WebConnect.getNumOfRealPoints();//预测点接在真实后面
-                float y = WebConnect.getLineData().get(i + WebConnect.getNumOfRealLines())[p];
+                float y = WebConnect.getLineDataList().get(i + WebConnect.getNumOfRealLines())[p];
                 tempArrayList.add(new PointValue(x, y));//在真实线后面的是预测线
             }
             //设置样式
@@ -104,20 +104,17 @@ public class LineViewModel extends ViewModel {
         for (int i = 0; i < WebConnect.getNumOfRealLines(); i++) {
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
             for (int j = 0; j < WebConnect.getNumOfRealPoints(); j++) {
-                Log.d(TAG, "initRealChart：拿到仓库的linedata："+WebConnect.getLineData().get(i)[j]);
-                tempArrayList.add(new PointValue(j, WebConnect.getLineData().get(i)[j]));
+                Log.d(TAG, "initRealChart：拿到仓库的linedata：" + WebConnect.getLineDataList().get(i)[j]);
+                tempArrayList.add(new PointValue(j, WebConnect.getLineDataList().get(i)[j]));
             }
             Line line = new Line(tempArrayList);//根据值来创建一条线
-            if(i==0){
+            if (i == 0) {
                 line.setColor(Color.rgb(255, 0, 0));//第一条线为红色
-            }
-            else if(i==1){
+            } else if (i == 1) {
                 line.setColor(Color.rgb(255, 140, 0));//第二条线橙色
-            }
-            else if(i==2){
+            } else if (i == 2) {
                 line.setColor(Color.rgb(50, 205, 50));//第三条线绿色
-            }
-            else{
+            } else {
                 line.setColor(Color.rgb(126, 185, 236));//第四条线蓝色
             }
             //line.setPointColor(Color.rgb(255,255,255));//点的颜色 这个是白色
@@ -135,7 +132,7 @@ public class LineViewModel extends ViewModel {
             }
         }
 
-       //轴
+        //轴
         WebConnect.initRealAxis();
         //绑定标签和轴
         for (int i = 0; i < WebConnect.getNumOfRealLines(); i++) {
