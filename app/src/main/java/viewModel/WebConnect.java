@@ -217,14 +217,6 @@ public class WebConnect {
                     List<Integer> predict = response.body();
                     float[] linePoints = new float[5];//一条线上面的点
                     for (int j = 0; j < 5; ++j) {
-//                        if (hasControl) {
-//                            //如果进行控制
-//                            linePoints[j] = 1150000 - j * j * 1000;
-//                        } else {
-//                            //群体免疫
-//                            float x = j * 1000;
-//                            linePoints[j] = 1150000 + (float) Math.sqrt(x) * 1000;
-//                        }
                         linePoints[j] = predict.get(j);
                     }
                     //判定是否要刷新
