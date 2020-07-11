@@ -296,8 +296,8 @@ public class WebConnect {
                 }
             }*/
             //判定是否要刷新
-            int size = lineData.size();
-            if (size < numOfRealLines + numOfForecastLines) {
+//            int size = lineData.size();
+            if (lineData.size() < numOfRealLines + numOfForecastLines) {
                 //如果线组里面还没有预测线，就新添加
                 lineData.add(linePoints);
             } else {
