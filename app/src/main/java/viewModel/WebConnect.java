@@ -308,10 +308,10 @@ public class WebConnect {
     public static void initRealAxis() {
         //真实
         //建立标签
-        for (int i = 0; i < WebConnect.getNumOfRealLines(); i++) {
-            List<String> strings = new ArrayList<>(WebConnect.getNumOfRealPoints());
+        for (int i = 0; i < numOfRealLines; i++) {
+            List<String> strings = new ArrayList<>();
             int day = 0;
-            for (int j = 0; j < WebConnect.getNumOfRealPoints(); j++) {
+            for (int j = 0; j < numOfRealPoints; j++) {
                 day++;
                 if (day > 30) {
                     day %= 30;

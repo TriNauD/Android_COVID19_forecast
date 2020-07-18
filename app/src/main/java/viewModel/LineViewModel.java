@@ -109,6 +109,8 @@ public class LineViewModel extends ViewModel {
 
         //线
         for (int i = 0; i < numOflines; i++) {
+
+            //获取仓库数据
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
             for (int j = 0; j < numOfPoints; j++) {
 //                Log.d(TAG, "initRealChart：拿到仓库的linedata：" + WebConnect.getLineDataList().get(i)[j]);
