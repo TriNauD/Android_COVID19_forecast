@@ -89,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         drawChart();
 
 
-
     }
+
     /**
      * 绑定组件。
      * 绑定xml的组件
@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationLabel = findViewById(R.id.control_duration_label);
         dayLabel = findViewById(R.id.day_label);
     }
+
     public void setListener() {
         //switch设置listener
         forecastSwitch.setOnCheckedChangeListener(this);
@@ -151,6 +152,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         changeNationSpinner.setOnItemSelectedListener(this);
         //input设置listener
     }
+
+    /**
+     * 从网络获取数据
+     *
+     * @author lym
+     */
+    private void getDataFromWeb() {
+        //初始化折线图数据
+        //尝试传一个地区名字
+        Log.i(TAG, "draw 传递地区名字：" + currentNation);
+        //调用网络更新
+        //世界真实
+        WebConnect.getWorld(currentNation);
+        //预测
+        WebConnect.getPredict(currentNation);
+    }
+
     /**
      * 刷新图像。
      * 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
@@ -161,14 +179,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
 
-
-        //初始化折线图数据
-        //尝试传一个地区名字
-        Log.i(TAG, "draw 传递地区名字：" + currentNation);
-        //调用网络更新
-        WebConnect.getWorld(currentNation);
-        WebConnect.getPredict(currentNation);
-
+        //从网络获取数据
+        getDataFromWeb();
 
         //重新生成线
         lineViewModel.initRealChart();
