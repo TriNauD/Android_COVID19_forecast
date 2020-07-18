@@ -220,8 +220,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         //轴
+        //获取所有轴
+        List<Axis[]> allAxes = lineViewModel.getAxesList();
         //选择要显示的轴
-        Axis[] showAxisXY = lineViewModel.getAxesList().get(curLineIndex);
+        Axis[] showAxisXY = allAxes.get(curLineIndex);
 
         //设置到图
         //设置X轴在下面
