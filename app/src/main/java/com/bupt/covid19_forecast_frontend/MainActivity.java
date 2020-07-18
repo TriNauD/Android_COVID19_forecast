@@ -170,6 +170,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
+     * 生成线并且调整线条格式
+     *
+     * @author lym
+     */
+    void getLines() {
+        //重新生成线
+        lineViewModel.initRealChart();
+        lineViewModel.initForecastChart();
+    }
+
+    /**
      * 刷新图像。
      * 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
      *
@@ -182,10 +193,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //从网络获取数据
         getDataFromWeb();
 
-        //重新生成线
-        lineViewModel.initRealChart();
-        lineViewModel.initForecastChart();
-
+        //生成线并且调整线条格式
+        getLines();
 
         //更新预测状态，这个值是表示显示的线是不是真的预测线
         boolean isForecast = (curLineIndex >= lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
