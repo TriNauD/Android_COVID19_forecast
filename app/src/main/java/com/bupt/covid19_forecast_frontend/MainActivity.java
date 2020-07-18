@@ -85,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //折线图数据
         lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
 
+        //首次从网络获取数据
+        getDataFromWeb();
         //画折线图
         drawChart();
 
@@ -161,12 +163,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void getDataFromWeb() {
         //初始化折线图数据
         //尝试传一个地区名字
-        Log.i(TAG, "draw 传递地区名字：" + currentNation);
+//        Log.i(TAG, "draw 传递地区名字：" + currentNation);
         //调用网络更新
         //世界真实
         WebConnect.getWorld(currentNation);
-        //预测
-        WebConnect.getPredict(currentNation);
     }
 
     /**
@@ -189,9 +189,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void drawChart() {
         Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
-
-        //从网络获取数据
-        getDataFromWeb();
 
         //生成线并且调整线条格式
         getLines();
@@ -364,7 +361,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //设置toolbar标题
                 toolbarTitle.setText(currentNation + getResources().getString(R.string.national_title));
                 Log.i(TAG, "onItemSelected:国家名 " + currentNation);
-                drawChart();
+                //改变国家后，需要从网络重新获取数据
+                getDataFromWeb();
                 break;
 //            //第4个spinner 控制开始日期
 //            case R.id.control_start_date_spinner:
@@ -419,7 +417,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             paramLine2.setVisibility(View.INVISIBLE);
             paramLine3.setVisibility(View.INVISIBLE);
         }
-        //无论怎样，点击了预测开关就刷新一下线图
+        //只需要获取预测数据即可
+        WebConnect.getPredict(currentNation);
+        //刷新一下线图
         drawChart();
     }
 }
