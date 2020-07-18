@@ -112,7 +112,9 @@ public class LineViewModel extends ViewModel {
 
             //根据值来创建一条线
             Line line = new Line(tempArrayList);
-            //调整颜色
+
+            //调整线样式
+            //颜色
             if (i == 0) {
                 line.setColor(Color.rgb(255, 0, 0));//第一条线为红色
             } else if (i == 1) {
@@ -127,6 +129,7 @@ public class LineViewModel extends ViewModel {
             line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
             line.setFilled(true);//下方填充
             line.setCubic(false);//不要曲线
+
             //刷新和初始化
             if (lines.size() < numOflines) {
                 //如果是空的就初始化
