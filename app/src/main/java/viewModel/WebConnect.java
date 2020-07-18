@@ -332,11 +332,11 @@ public class WebConnect {
         //预测
         //todo 预测的坐标轴应该是真实轴的延申
         //建立预测标签
-        for (int i = 0; i < WebConnect.getNumOfForecastLines(); i++) {
+        for (int i = 0; i < numOfForecastLines; i++) {
             //对于每一条预测线
             List<String> strings = new ArrayList<>();
             int day = 0;
-            for (int j = 0; j < WebConnect.getNumOfForecastPoints(); j++) {
+            for (int j = 0; j < numOfForecastPoints; j++) {
                 day++;
                 if (day > 30) {
                     day %= 30;
