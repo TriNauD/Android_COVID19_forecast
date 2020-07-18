@@ -153,9 +153,6 @@ public class WebConnect {
                 Log.i(TAG, "onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Alltime_world> world = response.body();
-
-                    /*------ok 获取数据-------*/
-
                     //网络拿到的一个地区的列表，里面是所有时间的数据
                     //赋值列表
                     nationList = world;
@@ -218,7 +215,6 @@ public class WebConnect {
                 Log.i(TAG, "onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Integer> predict = response.body();
-                    //实际使用的代码
                     float[] linePoints = new float[5];//一条线上面的点
                     for (int j = 0; j < 5; ++j) {
                         linePoints[j] = predict.get(j);
