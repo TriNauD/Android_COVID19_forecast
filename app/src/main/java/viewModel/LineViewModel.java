@@ -99,9 +99,14 @@ public class LineViewModel extends ViewModel {
      */
     public void initRealChart() {
         Log.i(TAG, "initRealChart 进入函数");
+
+        //调用初始化函数
         WebConnect.initReal();
+
+        //获取线条和点数量
         int numOflines = WebConnect.getNumOfRealLines();
         int numOfPoints = WebConnect.getNumOfRealPoints();
+
         //线
         for (int i = 0; i < numOflines; i++) {
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
@@ -110,7 +115,7 @@ public class LineViewModel extends ViewModel {
                 tempArrayList.add(new PointValue(j, WebConnect.getLineDataList().get(i)[j]));
             }
 
-            //根据值来创建一条线
+            //创建一条线
             Line line = new Line(tempArrayList);
 
             //调整线样式
@@ -130,6 +135,7 @@ public class LineViewModel extends ViewModel {
             line.setFilled(true);//下方填充
             line.setCubic(false);//不要曲线
 
+            //放到线组
             //刷新和初始化
             if (lines.size() < numOflines) {
                 //如果是空的就初始化
