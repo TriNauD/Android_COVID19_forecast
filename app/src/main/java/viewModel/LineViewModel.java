@@ -169,12 +169,20 @@ public class LineViewModel extends ViewModel {
             }
 
             //做轴
-            Axis axisX = new Axis();//新建一个x轴
-            axisX.setValues(valueListX);//将列表设置到x轴上面
+            //x轴
+            Axis axisX = new Axis();
+            //将标签列表设置到x轴上面
+            axisX.setValues(valueListX);
+
             //TODO step of y ? 是时候考虑y轴的步长问题了
+            //y轴
             Axis axisY = new Axis();//Y轴没有任何设定，就初始化
-            Axis[] axisXY = {axisX, axisY};//把XY放到一起
-            axesList.add(axisXY);//加入总的坐标轴列表
+
+
+            //把XY放到一起
+            Axis[] axisXY = {axisX, axisY};
+            //加入总的坐标轴列表
+            axesList.add(axisXY);
         }
     }
 
