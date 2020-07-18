@@ -197,23 +197,42 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         getLines();
 
         //更新预测状态，这个值是表示显示的线是不是真的预测线
-        boolean isForecast = (curLineIndex >= lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
-        //线
+        int numOfRealLines = lineViewModel.getNumOfRealLines();
+        boolean isForecast = (curLineIndex >= numOfRealLines);//如果索引大于“真实线”数目，就表示是在预测
+
+        //准备显示线组
+        //获取到所有的线
         List<Line> allLines = lineViewModel.getLines();
+
+        //当前要画的线
         List<Line> showLines = new ArrayList<>();
-        //当前的
+        //按照下标来选择一条
         showLines.add(allLines.get(curLineIndex));
+        //前半截后半截
+        //如果在预测，加上对应的真实线
         if (isForecast) {
-            //如果在预测，加上对应的真实线
             showLines.add(allLines.get(0));
         }
+
+
+        //线组放到线图数据里面
         LineChartData curLineData = new LineChartData(showLines);
+
+
         //轴
+        //选择要显示的轴
         Axis[] showAxisXY = lineViewModel.getAxesList().get(curLineIndex);
-        curLineData.setAxisXBottom(showAxisXY[0]);//设置X轴
-        curLineData.setAxisYLeft(showAxisXY[1]);//设置Y轴
+
+        //设置到图
+        //设置X轴在下面
+        curLineData.setAxisXBottom(showAxisXY[0]);
+        //设置Y轴在左边
+        curLineData.setAxisYLeft(showAxisXY[1]);
+
+
         //视图
-        myLineChartView.setLineChartData(curLineData);//把这个设置好的数据放到view里面
+        //把这个设置好的数据放到view里面
+        myLineChartView.setLineChartData(curLineData);
 
         Log.i(TAG, "drawChart 调参师");
 
