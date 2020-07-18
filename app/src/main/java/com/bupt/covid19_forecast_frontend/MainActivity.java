@@ -196,6 +196,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //生成线并且调整线条格式
         getLines();
 
+        //画画和调整视图
+        draw();
+    }
+
+    /**
+     * 小画家
+     *
+     * @author lym
+     */
+    private void draw() {
         //更新预测状态，这个值是表示显示的线是不是真的预测线
         int numOfRealLines = lineViewModel.getNumOfRealLines();
         boolean isForecast = (curLineIndex >= numOfRealLines);//如果索引大于“真实线”数目，就表示是在预测
@@ -282,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //判断是哪个spinner
         switch (parent.getId()) {
             //第1个spinner 曲线类型
-            case R.id.line_type_spinner:
+            case R.id.line_type_spinner: {
                 //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
                 if (pos != 0) {
                     //如果不是第一条线，也就不应该显示预测
@@ -314,9 +324,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         paramLine3.setVisibility(View.INVISIBLE);
                     }
                 }
+                //只需要重新绘制即可
+                draw();
                 break;
+            }
             //第2个spinner 模型类型（群体和控制）
-            case R.id.model_type_spinner:
+            case R.id.model_type_spinner: {
                 //选了第1个选项：控制
                 if (pos == 0) {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
@@ -338,9 +351,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlLevelSpinner.setVisibility(View.INVISIBLE);
                     controlLevelLabel.setVisibility(View.INVISIBLE);
                 }
+                drawChart();
                 break;
+            }
             //第3个spinner 控制等级
-            case R.id.control_level_spinner:
+            case R.id.control_level_spinner: {
                 //选了非最后一项（即1～3级控制）
                 if (pos != 3) {
                     Log.i(TAG, "onItemSelected 选了第3个spinner的前3个选项");
@@ -376,9 +391,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlDurationInput.setTextColor(Color.BLACK);
 
                 }
+                drawChart();
                 break;
+            }
             //选择国家
-            case R.id.change_nation_spinner:
+            case R.id.change_nation_spinner: {
                 //从spinner选项得到当前选择的国家
                 currentNation = changeNationSpinner.getSelectedItem().toString();
                 //设置toolbar标题
@@ -386,8 +403,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.i(TAG, "onItemSelected:国家名 " + currentNation);
                 drawChart();
                 break;
-//            //第4个spinner 控制开始日期
-//            case R.id.control_start_date_spinner:
+            }
+            //第4个spinner 控制开始日期
+//            case R.id.control_start_date_spinner: {
 //                //选了非最后一项
 //                if (pos != 3) {
 //                    Log.i(TAG, "onItemSelected 选了第4个spinner的前3个选项");
@@ -398,10 +416,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                    Log.i(TAG, "onItemSelected 选了第4个spinner的最后一个选项");
 //                    //天数输入框可以编辑&正常颜色
 //                }
+//                drawChart();
 //                break;
+//            }
         }
-        //刷新 线
-        drawChart();
+
     }
 
     /**
