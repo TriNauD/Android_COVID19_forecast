@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         int numOfRealLines = lineViewModel.getNumOfRealLines();
         boolean isForecast = (curLineIndex >= numOfRealLines);//如果索引大于“真实线”数目，就表示是在预测
 
-        //准备显示线组
+        //------------------------- 线 ---------------------
         //获取到所有的线
         List<Line> allLines = lineViewModel.getLines();
 
@@ -214,25 +214,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             showLines.add(allLines.get(0));
         }
 
-
-        //线组放到线图数据里面
-        LineChartData curLineData = new LineChartData(showLines);
-
-
-        //轴
+        //------------------------- 轴 -----------------------
         //获取所有轴
         List<Axis[]> allAxes = lineViewModel.getAxesList();
         //选择要显示的轴
         Axis[] showAxisXY = allAxes.get(curLineIndex);
 
-        //设置到图
+        //-------------------- 图 ---------------------------------
+        //线组放到线图数据里面
+        LineChartData curLineData = new LineChartData(showLines);
+
+        //坐标轴设置到图上
         //设置X轴在下面
         curLineData.setAxisXBottom(showAxisXY[0]);
         //设置Y轴在左边
         curLineData.setAxisYLeft(showAxisXY[1]);
 
 
-        //视图
+        //----------------------- 视图 ------------------------------
         //把这个设置好的数据放到view里面
         myLineChartView.setLineChartData(curLineData);
 
