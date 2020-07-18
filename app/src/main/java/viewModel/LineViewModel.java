@@ -148,18 +148,28 @@ public class LineViewModel extends ViewModel {
             }
         }
 
-        //轴
+        //---------------- 轴 ---------------
+
+        //调用初始化轴
         WebConnect.initRealAxis();
+
         //绑定标签和轴
         for (int i = 0; i < numOflines; i++) {
-            Axis axisX = new Axis();//新建一个x轴
-            List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
+            //新建一个x轴的值列表
+            List<AxisValue> valueListX = new ArrayList<>();
+            //赋值日期数据
             //每个点
             for (int j = 0; j < numOfPoints; j++) {
-                AxisValue valueX = new AxisValue(j);//这里的数字是坐标的数值，比如第一个坐标就是0
-                valueX.setLabel(WebConnect.getAxisLableList().get(i).get(j));//将坐标的数值和对应的文字标签绑定起来
-                valueListX.add(valueX);//添加一个值
+                //一个点的轴的坐标显示值
+                AxisValue valueX = new AxisValue(j);//这里的数字j是坐标的数值，比如第一个坐标就是0
+                //将坐标的数值和对应的文字标签绑定起来
+                valueX.setLabel(WebConnect.getAxisLableList().get(i).get(j));
+                //添加一个值
+                valueListX.add(valueX);
             }
+
+            //做轴
+            Axis axisX = new Axis();//新建一个x轴
             axisX.setValues(valueListX);//将列表设置到x轴上面
             //TODO step of y ? 是时候考虑y轴的步长问题了
             Axis axisY = new Axis();//Y轴没有任何设定，就初始化
