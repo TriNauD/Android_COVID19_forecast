@@ -109,7 +109,10 @@ public class LineViewModel extends ViewModel {
 //                Log.d(TAG, "initRealChart：拿到仓库的linedata：" + WebConnect.getLineDataList().get(i)[j]);
                 tempArrayList.add(new PointValue(j, WebConnect.getLineDataList().get(i)[j]));
             }
-            Line line = new Line(tempArrayList);//根据值来创建一条线
+
+            //根据值来创建一条线
+            Line line = new Line(tempArrayList);
+            //调整颜色
             if (i == 0) {
                 line.setColor(Color.rgb(255, 0, 0));//第一条线为红色
             } else if (i == 1) {
