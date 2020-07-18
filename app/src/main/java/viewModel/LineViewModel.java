@@ -125,7 +125,7 @@ public class LineViewModel extends ViewModel {
             line.setFilled(true);//下方填充
             line.setCubic(false);//不要曲线
             //刷新和初始化
-            if (lines.size() < WebConnect.getNumOfRealLines()) {
+            if (lines.size() < numOflines) {
                 //如果是空的就初始化
                 lines.add(line);
             } else {
@@ -137,11 +137,11 @@ public class LineViewModel extends ViewModel {
         //轴
         WebConnect.initRealAxis();
         //绑定标签和轴
-        for (int i = 0; i < WebConnect.getNumOfRealLines(); i++) {
+        for (int i = 0; i < numOflines; i++) {
             Axis axisX = new Axis();//新建一个x轴
             List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
             //每个点
-            for (int j = 0; j < WebConnect.getNumOfRealPoints(); j++) {
+            for (int j = 0; j < numOfPoints; j++) {
                 AxisValue valueX = new AxisValue(j);//这里的数字是坐标的数值，比如第一个坐标就是0
                 valueX.setLabel(WebConnect.getAxisLableList().get(i).get(j));//将坐标的数值和对应的文字标签绑定起来
                 valueListX.add(valueX);//添加一个值
