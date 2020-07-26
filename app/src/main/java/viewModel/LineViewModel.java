@@ -40,7 +40,7 @@ public class LineViewModel extends ViewModel {
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
             for (int p = 0; p < WebConnect.getNumOfForecastPoints(); p++) {
                 int x = p + WebConnect.getNumOfRealPoints();//预测点接在真实后面
-                float y = WebConnect.getLineData().get(i + WebConnect.getNumOfRealLines())[p];
+                float y = WebConnect.getLineDataList().get(i + WebConnect.getNumOfRealLines())[p];
                 tempArrayList.add(new PointValue(x, y));//在真实线后面的是预测线
             }
             //设置样式
@@ -99,25 +99,36 @@ public class LineViewModel extends ViewModel {
      */
     public void initRealChart() {
         Log.i(TAG, "initRealChart 进入函数");
+
+        //调用初始化函数
         WebConnect.initReal();
+
+        //获取线条和点数量
+        int numOflines = WebConnect.getNumOfRealLines();
+        int numOfPoints = WebConnect.getNumOfRealPoints();
+
         //线
-        for (int i = 0; i < WebConnect.getNumOfRealLines(); i++) {
+        for (int i = 0; i < numOflines; i++) {
+
+            //获取仓库数据
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
-            for (int j = 0; j < WebConnect.getNumOfRealPoints(); j++) {
-                Log.d(TAG, "initRealChart：拿到仓库的linedata："+WebConnect.getLineData().get(i)[j]);
-                tempArrayList.add(new PointValue(j, WebConnect.getLineData().get(i)[j]));
+            for (int j = 0; j < numOfPoints; j++) {
+//                Log.d(TAG, "initRealChart：拿到仓库的linedata：" + WebConnect.getLineDataList().get(i)[j]);
+                tempArrayList.add(new PointValue(j, WebConnect.getLineDataList().get(i)[j]));
             }
-            Line line = new Line(tempArrayList);//根据值来创建一条线
-            if(i==0){
+
+            //创建一条线
+            Line line = new Line(tempArrayList);
+
+            //调整线样式
+            //颜色
+            if (i == 0) {
                 line.setColor(Color.rgb(255, 0, 0));//第一条线为红色
-            }
-            else if(i==1){
+            } else if (i == 1) {
                 line.setColor(Color.rgb(255, 140, 0));//第二条线橙色
-            }
-            else if(i==2){
+            } else if (i == 2) {
                 line.setColor(Color.rgb(50, 205, 50));//第三条线绿色
-            }
-            else{
+            } else {
                 line.setColor(Color.rgb(126, 185, 236));//第四条线蓝色
             }
             //line.setPointColor(Color.rgb(255,255,255));//点的颜色 这个是白色
@@ -125,8 +136,10 @@ public class LineViewModel extends ViewModel {
             line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
             line.setFilled(true);//下方填充
             line.setCubic(false);//不要曲线
+
+            //放到线组
             //刷新和初始化
-            if (lines.size() < WebConnect.getNumOfRealLines()) {
+            if (lines.size() < numOflines) {
                 //如果是空的就初始化
                 lines.add(line);
             } else {
@@ -135,23 +148,41 @@ public class LineViewModel extends ViewModel {
             }
         }
 
-       //轴
+        //---------------- 轴 ---------------
+
+        //调用初始化轴
         WebConnect.initRealAxis();
+
         //绑定标签和轴
-        for (int i = 0; i < WebConnect.getNumOfRealLines(); i++) {
-            Axis axisX = new Axis();//新建一个x轴
-            List<AxisValue> valueListX = new ArrayList<>();//新建一个x轴的值列表
+        for (int i = 0; i < numOflines; i++) {
+            //新建一个x轴的值列表
+            List<AxisValue> valueListX = new ArrayList<>();
+            //赋值日期数据
             //每个点
-            for (int j = 0; j < WebConnect.getNumOfRealPoints(); j++) {
-                AxisValue valueX = new AxisValue(j);//这里的数字是坐标的数值，比如第一个坐标就是0
-                valueX.setLabel(WebConnect.getAxisLableList().get(i).get(j));//将坐标的数值和对应的文字标签绑定起来
-                valueListX.add(valueX);//添加一个值
+            for (int j = 0; j < numOfPoints; j++) {
+                //一个点的轴的坐标显示值
+                AxisValue valueX = new AxisValue(j);//这里的数字j是坐标的数值，比如第一个坐标就是0
+                //将坐标的数值和对应的文字标签绑定起来
+                valueX.setLabel(WebConnect.getAxisLableList().get(i).get(j));
+                //添加一个值
+                valueListX.add(valueX);
             }
-            axisX.setValues(valueListX);//将列表设置到x轴上面
+
+            //做轴
+            //x轴
+            Axis axisX = new Axis();
+            //将标签列表设置到x轴上面
+            axisX.setValues(valueListX);
+
             //TODO step of y ? 是时候考虑y轴的步长问题了
+            //y轴
             Axis axisY = new Axis();//Y轴没有任何设定，就初始化
-            Axis[] axisXY = {axisX, axisY};//把XY放到一起
-            axesList.add(axisXY);//加入总的坐标轴列表
+
+
+            //把XY放到一起
+            Axis[] axisXY = {axisX, axisY};
+            //加入总的坐标轴列表
+            axesList.add(axisXY);
         }
     }
 

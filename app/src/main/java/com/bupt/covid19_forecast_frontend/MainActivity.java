@@ -89,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         drawChart();
 
 
-
     }
+
     /**
      * 绑定组件。
      * 绑定xml的组件
@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationLabel = findViewById(R.id.control_duration_label);
         dayLabel = findViewById(R.id.day_label);
     }
+
     public void setListener() {
         //switch设置listener
         forecastSwitch.setOnCheckedChangeListener(this);
@@ -151,6 +152,34 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         changeNationSpinner.setOnItemSelectedListener(this);
         //input设置listener
     }
+
+    /**
+     * 从网络获取数据
+     *
+     * @author lym
+     */
+    private void getDataFromWeb() {
+        //初始化折线图数据
+        //尝试传一个地区名字
+        Log.i(TAG, "draw 传递地区名字：" + currentNation);
+        //调用网络更新
+        //世界真实
+        WebConnect.getWorld(currentNation);
+        //预测
+        WebConnect.getPredict(currentNation);
+    }
+
+    /**
+     * 生成线并且调整线条格式
+     *
+     * @author lym
+     */
+    void getLines() {
+        //重新生成线
+        lineViewModel.initRealChart();
+        lineViewModel.initForecastChart();
+    }
+
     /**
      * 刷新图像。
      * 刷新图像，包括绑定视图、坐标轴、显示位置、显示区域范围
@@ -161,42 +190,60 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
 
+        //从网络获取数据
+        getDataFromWeb();
 
-        //初始化折线图数据
-        //尝试传一个地区名字
-        Log.i(TAG, "draw 传递地区名字：" + currentNation);
-        //调用网络更新
-        WebConnect.getWorld(currentNation);
-        WebConnect.getPredict(currentNation);
+        //生成线并且调整线条格式
+        getLines();
 
+        //画画和调整视图
+        draw();
+    }
 
-        //重新生成线
-        lineViewModel.initRealChart();
-        lineViewModel.initForecastChart();
-
-
+    /**
+     * 小画家
+     *
+     * @author lym
+     */
+    private void draw() {
         //更新预测状态，这个值是表示显示的线是不是真的预测线
-        boolean isForecast = (curLineIndex >= lineViewModel.getNumOfRealLines());//如果索引大于“真实线”数目，就表示是在预测
-        if (isForecast) {
-            //如果在预测，就重新初始化预测数据
-            lineViewModel.initForecastChart();
-        }
-        //线
+        int numOfRealLines = lineViewModel.getNumOfRealLines();
+        boolean isForecast = (curLineIndex >= numOfRealLines);//如果索引大于“真实线”数目，就表示是在预测
+
+        //------------------------- 线 ---------------------
+        //获取到所有的线
         List<Line> allLines = lineViewModel.getLines();
+
+        //当前要画的线
         List<Line> showLines = new ArrayList<>();
-        //当前的
+        //按照下标来选择一条
         showLines.add(allLines.get(curLineIndex));
+        //前半截后半截
+        //如果在预测，加上对应的真实线
         if (isForecast) {
-            //如果在预测，加上对应的真实线
             showLines.add(allLines.get(0));
         }
+
+        //------------------------- 轴 -----------------------
+        //获取所有轴
+        List<Axis[]> allAxes = lineViewModel.getAxesList();
+        //选择要显示的轴
+        Axis[] showAxisXY = allAxes.get(curLineIndex);
+
+        //-------------------- 图 ---------------------------------
+        //线组放到线图数据里面
         LineChartData curLineData = new LineChartData(showLines);
-        //轴
-        Axis[] showAxisXY = lineViewModel.getAxesList().get(curLineIndex);
-        curLineData.setAxisXBottom(showAxisXY[0]);//设置X轴
-        curLineData.setAxisYLeft(showAxisXY[1]);//设置Y轴
-        //视图
-        myLineChartView.setLineChartData(curLineData);//把这个设置好的数据放到view里面
+
+        //坐标轴设置到图上
+        //设置X轴在下面
+        curLineData.setAxisXBottom(showAxisXY[0]);
+        //设置Y轴在左边
+        curLineData.setAxisYLeft(showAxisXY[1]);
+
+
+        //----------------------- 视图 ------------------------------
+        //把这个设置好的数据放到view里面
+        myLineChartView.setLineChartData(curLineData);
 
         Log.i(TAG, "drawChart 调参师");
 
@@ -245,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //判断是哪个spinner
         switch (parent.getId()) {
             //第1个spinner 曲线类型
-            case R.id.line_type_spinner:
+            case R.id.line_type_spinner: {
                 //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
                 if (pos != 0) {
                     //如果不是第一条线，也就不应该显示预测
@@ -277,9 +324,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         paramLine3.setVisibility(View.INVISIBLE);
                     }
                 }
+                //只需要重新绘制即可
+                draw();
                 break;
+            }
             //第2个spinner 模型类型（群体和控制）
-            case R.id.model_type_spinner:
+            case R.id.model_type_spinner: {
                 //选了第1个选项：控制
                 if (pos == 0) {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
@@ -301,9 +351,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlLevelSpinner.setVisibility(View.INVISIBLE);
                     controlLevelLabel.setVisibility(View.INVISIBLE);
                 }
+                drawChart();
                 break;
+            }
             //第3个spinner 控制等级
-            case R.id.control_level_spinner:
+            case R.id.control_level_spinner: {
                 //选了非最后一项（即1～3级控制）
                 if (pos != 3) {
                     Log.i(TAG, "onItemSelected 选了第3个spinner的前3个选项");
@@ -339,9 +391,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlDurationInput.setTextColor(Color.BLACK);
 
                 }
+                drawChart();
                 break;
+            }
             //选择国家
-            case R.id.change_nation_spinner:
+            case R.id.change_nation_spinner: {
                 //从spinner选项得到当前选择的国家
                 currentNation = changeNationSpinner.getSelectedItem().toString();
                 //设置toolbar标题
@@ -349,8 +403,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.i(TAG, "onItemSelected:国家名 " + currentNation);
                 drawChart();
                 break;
-//            //第4个spinner 控制开始日期
-//            case R.id.control_start_date_spinner:
+            }
+            //第4个spinner 控制开始日期
+//            case R.id.control_start_date_spinner: {
 //                //选了非最后一项
 //                if (pos != 3) {
 //                    Log.i(TAG, "onItemSelected 选了第4个spinner的前3个选项");
@@ -361,10 +416,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                    Log.i(TAG, "onItemSelected 选了第4个spinner的最后一个选项");
 //                    //天数输入框可以编辑&正常颜色
 //                }
+//                drawChart();
 //                break;
+//            }
         }
-        //刷新 线
-        drawChart();
+
     }
 
     /**
