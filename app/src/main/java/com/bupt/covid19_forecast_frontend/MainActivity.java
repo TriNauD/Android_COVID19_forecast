@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private RelativeLayout paramLine3;
 
     //当前国家
-    private String currentNation = "秘鲁";
+    private String currentNation = "中国";
 
     //折线视图
     private LineChartView myLineChartView;
@@ -252,24 +252,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         maxViewPort.left = 0;
         maxViewPort.bottom = 0;
         //x轴最大坐标值
-        maxViewPort.right = 120 + 15 - 1;
+        maxViewPort.right = 200 + 15 - 1;
         //y轴最大坐标值
-        maxViewPort.top = 1200000;
+        maxViewPort.top = 2200000;
         myLineChartView.setMaximumViewport(maxViewPort);
 
         //显示的小界面，可以滑动
         Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
-        halfViewport.top = 1200000;
+        halfViewport.top = 2200000;
         halfViewport.bottom = 0;
         halfViewport.left = 0;
         if (isForecast) {
             //如果在预测
             Log.i(TAG, "setChartShow 函数：【预测】设置当前范围");
             //真实120预测15
-            halfViewport.right = 120 + 15 - 1;
+            halfViewport.right = 200 + 15 - 1;
         } else {
             Log.i(TAG, "setChartShow 函数：【真实】设置当前范围");
-            halfViewport.right = 120;
+            halfViewport.right = 200 + 15 - 1;
         }
         myLineChartView.setCurrentViewport(halfViewport);
     }
