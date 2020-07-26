@@ -157,10 +157,10 @@ public class WebConnect {
                     //赋值列表
                     nationList = world;
                     //一天的所有数据
-                    Alltime_world oneDay = nationList.get(0);
+                    Alltime_world oneDay = nationList.get(nationList.size() - 1);
                     //一天的现存确诊
                     a = oneDay.getPresent_confirm();
-                    Log.i(TAG, "onResponse: 第一天的的现存确诊： " + a);
+                    Log.i(TAG, "onResponse: 最后一天的的现存确诊： " + a);
                     //真实线的数量，要根据传进来的数量啦
                     numOfRealPoints = nationList.size();
                     Log.i(TAG, "onResponse: 真实线的节点数量：" + numOfRealPoints);
