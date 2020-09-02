@@ -247,12 +247,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         Log.i(TAG, "drawChart 调参师");
 
+        //获取后端的节点数目
+        int numOfPoint = lineViewModel.getNumOfRealPoint();
+
         //总体的图表范围
         Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
         maxViewPort.left = 0;
         maxViewPort.bottom = 0;
         //x轴最大坐标值
-        maxViewPort.right = 200 + 15 - 1;
+        maxViewPort.right = numOfPoint;
         //y轴最大坐标值
         maxViewPort.top = 2200000;
         myLineChartView.setMaximumViewport(maxViewPort);
@@ -266,10 +269,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //如果在预测
             Log.i(TAG, "setChartShow 函数：【预测】设置当前范围");
             //真实120预测15
-            halfViewport.right = 200 + 15 - 1;
+            halfViewport.right = numOfPoint;
         } else {
             Log.i(TAG, "setChartShow 函数：【真实】设置当前范围");
-            halfViewport.right = 200 + 15 - 1;
+            halfViewport.right = numOfPoint;
         }
         myLineChartView.setCurrentViewport(halfViewport);
     }
