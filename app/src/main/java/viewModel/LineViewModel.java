@@ -208,7 +208,7 @@ public class LineViewModel extends ViewModel {
     }
 
     public int getNumOfRealPoint() {
-        return 200 + 15 - 1;
+        return WebConnect.getNumOfRealPoints() + 5 - 1;
     }
 
 }
