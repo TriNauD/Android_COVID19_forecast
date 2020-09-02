@@ -88,10 +88,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 //        //从网络获取数据
 //        getDataFromWeb();
-        //世界真实
-        WebConnect.getWorld(currentNation);
-        //预测
-        WebConnect.getPredict(currentNation);
+//        //世界真实
+//        WebConnect.getWorld(currentNation);
+//        //预测
+//        WebConnect.getPredict(currentNation);
         //画折线图
         drawChart();
 
