@@ -160,21 +160,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //input设置listener
     }
 
-    /**
-     * 从网络获取数据
-     *
-     * @author lym
-     */
-    private void getDataFromWeb() {
-        //初始化折线图数据
-        //尝试传一个地区名字
-        Log.i(TAG, "draw 传递地区名字：" + currentNation);
-        //调用网络更新
-        //世界真实
-        WebConnect.getWorld(currentNation);
-        //预测
-        WebConnect.getPredict(currentNation);
-    }
 
     /**
      * 生成线并且调整线条格式
