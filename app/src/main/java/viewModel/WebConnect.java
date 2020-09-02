@@ -95,7 +95,7 @@ public class WebConnect {
                     Log.i(TAG, "onResponse: 第一天的的现存确诊： " + oneDayPresent);
                     //真实线的数量，要根据传进来的数量啦
                     numOfRealPoints = provinceList.size();
-                    Log.i(TAG, "onResponse: 真实线的节点数量：" + numOfRealPoints);
+                    Log.i(TAG, "onResponse: 省份真实线的节点数量：" + numOfRealPoints);
 
                     //真实线，一共4条
                     for (int i = 0; i < numOfRealPoints; i++) {
@@ -166,7 +166,7 @@ public class WebConnect {
                     Log.i(TAG, "onResponse: 最后一天的的累计治愈： " + oneDayHeal);
                     //真实线的数量，要根据传进来的数量啦
                     numOfRealPoints = nationList.size();
-                    Log.i(TAG, "onResponse: 真实线的节点数量：" + numOfRealPoints);
+                    Log.i(TAG, "onResponse: 世界真实线的节点数量：" + numOfRealPoints);
 
                     //真实线，一共4条
                     for (int i = 0; i < numOfRealPoints; i++) {
