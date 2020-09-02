@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         protected String doInBackground(String... params) {
             try {
 //                Thread.sleep(5000);
+                Log.i(TAG, "当前国家"+currentNation);
                 while (WebConnect.isDataGotten == false){
                     WebConnect.getWorld(currentNation);
                 }
