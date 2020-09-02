@@ -34,8 +34,8 @@ public class WebConnect {
 
 
     //预测参数
-    //后端用的“是否为国家”
-    private static Boolean isNation = true;
+    //是否在国内，true表示省份，false表示国家
+    private static Boolean isNation = false;
     //是否进行控制
     private static Boolean hasControl = true;
     //控制开始时间
