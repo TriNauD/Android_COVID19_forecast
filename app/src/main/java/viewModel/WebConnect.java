@@ -66,7 +66,7 @@ public class WebConnect {
      * @author qy
      */
     public static void getProvince(String name) {
-        Log.i(TAG, "进入getProvince");
+        Log.i(TAG, "进入获取省份getProvince");
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -79,7 +79,7 @@ public class WebConnect {
         province_task.enqueue(new Callback<List<Alltime_province>>() {
             @Override
             public void onResponse(Call<List<Alltime_province>> call, Response<List<Alltime_province>> response) {
-                Log.i(TAG, "onResponse --> " + response.code());
+                Log.i(TAG, "省份onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Alltime_province> province = response.body();
                     //网络拿到的一个地区的列表，里面是所有时间的数据
@@ -114,7 +114,7 @@ public class WebConnect {
 
             @Override
             public void onFailure(Call<List<Alltime_province>> call, Throwable t) {
-                Log.i(TAG, "onFailure..." + t.toString());
+                Log.i(TAG, "省份onFailure..." + t.toString());
             }
         });
 
@@ -128,7 +128,7 @@ public class WebConnect {
      * @author qy
      */
     public static void getWorld(String name) {
-        Log.i(TAG, "进入getWorld");
+        Log.i(TAG, "进入获取世界getWorld");
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -147,7 +147,7 @@ public class WebConnect {
         task.enqueue(new Callback<List<Alltime_world>>() {
             @Override
             public void onResponse(Call<List<Alltime_world>> call, Response<List<Alltime_world>> response) {
-                Log.i(TAG, "onResponse --> " + response.code());
+                Log.i(TAG, "世界onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Alltime_world> world = response.body();
                     //网络拿到的一个地区的列表，里面是所有时间的数据
@@ -186,7 +186,7 @@ public class WebConnect {
 
             @Override
             public void onFailure(Call<List<Alltime_world>> call, Throwable t) {
-                Log.i(TAG, "onFailure..." + t.toString());
+                Log.i(TAG, "世界onFailure..." + t.toString());
             }
         });
 
@@ -199,7 +199,7 @@ public class WebConnect {
      * @author qy
      */
     public static void getPredict(String name) {
-        Log.i(TAG, "进入getPredict");
+        Log.i(TAG, "进入获取预测getPredict");
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -212,7 +212,7 @@ public class WebConnect {
         task.enqueue(new Callback<List<Integer>>() {
             @Override
             public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
-                Log.i(TAG, "onResponse --> " + response.code());
+                Log.i(TAG, "预测onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Integer> predict = response.body();
                     float[] linePoints = new float[5];//一条线上面的点
@@ -233,7 +233,7 @@ public class WebConnect {
 
             @Override
             public void onFailure(Call<List<Integer>> call, Throwable t) {
-                Log.i(TAG, "onFailure..." + t.toString());
+                Log.i(TAG, "预测onFailure..." + t.toString());
             }
         });
 
