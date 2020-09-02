@@ -34,14 +34,16 @@ public class WebConnect {
 
 
     //预测参数
+    //后端用的“是否为国家”
+    private static Boolean isNation = true;
     //是否进行控制
-    private static boolean hasControl = false;
+    private static Boolean hasControl = true;
     //控制开始时间
-    private static String startControlDate;
+    private static String startControlDate = "2020-01-01";
     //控制增长阶段的时间
-    private static int raiseLastTime;
+    private static int raiseLastTime = 7;
     //控制强度
-    private static int controlGrade;
+    private static int controlGrade = 1;
 
     //所有线数据
     private static List<float[]> lineDataList = new ArrayList<>();
@@ -49,11 +51,6 @@ public class WebConnect {
     //网络传进来的数
     private static float[][] xyReal = new float[4][9999];
 
-
-    //后端用的国家名
-    private static String name;
-    //后端用的“是否为国家”
-    private static boolean isNation;
 
     //拿到的一个地区的列表，里面是所有时间的数据
     private static List<Alltime_province> provinceList = new ArrayList<>();
