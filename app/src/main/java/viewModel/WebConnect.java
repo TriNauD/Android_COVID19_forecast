@@ -60,7 +60,7 @@ public class WebConnect {
     //世界的列表
     private static List<Alltime_world> nationList = new ArrayList<>();
     //第一天的现存确诊
-    private static Integer a;
+    private static Integer oneDayPresent, oneDayHeal;
 
     /**
      * 从后端获取省份疫情数据
@@ -91,8 +91,8 @@ public class WebConnect {
                     //一天的所有数据
                     Alltime_province oneDay = provinceList.get(0);
                     //一天的现存确诊
-                    a = oneDay.getPresent_confirm();
-                    Log.i(TAG, "onResponse: 第一天的的现存确诊： " + a);
+                    oneDayPresent = oneDay.getPresent_confirm();
+                    Log.i(TAG, "onResponse: 第一天的的现存确诊： " + oneDayPresent);
                     //真实线的数量，要根据传进来的数量啦
                     numOfRealPoints = provinceList.size();
                     Log.i(TAG, "onResponse: 真实线的节点数量：" + numOfRealPoints);
@@ -159,8 +159,11 @@ public class WebConnect {
                     //一天的所有数据
                     Alltime_world oneDay = nationList.get(nationList.size() - 1);
                     //一天的现存确诊
-                    a = oneDay.getPresent_confirm();
-                    Log.i(TAG, "onResponse: 最后一天的的现存确诊： " + a);
+                    oneDayPresent = oneDay.getPresent_confirm();
+                    Log.i(TAG, "onResponse: 最后一天的的现存确诊： " + oneDayPresent);
+                    //一天的累计治愈
+                    oneDayHeal = oneDay.getTotal_heal();
+                    Log.i(TAG, "onResponse: 最后一天的的累计治愈： " + oneDayHeal);
                     //真实线的数量，要根据传进来的数量啦
                     numOfRealPoints = nationList.size();
                     Log.i(TAG, "onResponse: 真实线的节点数量：" + numOfRealPoints);
