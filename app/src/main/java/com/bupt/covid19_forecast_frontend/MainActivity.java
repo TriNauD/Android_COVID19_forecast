@@ -1,16 +1,19 @@
 package com.bupt.covid19_forecast_frontend;
 
+import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -63,10 +66,66 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //折线的数据类
     private LineViewModel lineViewModel;
 
+    //加载中条
+    private ProgressDialog progressDialog = null;
+
     //当前显示的线是几号
     private int curLineIndex = 0;
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
+    //数据是否加载完毕
+    private boolean isDataGotten = false;
+
+    GetDataTask myTask;
+    ProgressBar progressBar;
+    //
+    private class GetDataTask extends AsyncTask<String,Integer,String> {
+        // 方法1：onPreExecute（）
+        // 作用：执行 线程任务前的操作
+        @Override
+        protected void onPreExecute(){
+        }
+        // 方法2：doInBackground（）
+        // 作用：接收输入参数、执行任务中的耗时操作、返回 线程任务执行的结果
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+//                Thread.sleep(5000);
+                while (WebConnect.isDataGotten == false){
+                    WebConnect.getWorld(currentNation);
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+//        // 方法3：onProgressUpdate（）
+//        // 作用：在主线程 显示线程任务执行的进度
+//        @Override
+//        protected void onProgressUpdate(Integer... progresses) {
+//            progressBar.setProgress(progresses[0]);
+//
+//        }
+        // 方法4：onPostExecute（）
+        // 作用：接收线程任务执行结果、将执行结果显示到UI组件
+        @Override
+        protected void onPostExecute(String result) {
+            // 执行完毕后，则更新UI
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+        // 方法5：onCancelled()
+        // 作用：将异步任务设置为：取消状态
+        @Override
+        protected void onCancelled() {
+//            text.setText("canceled");
+            progressBar.setProgress(0);
+            progressBar.setVisibility(View.INVISIBLE);
+//            startBtn.setVisibility(View.INVISIBLE);
+//            cancelBtn.setVisibility(View.INVISIBLE);
+
+        }
+
+    }
 
     /**
      * 活动生命周期：“创建”
@@ -74,17 +133,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @param savedInstanceState ？？？系统使用参数
      * @author lym
      */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //绑定组件
         bindingElements();
+        myTask = new GetDataTask();
+        myTask.execute();
         //设置监听
         setListener();
         //折线图数据
         lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
-
         //画折线图
         drawChart();
 
@@ -125,6 +186,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol2 = findViewById(R.id.people_num_bar_col_2_num);
         peopleNumBarCol3 = findViewById(R.id.people_num_bar_col_3_num);
         peopleNumBarCol4 = findViewById(R.id.people_num_bar_col_4_num);
+
+        //progress bar
+        progressBar = findViewById(R.id.progress_bar);
+
         /*peopleNumBarCol1.setText((int) WebConnect.getLineData().get(0)[WebConnect.getNumOfRealPoints()]);
         peopleNumBarCol2.setText((int) WebConnect.getLineData().get(1)[WebConnect.getNumOfRealPoints()]);
         peopleNumBarCol3.setText((int) WebConnect.getLineData().get(2)[WebConnect.getNumOfRealPoints()]);
@@ -141,7 +206,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationLabel = findViewById(R.id.control_duration_label);
         dayLabel = findViewById(R.id.day_label);
     }
-
+    /**
+     * 设置监听。
+     * 设置多个监听器
+     *
+     * @author xjy
+     */
     public void setListener() {
         //switch设置listener
         forecastSwitch.setOnCheckedChangeListener(this);
@@ -153,6 +223,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //input设置listener
     }
 
+    /**
+     * 显示加载中栏
+     *
+     * @author xjy
+     */
+    public void showLoadingDialog(){
+        progressDialog = new ProgressDialog(MainActivity.this);
+        //加载中栏的内容
+        progressDialog.setTitle("Loading");
+        progressDialog.setMessage("Loading Data");
+        progressDialog.setCancelable(true);
+        //判断是否显示加载中
+        if (isDataGotten){
+            progressDialog.show();
+        }else {
+            progressDialog.cancel();
+        }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void setWebOK(){
+        isDataGotten = true;
+    }
     /**
      * 从网络获取数据
      *
