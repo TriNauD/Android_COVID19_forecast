@@ -66,7 +66,7 @@ public class WebConnect {
      * @author qy
      */
     public static void getProvince(String name) {
-        Log.i(TAG, "进入获取省份getProvince");
+        Log.i(TAG, "获取省份：" + name);
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -128,7 +128,7 @@ public class WebConnect {
      * @author qy
      */
     public static void getWorld(String name) {
-        Log.i(TAG, "进入获取世界getWorld");
+        Log.i(TAG, "获取世界：" + name);
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -199,7 +199,7 @@ public class WebConnect {
      * @author qy
      */
     public static void getPredict(String name) {
-        Log.i(TAG, "进入获取预测getPredict");
+        Log.i(TAG, "进入获取预测：" + name);
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
