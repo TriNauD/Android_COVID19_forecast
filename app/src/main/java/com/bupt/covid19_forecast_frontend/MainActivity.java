@@ -85,6 +85,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //折线图数据
         lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
 
+
+//        //从网络获取数据
+//        getDataFromWeb();
+        //世界真实
+        WebConnect.getWorld(currentNation);
+        //预测
+        WebConnect.getPredict(currentNation);
         //画折线图
         drawChart();
 
@@ -190,8 +197,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
 
-        //从网络获取数据
-        getDataFromWeb();
 
         //生成线并且调整线条格式
         getLines();
@@ -354,6 +359,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlLevelSpinner.setVisibility(View.INVISIBLE);
                     controlLevelLabel.setVisibility(View.INVISIBLE);
                 }
+
+//                //从网络获取数据
+//                getDataFromWeb();
+//                //世界真实
+//                WebConnect.getWorld(currentNation);
+                //预测
+                WebConnect.getPredict(currentNation);
+                //画图
                 drawChart();
                 break;
             }
@@ -394,6 +407,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlDurationInput.setTextColor(Color.BLACK);
 
                 }
+
+//                //从网络获取数据
+//                getDataFromWeb();
+//                //世界真实
+//                WebConnect.getWorld(currentNation);
+                //预测
+                WebConnect.getPredict(currentNation);
                 drawChart();
                 break;
             }
@@ -404,6 +424,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //设置toolbar标题
                 toolbarTitle.setText(currentNation + getResources().getString(R.string.national_title));
                 Log.i(TAG, "onItemSelected:国家名 " + currentNation);
+
+//                //从网络获取数据
+//                getDataFromWeb();
+                //世界真实
+                WebConnect.getWorld(currentNation);
+                //预测
+                WebConnect.getPredict(currentNation);
                 drawChart();
                 break;
             }
@@ -461,6 +488,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             paramLine2.setVisibility(View.INVISIBLE);
             paramLine3.setVisibility(View.INVISIBLE);
         }
+
+//        //从网络获取数据
+//        getDataFromWeb();
+//        //世界真实
+//        WebConnect.getWorld(currentNation);
+//        //预测
+//        WebConnect.getPredict(currentNation);
         //无论怎样，点击了预测开关就刷新一下线图
         drawChart();
     }
