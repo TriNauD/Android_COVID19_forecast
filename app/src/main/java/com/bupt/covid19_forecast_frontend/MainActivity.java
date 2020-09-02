@@ -78,24 +78,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     GetDataTask myTask;
     ProgressBar progressBar;
-    //
-    private class GetDataTask extends AsyncTask<String,Integer,String> {
+
+    /**
+     * 异步运行获取数据 获取结束后反映在ui组件上（加载中消失）
+     *
+     * @param
+     * @author xjy
+     */
+    private class GetDataTask extends AsyncTask<String, Integer, String> {
         // 方法1：onPreExecute（）
         // 作用：执行 线程任务前的操作
-        @Override
-        protected void onPreExecute(){
-        }
+//        @Override
+//        protected void onPreExecute(){
+//        }
         // 方法2：doInBackground（）
         // 作用：接收输入参数、执行任务中的耗时操作、返回 线程任务执行的结果
         @Override
         protected String doInBackground(String... params) {
             try {
-//                Thread.sleep(5000);
-                Log.i(TAG, "当前国家"+currentNation);
-                while (WebConnect.isDataGotten == false){
-                    WebConnect.getWorld(currentNation);
-                }
-            }catch (Exception e) {
+                Thread.sleep(5000);
+//                Log.i(TAG, "当前国家"+currentNation);
+//                while (WebConnect.isDataGotten == false){
+//                    WebConnect.getWorld(currentNation);
+//                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -107,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //            progressBar.setProgress(progresses[0]);
 //
 //        }
+
         // 方法4：onPostExecute（）
         // 作用：接收线程任务执行结果、将执行结果显示到UI组件
         @Override
@@ -114,17 +121,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // 执行完毕后，则更新UI
             progressBar.setVisibility(View.INVISIBLE);
         }
-        // 方法5：onCancelled()
-        // 作用：将异步任务设置为：取消状态
-        @Override
-        protected void onCancelled() {
-//            text.setText("canceled");
-            progressBar.setProgress(0);
-            progressBar.setVisibility(View.INVISIBLE);
-//            startBtn.setVisibility(View.INVISIBLE);
-//            cancelBtn.setVisibility(View.INVISIBLE);
 
-        }
+//        // 方法5：onCancelled()
+//        // 作用：将异步任务设置为：取消状态
+//        @Override
+//        protected void onCancelled() {
+//            progressBar.setProgress(0);
+//            progressBar.setVisibility(View.INVISIBLE);
+//
+//        }
 
     }
 
@@ -207,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationLabel = findViewById(R.id.control_duration_label);
         dayLabel = findViewById(R.id.day_label);
     }
+
     /**
      * 设置监听。
      * 设置多个监听器
@@ -229,23 +235,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @author xjy
      */
-    public void showLoadingDialog(){
+    public void showLoadingDialog() {
         progressDialog = new ProgressDialog(MainActivity.this);
         //加载中栏的内容
         progressDialog.setTitle("Loading");
         progressDialog.setMessage("Loading Data");
         progressDialog.setCancelable(true);
         //判断是否显示加载中
-        if (isDataGotten){
+        if (isDataGotten) {
             progressDialog.show();
-        }else {
+        } else {
             progressDialog.cancel();
         }
     }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void setWebOK(){
+    public void setWebOK() {
         isDataGotten = true;
     }
+
     /**
      * 从网络获取数据
      *
