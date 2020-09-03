@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //先设置为没有开始获取
                 WebConnect.isDataGotten = false;
                 progressBar.setVisibility(View.VISIBLE);
-                Log.i(TAG, "isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
+                Log.i(TAG, "Loading...isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
 
 
                 //去获取数据，如果成功会将isDataGotten设置为true
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 //如果没有得到数据，就一直刷新图表
                 while (!WebConnect.isDataGotten) {
-//                    drawChart();
+                    Log.d(TAG, "Loading...While " + WebConnect.isDataGotten);
                 }
 
                 //成功之后，最后一次再刷新一下图表
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //先设置为没有开始获取
                 WebConnect.isDataGotten = false;
                 progressBar.setVisibility(View.VISIBLE);
-                Log.i(TAG, "isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
+                Log.i(TAG, "Loading...isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
 
 
                 //去获取数据，如果成功会将isDataGotten设置为true
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 //如果没有得到数据，就一直刷新图表
                 while (!WebConnect.isDataGotten) {
-//                    drawChart();
+                    Log.d(TAG, "Loading...While " + WebConnect.isDataGotten);
                 }
 
                 //成功之后，最后一次再刷新一下图表
