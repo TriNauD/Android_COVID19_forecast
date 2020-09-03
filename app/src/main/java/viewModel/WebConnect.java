@@ -193,6 +193,9 @@ public class WebConnect {
             @Override
             public void onFailure(Call<List<Alltime_world>> call, Throwable t) {
                 Log.i(TAG, "世界onFailure..." + t.toString());
+
+                //已经获取完毕
+                isDataGotten = true;
             }
         });
 
@@ -232,22 +235,17 @@ public class WebConnect {
                     //预测线的节点数量要根据传入数量
                     numOfForecastPoints = predict.size();
 
-//
-//                    //判定是否要刷新
-//                    int size = lineDataList.size();
-//                    if (size < numOfRealLines + numOfForecastLines) {
-//                        //如果线组里面还没有预测线，就新添加
-//                        lineDataList.add(linePoints);
-//                    } else {
-//                        //如果已经有预测线，就更新
-//                        lineDataList.set(numOfRealLines, linePoints);
-//                    }
+                    //已经获取完毕
+                    isDataGotten = true;
                 }
             }
 
             @Override
             public void onFailure(Call<List<Integer>> call, Throwable t) {
                 Log.i(TAG, "预测onFailure..." + t.toString());
+
+                //已经获取完毕
+                isDataGotten = true;
             }
         });
 
