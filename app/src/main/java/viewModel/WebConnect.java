@@ -30,18 +30,20 @@ public class WebConnect {
     //“真实线”的节点数
     private static int numOfRealPoints = 9999;
     //“预测线”的节点数
-    private static final int numOfForecastPoints = 15;
+    private static int numOfForecastPoints = 555;
 
 
     //预测参数
+    //是否在国内，true表示省份，false表示国家
+    private static Boolean isNation = false;
     //是否进行控制
-    private static boolean hasControl = false;
+    private static Boolean hasControl = true;
     //控制开始时间
-    private static String startControlDate;
+    private static String startControlDate = "2020-01-01";
     //控制增长阶段的时间
-    private static int raiseLastTime;
+    private static int raiseLastTime = 7;
     //控制强度
-    private static int controlGrade;
+    private static int controlGrade = 1;
 
     //所有线数据
     private static List<float[]> lineDataList = new ArrayList<>();
@@ -50,17 +52,15 @@ public class WebConnect {
     private static float[][] xyReal = new float[4][9999];
 
 
-    //后端用的国家名
-    private static String name;
-    //后端用的“是否为国家”
-    private static boolean isNation;
-
     //拿到的一个地区的列表，里面是所有时间的数据
     private static List<Alltime_province> provinceList = new ArrayList<>();
     //世界的列表
     private static List<Alltime_world> nationList = new ArrayList<>();
     //第一天的现存确诊
-    private static Integer a;
+    private static Integer oneDayPresent, oneDayHeal;
+
+    //一条线上面的点
+    private static float[] xyPredict = new float[numOfForecastPoints];
 
     //数据是否获取完毕 用于通知前端 已加载
     public static boolean isDataGotten = false;
@@ -72,7 +72,7 @@ public class WebConnect {
      * @author qy
      */
     public static void getProvince(String name) {
-        Log.i(TAG, "进入getProvince");
+        Log.i(TAG, "获取省份：" + name);
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -85,7 +85,7 @@ public class WebConnect {
         province_task.enqueue(new Callback<List<Alltime_province>>() {
             @Override
             public void onResponse(Call<List<Alltime_province>> call, Response<List<Alltime_province>> response) {
-                Log.i(TAG, "onResponse --> " + response.code());
+                Log.i(TAG, "省份onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Alltime_province> province = response.body();
                     //网络拿到的一个地区的列表，里面是所有时间的数据
@@ -94,11 +94,11 @@ public class WebConnect {
                     //一天的所有数据
                     Alltime_province oneDay = provinceList.get(0);
                     //一天的现存确诊
-                    a = oneDay.getPresent_confirm();
-                    Log.i(TAG, "onResponse: 第一天的的现存确诊： " + a);
+                    oneDayPresent = oneDay.getPresent_confirm();
+                    Log.i(TAG, "onResponse: 第一天的的现存确诊： " + oneDayPresent);
                     //真实线的数量，要根据传进来的数量啦
                     numOfRealPoints = provinceList.size();
-                    Log.i(TAG, "onResponse: 真实线的节点数量：" + numOfRealPoints);
+                    Log.i(TAG, "onResponse: 省份真实线的节点数量：" + numOfRealPoints);
 
                     //真实线，一共4条
                     for (int i = 0; i < numOfRealPoints; i++) {
@@ -120,7 +120,7 @@ public class WebConnect {
 
             @Override
             public void onFailure(Call<List<Alltime_province>> call, Throwable t) {
-                Log.i(TAG, "onFailure..." + t.toString());
+                Log.i(TAG, "省份onFailure..." + t.toString());
             }
         });
 
@@ -134,7 +134,7 @@ public class WebConnect {
      * @author qy
      */
     public static void getWorld(String name) {
-        Log.i(TAG, "进入getWorld");
+        Log.i(TAG, "获取世界：" + name);
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -153,20 +153,23 @@ public class WebConnect {
         task.enqueue(new Callback<List<Alltime_world>>() {
             @Override
             public void onResponse(Call<List<Alltime_world>> call, Response<List<Alltime_world>> response) {
-                Log.i(TAG, "onResponse --> " + response.code());
+                Log.i(TAG, "世界onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Alltime_world> world = response.body();
                     //网络拿到的一个地区的列表，里面是所有时间的数据
                     //赋值列表
                     nationList = world;
                     //一天的所有数据
-                    Alltime_world oneDay = nationList.get(0);
+                    Alltime_world oneDay = nationList.get(nationList.size() - 1);
                     //一天的现存确诊
-                    a = oneDay.getPresent_confirm();
-                    Log.i(TAG, "onResponse: 第一天的的现存确诊： " + a);
+                    oneDayPresent = oneDay.getPresent_confirm();
+                    Log.i(TAG, "onResponse: 最后一天的的现存确诊： " + oneDayPresent);
+                    //一天的累计治愈
+                    oneDayHeal = oneDay.getTotal_heal();
+                    Log.i(TAG, "onResponse: 最后一天的的累计治愈： " + oneDayHeal);
                     //真实线的数量，要根据传进来的数量啦
                     numOfRealPoints = nationList.size();
-                    Log.i(TAG, "onResponse: 真实线的节点数量：" + numOfRealPoints);
+                    Log.i(TAG, "onResponse: 世界真实线的节点数量：" + numOfRealPoints);
 
                     //真实线，一共4条
                     for (int i = 0; i < numOfRealPoints; i++) {
@@ -189,7 +192,7 @@ public class WebConnect {
 
             @Override
             public void onFailure(Call<List<Alltime_world>> call, Throwable t) {
-                Log.i(TAG, "onFailure..." + t.toString());
+                Log.i(TAG, "世界onFailure..." + t.toString());
             }
         });
 
@@ -202,7 +205,7 @@ public class WebConnect {
      * @author qy
      */
     public static void getPredict(String name) {
-        Log.i(TAG, "进入getPredict");
+        Log.i(TAG, "进入获取预测：" + name);
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -215,28 +218,36 @@ public class WebConnect {
         task.enqueue(new Callback<List<Integer>>() {
             @Override
             public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
-                Log.i(TAG, "onResponse --> " + response.code());
+                Log.i(TAG, "预测onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Integer> predict = response.body();
-                    float[] linePoints = new float[5];//一条线上面的点
-                    for (int j = 0; j < 5; ++j) {
-                        linePoints[j] = predict.get(j);
+                    //第一天预测的数据
+                    Log.i(TAG, "onResponse: 第一天预测的数据： " + predict.get(0));
+
+                    //将预测数据放到线上
+                    for (int j = 0; j < predict.size(); ++j) {
+                        xyPredict[j] = predict.get(j);
                     }
-                    //判定是否要刷新
-                    int size = lineDataList.size();
-                    if (size < numOfRealLines + numOfForecastLines) {
-                        //如果线组里面还没有预测线，就新添加
-                        lineDataList.add(linePoints);
-                    } else {
-                        //如果已经有预测线，就更新
-                        lineDataList.set(numOfRealLines, linePoints);
-                    }
+
+                    //预测线的节点数量要根据传入数量
+                    numOfForecastPoints = predict.size();
+
+//
+//                    //判定是否要刷新
+//                    int size = lineDataList.size();
+//                    if (size < numOfRealLines + numOfForecastLines) {
+//                        //如果线组里面还没有预测线，就新添加
+//                        lineDataList.add(linePoints);
+//                    } else {
+//                        //如果已经有预测线，就更新
+//                        lineDataList.set(numOfRealLines, linePoints);
+//                    }
                 }
             }
 
             @Override
             public void onFailure(Call<List<Integer>> call, Throwable t) {
-                Log.i(TAG, "onFailure..." + t.toString());
+                Log.i(TAG, "预测onFailure..." + t.toString());
             }
         });
 
@@ -250,13 +261,13 @@ public class WebConnect {
      * @author lym
      */
     public static void initReal() {
-        Log.i(TAG, "进入initReal");
+//        Log.i(TAG, "进入initReal");
 
         for (int i = 0; i < numOfRealLines; ++i) {
             float[] linePoints = new float[numOfRealPoints];//一条线上面的点
             for (int j = 0; j < numOfRealPoints; ++j) {
                 //debug TAG
-                Log.d(TAG, "initReal：xyReal[i][j]: " + xyReal[i][j]);
+//                Log.d(TAG, "initReal：xyReal[i][j]: " + xyReal[i][j]);
                 linePoints[j] = xyReal[i][j];
             }
             if (lineDataList.size() < numOfRealLines) {
@@ -277,16 +288,18 @@ public class WebConnect {
     public static void initForecast() {
         for (int i = 0; i < numOfForecastLines; ++i) {
             float[] linePoints = new float[numOfForecastPoints];//一条线上面的点
-            /*for (int j = 0; j < numOfForecastPoints; ++j) {
-                if (hasControl) {
-                    //如果进行控制
-                    linePoints[j] = 1150000 - j * j * 1000;
-                } else {
-                    //群体免疫
-                    float x = j * 1000;
-                    linePoints[j] = 1150000 + (float) Math.sqrt(x) * 1000;
-                }
-            }*/
+            for (int j = 0; j < numOfForecastPoints; ++j) {
+                linePoints[j] = xyPredict[j];
+
+//                if (hasControl) {
+//                    //如果进行控制
+//                    linePoints[j] = 1150000 - j * j * 1000;
+//                } else {
+//                    //群体免疫
+//                    float x = j * 1000;
+//                    linePoints[j] = 1150000 + (float) Math.sqrt(x) * 1000;
+//                }
+            }
             //判定是否要刷新
 //            int size = lineData.size();
             if (lineDataList.size() < numOfRealLines + numOfForecastLines) {

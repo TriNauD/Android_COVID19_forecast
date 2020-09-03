@@ -58,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //获取数据线程
     private GetDataTask getDataTask;
     //当前国家
-    private String currentNation = "秘鲁";
+    private String currentNation = "中国";
+
     //折线视图
     private LineChartView myLineChartView;
     //折线的数据类
@@ -114,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             progressBar.setVisibility(View.INVISIBLE);
         }
 
+
 //        // 方法5：onCancelled()
 //        // 作用：将异步任务设置为：取消状态
 //        @Override
@@ -137,21 +139,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         getDataTask.execute();
     }
 
-    /**
-     * 从网络获取数据
-     *
-     * @author lym
-     */
-    private void getDataFromWeb() {
-        //初始化折线图数据
-        //尝试传一个地区名字
-        Log.i(TAG, "draw 传递地区名字：" + currentNation);
-        //调用网络更新
-        //世界真实
-        WebConnect.getWorld(currentNation);
-        //预测
-        WebConnect.getPredict(currentNation);
-    }
 
     /*————————————画图相关————————————*/
 
@@ -176,8 +163,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
 
-        //从网络获取数据
-        getDataFromWeb();
 
         //生成线并且调整线条格式
         getLines();
@@ -233,29 +218,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         Log.i(TAG, "drawChart 调参师");
 
+        //获取后端的节点数目
+        int numOfPoint = lineViewModel.getNumOfRealPoint();
+
         //总体的图表范围
         Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
         maxViewPort.left = 0;
         maxViewPort.bottom = 0;
         //x轴最大坐标值
-        maxViewPort.right = 120 + 15 - 1;
+        maxViewPort.right = numOfPoint;
         //y轴最大坐标值
-        maxViewPort.top = 1200000;
+        maxViewPort.top = 2200000;
         myLineChartView.setMaximumViewport(maxViewPort);
 
         //显示的小界面，可以滑动
         Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
-        halfViewport.top = 1200000;
+        halfViewport.top = 2200000;
         halfViewport.bottom = 0;
         halfViewport.left = 0;
         if (isForecast) {
             //如果在预测
             Log.i(TAG, "setChartShow 函数：【预测】设置当前范围");
             //真实120预测15
-            halfViewport.right = 120 + 15 - 1;
+            halfViewport.right = numOfPoint;
         } else {
             Log.i(TAG, "setChartShow 函数：【真实】设置当前范围");
-            halfViewport.right = 120;
+            halfViewport.right = numOfPoint;
         }
         myLineChartView.setCurrentViewport(halfViewport);
     }
@@ -346,8 +334,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //日志调试
         Log.i(TAG, "onItemSelected 进入函数");
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
+
+        int parentID = parent.getId();
+
         //判断是哪个spinner
-        switch (parent.getId()) {
+        switch (parentID) {
             //第1个spinner 曲线类型
             case R.id.line_type_spinner: {
                 //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
@@ -408,6 +399,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlLevelSpinner.setVisibility(View.INVISIBLE);
                     controlLevelLabel.setVisibility(View.INVISIBLE);
                 }
+                //画图
                 drawChart();
                 break;
             }
@@ -478,6 +470,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //            }
         }
 
+        //网络获取
+        if (parentID == R.id.change_nation_spinner) {
+            //获取世界真实
+            WebConnect.getWorld(currentNation);
+        } else {
+            //获取预测
+            WebConnect.getPredict(currentNation);
+        }
     }
 
     /**
@@ -515,6 +515,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             paramLine2.setVisibility(View.INVISIBLE);
             paramLine3.setVisibility(View.INVISIBLE);
         }
+
+//        //从网络获取数据
+//        getDataFromWeb();
+//        //世界真实
+//        WebConnect.getWorld(currentNation);
+//        //预测
+//        WebConnect.getPredict(currentNation);
         //无论怎样，点击了预测开关就刷新一下线图
         drawChart();
     }
