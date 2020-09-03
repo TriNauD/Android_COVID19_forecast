@@ -62,6 +62,9 @@ public class WebConnect {
     //一条线上面的点
     private static float[] xyPredict = new float[numOfForecastPoints];
 
+    //数据是否获取完毕 用于通知前端 已加载
+    public static boolean isDataGotten = false;
+
     /**
      * 从后端获取省份疫情数据
      *
@@ -182,8 +185,8 @@ public class WebConnect {
                         //累计死亡
                         xyReal[3][i] = oneDay1.getTotal_dead();
                     }
-
-
+                    //已经获取完毕
+                    isDataGotten = true;
                 }
             }
 

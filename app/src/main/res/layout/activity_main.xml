@@ -183,8 +183,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignBaseline="@+id/model_type_spinner"
-                        android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@+id/control_level_label"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
                         android:entries="@array/control_level_choices"></Spinner>
                     <!--control level spinner-->
                     <TextView
@@ -193,7 +193,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignBaseline="@+id/model_type_label"
                         android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@+id/model_type_spinner"
+                        android:layout_toLeftOf="@+id/control_level_spinner"
                         android:text="@string/control_level_label" />
 
                     <TextView
@@ -220,8 +220,8 @@
                         android:layout_height="40dp"
                         android:layout_alignBaseline="@+id/control_start_date_label"
                         android:layout_toRightOf="@+id/control_start_date_label"
-                        android:inputType="text"
                         android:imeOptions="actionSearch"
+                        android:inputType="text"
                         android:maxLength="2"
                         android:maxLines="1"
                         android:textSize="15dp" />
@@ -284,6 +284,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignBaseline="@+id/control_start_date_label"
                         android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
                         android:text="@string/day_label" />
                 </RelativeLayout>
             </LinearLayout>
@@ -320,19 +321,37 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme">
 
-        <Spinner
-            android:id="@+id/change_nation_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/nation_name"></Spinner>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/national_title"
-            android:textSize="18dp" />
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/toolbar_title"
+                android:max="100"
+                android:progress="0"
+                android:scaleX="0.5"
+                android:scaleY="0.5"></ProgressBar>
+
+            <Spinner
+                android:id="@+id/change_nation_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:entries="@array/nation_name"></Spinner>
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/national_title"
+                android:textSize="18dp" />
+        </RelativeLayout>
+
     </android.support.v7.widget.Toolbar>
 
 </RelativeLayout>
