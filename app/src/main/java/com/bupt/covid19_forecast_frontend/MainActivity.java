@@ -2,12 +2,14 @@ package com.bupt.covid19_forecast_frontend;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Spinner lineTypeSpinner;
     private Spinner modelTypeSpinner;
     private Switch forecastSwitch;
+    private Button submitButton;
+    private Button resetButton;
     private EditText controlDurationInput;
     private EditText controlStartDateMonthInput;
     private EditText controlStartDateDayInput;
@@ -345,6 +349,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //switch
         forecastSwitch = findViewById(R.id.forecast_switch);
 
+        //button
+        submitButton = findViewById(R.id.submit_button);
+        resetButton = findViewById(R.id.reset_button);
+
         //edit text
         controlDurationInput = findViewById(R.id.control_duration_input);
         controlStartDateMonthInput = findViewById(R.id.control_start_date_month_input);
@@ -389,6 +397,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         modelTypeSpinner.setOnItemSelectedListener(this);
         controlLevelSpinner.setOnItemSelectedListener(this);
         changeNationSpinner.setOnItemSelectedListener(this);
+        //button设置listener
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Button: submit button clicked");
+                WebConnect.setHasControl(modelTypeSpinner.getSelectedItemPosition() == 0 ? true : false);
+                Log.i(TAG, "Button: hasControl:" + (modelTypeSpinner.getSelectedItemPosition() == 0 ? true : false));
+                WebConnect.setControlGrade(controlLevelSpinner.getSelectedItemPosition() + 1);
+                Log.i(TAG, "Button: ControlLevel:" + (controlLevelSpinner.getSelectedItemPosition() + 1));
+                String month = (Integer.parseInt(controlStartDateMonthInput.getText().toString()) >= 10) ? (controlStartDateMonthInput.getText().toString()) : ("0" + controlStartDateMonthInput.getText());
+                String day = (Integer.parseInt(controlStartDateDayInput.getText().toString()) >= 10) ? (controlStartDateDayInput.getText().toString()) : ("0" + controlStartDateDayInput.getText());
+                String date = "2020" + "-" + month + "-" + day;
+                WebConnect.setStartControlDate(date);
+                Log.i(TAG, "Button: ControlStartDate:" + date);
+            }
+        });
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Button: reset button clicked");
+            }
+        });
         //input设置listener
     }
 
