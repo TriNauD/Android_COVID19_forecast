@@ -60,7 +60,7 @@ public class WebConnect {
     private static List<Alltime_world> nationList = new ArrayList<>();
 
     //某一天的4个数
-    private static int[] oneDayFourNum = new int[4];
+    private static Integer[] oneDayFourNum = new Integer[4];
 
     //数据是否获取完毕 用于通知前端 已加载
     public static boolean isDataGotten = false;
@@ -449,7 +449,7 @@ public class WebConnect {
         WebConnect.lineDataList = lineDataList;
     }
 
-    public static int[] getOneDayFourNum() {
+    public static Integer[] getOneDayFourNum() {
         return oneDayFourNum;
     }
 }

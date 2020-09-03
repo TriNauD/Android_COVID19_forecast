@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @author lym
      */
     private void updateFourNum() {
-        int[] integers = WebConnect.getOneDayFourNum();
+        Integer[] integers = WebConnect.getOneDayFourNum();
         String[] strings = new String[4];
 
         //int -> String
