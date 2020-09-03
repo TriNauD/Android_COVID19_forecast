@@ -253,13 +253,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @author lym
      */
     private void updateFourNum() {
-        float[] floats = lineViewModel.getFourNum();
-        Integer[] integers = new Integer[4];
+        int[] integers = WebConnect.getOneDayFourNum();
         String[] strings = new String[4];
 
-        //float -> int -> String
+        //int -> String
         for (int i = 0; i < 4; i++) {
-            integers[i] = (int) floats[i];
             strings[i] = String.valueOf(integers[i]);
         }
 

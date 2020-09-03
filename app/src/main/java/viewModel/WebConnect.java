@@ -48,19 +48,19 @@ public class WebConnect {
     //所有线数据
     private static List<float[]> lineDataList = new ArrayList<>();
 
-    //网络传进来的数
-    private static float[][] xyReal = new float[4][9999];
-
+    //网络传进来的
+    //真实数据
+    private static float[][] xyReal = new float[numOfRealLines][numOfRealPoints];
+    //预测数据
+    private static float[] xyPredict = new float[numOfForecastPoints];
 
     //拿到的一个地区的列表，里面是所有时间的数据
     private static List<Alltime_province> provinceList = new ArrayList<>();
     //世界的列表
     private static List<Alltime_world> nationList = new ArrayList<>();
-    //第一天的现存确诊
-    private static Integer oneDayPresent, oneDayHeal;
 
-    //一条线上面的点
-    private static float[] xyPredict = new float[numOfForecastPoints];
+    //某一天的4个数
+    private static int[] oneDayFourNum = new int[4];
 
     //数据是否获取完毕 用于通知前端 已加载
     public static boolean isDataGotten = false;
@@ -94,7 +94,7 @@ public class WebConnect {
                     //一天的所有数据
                     Alltime_province oneDay = provinceList.get(0);
                     //一天的现存确诊
-                    oneDayPresent = oneDay.getPresent_confirm();
+                    Integer oneDayPresent = oneDay.getPresent_confirm();
                     Log.i(TAG, "onResponse: 第一天的的现存确诊： " + oneDayPresent);
                     //真实线的数量，要根据传进来的数量啦
                     numOfRealPoints = provinceList.size();
@@ -135,7 +135,6 @@ public class WebConnect {
 
     }
 
-
     /**
      * 从后端获取国家疫情数据
      *
@@ -171,11 +170,13 @@ public class WebConnect {
                     //一天的所有数据
                     Alltime_world oneDay = nationList.get(nationList.size() - 1);
                     //一天的现存确诊
-                    oneDayPresent = oneDay.getPresent_confirm();
+                    Integer oneDayPresent = oneDay.getPresent_confirm();
                     Log.i(TAG, "onResponse: 最后一天的的现存确诊： " + oneDayPresent);
-                    //一天的累计治愈
-                    oneDayHeal = oneDay.getTotal_heal();
-                    Log.i(TAG, "onResponse: 最后一天的的累计治愈： " + oneDayHeal);
+                    oneDayFourNum[0] = oneDayPresent;
+                    oneDayFourNum[1] = oneDay.getTotal_confirm();
+                    oneDayFourNum[2] = oneDay.getTotal_heal();
+                    oneDayFourNum[3] = oneDay.getTotal_dead();
+                    Log.i(TAG, "onResponse: 最后一天的的累计死亡： " + oneDayFourNum[3]);
                     //真实线的数量，要根据传进来的数量啦
                     numOfRealPoints = nationList.size();
                     Log.i(TAG, "onResponse: 世界真实线的节点数量：" + numOfRealPoints);
@@ -448,4 +449,7 @@ public class WebConnect {
         WebConnect.lineDataList = lineDataList;
     }
 
+    public static int[] getOneDayFourNum() {
+        return oneDayFourNum;
+    }
 }
