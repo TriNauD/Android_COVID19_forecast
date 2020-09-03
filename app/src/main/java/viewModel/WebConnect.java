@@ -116,11 +116,20 @@ public class WebConnect {
                     }
 
                 }
+
+                //已经获取完毕
+                isDataGotten = true;
+                Log.i(TAG, "isDataGotten省份成功" + isDataGotten);
+
             }
 
             @Override
             public void onFailure(Call<List<Alltime_province>> call, Throwable t) {
                 Log.i(TAG, "省份onFailure..." + t.toString());
+                //已经获取完毕
+                isDataGotten = true;
+                Log.i(TAG, "isDataGotten省份失败" + isDataGotten);
+
             }
         });
 
@@ -185,9 +194,12 @@ public class WebConnect {
                         //累计死亡
                         xyReal[3][i] = oneDay1.getTotal_dead();
                     }
-                    //已经获取完毕
-                    isDataGotten = true;
+
                 }
+                //已经获取完毕
+                isDataGotten = true;
+                Log.i(TAG, "isDataGotten世界成功" + isDataGotten);
+
             }
 
             @Override
@@ -196,6 +208,8 @@ public class WebConnect {
 
                 //已经获取完毕
                 isDataGotten = true;
+                Log.i(TAG, "isDataGotten世界失败" + isDataGotten);
+
             }
         });
 
@@ -235,9 +249,12 @@ public class WebConnect {
                     //预测线的节点数量要根据传入数量
                     numOfForecastPoints = predict.size();
 
-                    //已经获取完毕
-                    isDataGotten = true;
+
                 }
+                //已经获取完毕
+                isDataGotten = true;
+                Log.i(TAG, "isDataGotten预测成功" + isDataGotten);
+
             }
 
             @Override
@@ -246,6 +263,8 @@ public class WebConnect {
 
                 //已经获取完毕
                 isDataGotten = true;
+                Log.i(TAG, "isDataGotten预测失败" + isDataGotten);
+
             }
         });
 

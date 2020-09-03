@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // 作用：执行 线程任务前的操作
         @Override
         protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
         }
 
         // 方法2：doInBackground（）
@@ -90,8 +89,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         protected String doInBackground(String... params) {
             try {
                 Log.i(TAG, "Loading...真实当前国家：" + currentNation);
+
                 //先设置为没有开始获取
                 WebConnect.isDataGotten = false;
+                progressBar.setVisibility(View.VISIBLE);
+                Log.i(TAG, "isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
+
 
                 //去获取数据，如果成功会将isDataGotten设置为true
                 WebConnect.getWorld(currentNation);
@@ -144,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // 作用：执行 线程任务前的操作
         @Override
         protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
         }
 
         // 方法2：doInBackground（）
@@ -153,8 +155,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         protected String doInBackground(String... params) {
             try {
                 Log.i(TAG, "Loading...预测当前国家：" + currentNation);
+
                 //先设置为没有开始获取
                 WebConnect.isDataGotten = false;
+                progressBar.setVisibility(View.VISIBLE);
+                Log.i(TAG, "isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
+
 
                 //去获取数据，如果成功会将isDataGotten设置为true
                 WebConnect.getPredict(currentNation);
