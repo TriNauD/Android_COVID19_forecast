@@ -30,7 +30,7 @@ public class WebConnect {
     //“真实线”的节点数
     private static int numOfRealPoints = 9999;
     //“预测线”的节点数
-    private static final int numOfForecastPoints = 555;
+    private static int numOfForecastPoints = 555;
 
 
     //预测参数
@@ -60,7 +60,7 @@ public class WebConnect {
     private static Integer oneDayPresent, oneDayHeal;
 
     //一条线上面的点
-    private static float[] linePoints = new float[numOfForecastPoints];
+    private static float[] xyPredict = new float[numOfForecastPoints];
 
     /**
      * 从后端获取省份疫情数据
@@ -223,17 +223,22 @@ public class WebConnect {
 
                     //将预测数据放到线上
                     for (int j = 0; j < predict.size(); ++j) {
-                        linePoints[j] = predict.get(j);
+                        xyPredict[j] = predict.get(j);
                     }
-                    //判定是否要刷新
-                    int size = lineDataList.size();
-                    if (size < numOfRealLines + numOfForecastLines) {
-                        //如果线组里面还没有预测线，就新添加
-                        lineDataList.add(linePoints);
-                    } else {
-                        //如果已经有预测线，就更新
-                        lineDataList.set(numOfRealLines, linePoints);
-                    }
+
+                    //预测线的节点数量要根据传入数量
+                    numOfForecastPoints = predict.size();
+
+//
+//                    //判定是否要刷新
+//                    int size = lineDataList.size();
+//                    if (size < numOfRealLines + numOfForecastLines) {
+//                        //如果线组里面还没有预测线，就新添加
+//                        lineDataList.add(linePoints);
+//                    } else {
+//                        //如果已经有预测线，就更新
+//                        lineDataList.set(numOfRealLines, linePoints);
+//                    }
                 }
             }
 
@@ -280,16 +285,18 @@ public class WebConnect {
     public static void initForecast() {
         for (int i = 0; i < numOfForecastLines; ++i) {
             float[] linePoints = new float[numOfForecastPoints];//一条线上面的点
-            /*for (int j = 0; j < numOfForecastPoints; ++j) {
-                if (hasControl) {
-                    //如果进行控制
-                    linePoints[j] = 1150000 - j * j * 1000;
-                } else {
-                    //群体免疫
-                    float x = j * 1000;
-                    linePoints[j] = 1150000 + (float) Math.sqrt(x) * 1000;
-                }
-            }*/
+            for (int j = 0; j < numOfForecastPoints; ++j) {
+                linePoints[j] = xyPredict[j];
+
+//                if (hasControl) {
+//                    //如果进行控制
+//                    linePoints[j] = 1150000 - j * j * 1000;
+//                } else {
+//                    //群体免疫
+//                    float x = j * 1000;
+//                    linePoints[j] = 1150000 + (float) Math.sqrt(x) * 1000;
+//                }
+            }
             //判定是否要刷新
 //            int size = lineData.size();
             if (lineDataList.size() < numOfRealLines + numOfForecastLines) {
