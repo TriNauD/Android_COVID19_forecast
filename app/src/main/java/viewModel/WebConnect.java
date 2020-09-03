@@ -247,7 +247,7 @@ public class WebConnect {
      * @author lym
      */
     public static void initReal() {
-        Log.i(TAG, "进入initReal");
+//        Log.i(TAG, "进入initReal");
 
         for (int i = 0; i < numOfRealLines; ++i) {
             float[] linePoints = new float[numOfRealPoints];//一条线上面的点
