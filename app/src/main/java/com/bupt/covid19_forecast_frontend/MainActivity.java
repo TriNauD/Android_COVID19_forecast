@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //获取数据线程
     private GetDataTask getDataTask;
+    private GetPredictDataTask getPredictDataTask;
     //当前国家
     private String currentNation = "中国";
 
@@ -209,17 +210,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
-    /*————————————数据相关————————————*/
-
-    /**
-     * 启动下载数据线程。
-     *
-     * @author xjy
-     */
-    public void startGetDataTaskThread() {
-        getDataTask = new GetDataTask();
-        getDataTask.execute();
-    }
 
 
     /*————————————画图相关————————————*/
@@ -555,14 +545,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //网络获取
         if (parentID == R.id.change_nation_spinner) {
             //获取世界
-            GetDataTask getDataTask1 = new GetDataTask();
-            getDataTask1.execute();
+            getDataTask = new GetDataTask();
+            getDataTask.execute();
         }
-//        else {
-//            //获取预测
-//            GetPredictDataTask getDataTask2 = new GetPredictDataTask();
-//            getDataTask2.execute();
-//        }
+
     }
 
     /**
@@ -595,8 +581,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             paramLine3.setVisibility(View.VISIBLE);
 
             //获取预测
-            GetPredictDataTask getDataTask2 = new GetPredictDataTask();
-            getDataTask2.execute();
+            getPredictDataTask = new GetPredictDataTask();
+            getPredictDataTask.execute();
 
         } else {
             Log.i(TAG, "onCheckedChanged 开关状态：关闭");
@@ -621,8 +607,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         //绑定组件
         bindingElements();
-        //开始获取数据线程
-        startGetDataTaskThread();
         //设置监听
         setListener();
         //折线图数据
