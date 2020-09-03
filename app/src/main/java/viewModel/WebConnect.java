@@ -59,6 +59,9 @@ public class WebConnect {
     //第一天的现存确诊
     private static Integer oneDayPresent, oneDayHeal;
 
+    //一条线上面的点
+    private static float[] linePoints = new float[numOfForecastPoints];
+
     /**
      * 从后端获取省份疫情数据
      *
@@ -215,8 +218,11 @@ public class WebConnect {
                 Log.i(TAG, "预测onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Integer> predict = response.body();
-                    float[] linePoints = new float[5];//一条线上面的点
-                    for (int j = 0; j < 5; ++j) {
+                    //第一天预测的数据
+                    Log.i(TAG, "onResponse: 第一天预测的数据： " + predict.get(0));
+
+                    //将预测数据放到线上
+                    for (int j = 0; j < predict.size(); ++j) {
                         linePoints[j] = predict.get(j);
                     }
                     //判定是否要刷新
