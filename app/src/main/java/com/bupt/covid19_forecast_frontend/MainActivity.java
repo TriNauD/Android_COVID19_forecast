@@ -89,11 +89,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected String doInBackground(String... params) {
             try {
-                Thread.sleep(5000);
-//                Log.i(TAG, "当前国家"+currentNation);
-//                while (WebConnect.isDataGotten == false){
-//                    WebConnect.getWorld(currentNation);
-//                }
+                Log.i(TAG, "当前国家：" + currentNation);
+                //先设置为没有开始获取
+                isDataGotten = false;
+                //去获取数据，如果成功会将isDataGotten设置为true
+                WebConnect.getWorld(currentNation);
+                //如果没有得到数据，就一直刷新图表
+                while (!WebConnect.isDataGotten) {
+                    drawChart();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -472,8 +476,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //网络获取
         if (parentID == R.id.change_nation_spinner) {
-            //获取世界真实
-            WebConnect.getWorld(currentNation);
+            GetDataTask getDataTask1 = new GetDataTask();
+            getDataTask1.execute();
+
+//            //获取世界真实
+//            WebConnect.getWorld(currentNation);
         } else {
             //获取预测
             WebConnect.getPredict(currentNation);
