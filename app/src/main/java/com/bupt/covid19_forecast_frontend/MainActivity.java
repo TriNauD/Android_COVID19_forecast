@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
 
+
     /**
      * 活动生命周期：“创建”
      *
@@ -87,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //画折线图
         drawChart();
-
 
     }
 
