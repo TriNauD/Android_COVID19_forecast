@@ -259,6 +259,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //int -> String
         for (int i = 0; i < 4; i++) {
             strings[i] = String.valueOf(integers[i]);
+            Log.i(TAG, "updateFourNum第" + i + "个字符串：" + strings[i]);
         }
 
         peopleNumBarCol1.setText(strings[0]);
