@@ -30,7 +30,7 @@ public class WebConnect {
     //“真实线”的节点数
     private static int numOfRealPoints = 9999;
     //“预测线”的节点数
-    private static int numOfForecastPoints = 5;
+    private static int numOfForecastPoints = 333;
 
 
     //预测参数

@@ -312,32 +312,36 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         Log.i(TAG, "drawChart 调参师");
 
-        //获取后端的节点数目
-        int numOfPoint = lineViewModel.getNumOfPoint();
+        //x轴-获取后端的节点数目
+        int numOfRP = WebConnect.getNumOfRealPoints();
+        int numOfFP = WebConnect.getNumOfForecastPoints();
+
+        //y轴-最大数目
+        int MaxY = 220000;
 
         //总体的图表范围
         Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
         maxViewPort.left = 0;
         maxViewPort.bottom = 0;
         //x轴最大坐标值
-        maxViewPort.right = numOfPoint;
+        maxViewPort.right = numOfRP + numOfFP;
         //y轴最大坐标值
-        maxViewPort.top = 2200000;
+        maxViewPort.top = MaxY;
         myLineChartView.setMaximumViewport(maxViewPort);
 
         //显示的小界面，可以滑动
         Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
-        halfViewport.top = 2200000;
+        halfViewport.top = MaxY;
         halfViewport.bottom = 0;
         halfViewport.left = 0;
         if (isForecast) {
             //如果在预测
             Log.i(TAG, "setChartShow 函数：【预测】设置当前范围");
             //真实120预测15
-            halfViewport.right = numOfPoint;
+            halfViewport.right = numOfRP + numOfFP - 1;
         } else {
             Log.i(TAG, "setChartShow 函数：【真实】设置当前范围");
-            halfViewport.right = numOfPoint;
+            halfViewport.right = numOfRP - 1;
         }
         myLineChartView.setCurrentViewport(halfViewport);
     }
