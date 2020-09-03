@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected String doInBackground(String... params) {
             try {
-                Log.i(TAG, "Loading...当前国家：" + currentNation);
+                Log.i(TAG, "Loading...真实当前国家：" + currentNation);
                 //先设置为没有开始获取
                 WebConnect.isDataGotten = false;
 
@@ -98,13 +98,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 //如果没有得到数据，就一直刷新图表
                 while (!WebConnect.isDataGotten) {
-                    drawChart();
+//                    drawChart();
                 }
 
                 //成功之后，最后一次再刷新一下图表
                 drawChart();
 
-                Log.i(TAG, "Loading" + currentNation + "结束");
+                Log.i(TAG, "Loading" + currentNation + "结束真实线");
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected String doInBackground(String... params) {
             try {
-                Log.i(TAG, "Loading...当前国家：" + currentNation);
+                Log.i(TAG, "Loading...预测当前国家：" + currentNation);
                 //先设置为没有开始获取
                 WebConnect.isDataGotten = false;
 
@@ -161,13 +161,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 //如果没有得到数据，就一直刷新图表
                 while (!WebConnect.isDataGotten) {
-                    drawChart();
+//                    drawChart();
                 }
 
                 //成功之后，最后一次再刷新一下图表
                 drawChart();
 
-                Log.i(TAG, "Loading" + currentNation + "结束");
+                Log.i(TAG, "Loading" + currentNation + "结束预测线");
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -551,11 +551,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //获取世界
             GetDataTask getDataTask1 = new GetDataTask();
             getDataTask1.execute();
-        } else {
-            //获取预测
-            GetPredictDataTask getDataTask2 = new GetPredictDataTask();
-            getDataTask2.execute();
         }
+//        else {
+//            //获取预测
+//            GetPredictDataTask getDataTask2 = new GetPredictDataTask();
+//            getDataTask2.execute();
+//        }
     }
 
     /**
@@ -586,6 +587,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             curLineIndex = lineViewModel.getNumOfRealLines();
             paramLine2.setVisibility(View.VISIBLE);
             paramLine3.setVisibility(View.VISIBLE);
+
+            //获取预测
+            GetPredictDataTask getDataTask2 = new GetPredictDataTask();
+            getDataTask2.execute();
+
         } else {
             Log.i(TAG, "onCheckedChanged 开关状态：关闭");
             //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
