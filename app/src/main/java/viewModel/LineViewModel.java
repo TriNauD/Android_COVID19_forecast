@@ -207,8 +207,27 @@ public class LineViewModel extends ViewModel {
         WebConnect.setHasControl(hasControl);
     }
 
-    public int getNumOfRealPoint() {
+    public int getNumOfPoint() {
         return WebConnect.getNumOfRealPoints() + WebConnect.getNumOfForecastPoints() - 1;
+    }
+
+    /**
+     * 获取上方的4个数
+     */
+    public float[] getFourNum() {
+        float[] fourNum = new float[4];
+//        //获取4条线的数据
+//        List<float[]> lineDataList = WebConnect.getLineDataList();
+//        //挑出4个数字来
+//        for (int i = 0; i < 4; i++) {
+//            //获取总节点数，作为下标
+//            int numOfPoints = lineDataList.get(i).length - 1;
+//            fourNum[i] = lineDataList.get(i)[numOfPoints];
+//        }
+        for (int i = 0; i < 4; i++) {
+            fourNum[i] = (i + 1) * 10;
+        }
+        return fourNum;
     }
 
 }

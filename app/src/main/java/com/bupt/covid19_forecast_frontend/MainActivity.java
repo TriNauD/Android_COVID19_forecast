@@ -241,6 +241,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //画画和调整视图
         draw();
+
+        //更新上方4个数
+        updateFourNum();
+
+    }
+
+    /**
+     * 更新上方4个数
+     *
+     * @author lym
+     */
+    private void updateFourNum() {
+        float[] floats = lineViewModel.getFourNum();
+        Integer[] integers = new Integer[4];
+        String[] strings = new String[4];
+
+        //float -> int -> String
+        for (int i = 0; i < 4; i++) {
+            integers[i] = (int) floats[i];
+            strings[i] = String.valueOf(integers[i]);
+        }
+
+        peopleNumBarCol1.setText(strings[0]);
+        peopleNumBarCol2.setText(strings[1]);
+        peopleNumBarCol3.setText(strings[2]);
+        peopleNumBarCol4.setText(strings[3]);
     }
 
     /**
@@ -291,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "drawChart 调参师");
 
         //获取后端的节点数目
-        int numOfPoint = lineViewModel.getNumOfRealPoint();
+        int numOfPoint = lineViewModel.getNumOfPoint();
 
         //总体的图表范围
         Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
@@ -360,14 +386,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //progress bar
         progressBar = findViewById(R.id.progress_bar);
 
-        /*peopleNumBarCol1.setText((int) WebConnect.getLineData().get(0)[WebConnect.getNumOfRealPoints()]);
-        peopleNumBarCol2.setText((int) WebConnect.getLineData().get(1)[WebConnect.getNumOfRealPoints()]);
-        peopleNumBarCol3.setText((int) WebConnect.getLineData().get(2)[WebConnect.getNumOfRealPoints()]);
-        peopleNumBarCol4.setText((int) WebConnect.getLineData().get(3)[WebConnect.getNumOfRealPoints()]);*/
-        peopleNumBarCol1.setText("1142777");
-        peopleNumBarCol2.setText("3578240");
-        peopleNumBarCol3.setText("102429");
-        peopleNumBarCol4.setText("6088");
+        peopleNumBarCol1.setText("现存确诊");
+        peopleNumBarCol2.setText("累计确诊");
+        peopleNumBarCol3.setText("累计治愈");
+        peopleNumBarCol4.setText("累计死亡");
 
 
         //static element
