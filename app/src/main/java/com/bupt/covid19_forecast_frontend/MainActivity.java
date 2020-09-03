@@ -2,15 +2,15 @@ package com.bupt.covid19_forecast_frontend;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //日志TAG，调试用，默认使用类名
     private static final String TAG = "MainActivity";
 
-    //控件
+    //ui控件
     private Spinner controlLevelSpinner;
     private Spinner changeNationSpinner;
     private Spinner lineTypeSpinner;
@@ -53,104 +53,88 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private RelativeLayout paramLine1;
     private RelativeLayout paramLine2;
     private RelativeLayout paramLine3;
+    private ProgressBar progressBar;
 
+    //获取数据线程
+    private GetDataTask getDataTask;
     //当前国家
     private String currentNation = "秘鲁";
-
     //折线视图
     private LineChartView myLineChartView;
-
     //折线的数据类
     private LineViewModel lineViewModel;
-
     //当前显示的线是几号
     private int curLineIndex = 0;
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
+    //数据是否加载完毕
+    private boolean isDataGotten = false;
+
 
     /**
-     * 活动生命周期：“创建”
-     *
-     * @param savedInstanceState ？？？系统使用参数
-     * @author lym
-     */
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //绑定组件
-        bindingElements();
-        //设置监听
-        setListener();
-        //折线图数据
-        lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
-
-        //画折线图
-        drawChart();
-
-
-    }
-
-    /**
-     * 绑定组件。
-     * 绑定xml的组件
+     * 获取数据线程类
+     * 异步运行获取数据 获取结束后反映在ui组件上（加载中图标消失）
      *
      * @author xjy
      */
-    public void bindingElements() {
-        //chart
-        myLineChartView = findViewById(R.id.chart);
-        //spinner 页面的4个spinner并绑定listener
-        lineTypeSpinner = findViewById(R.id.line_type_spinner);
-        modelTypeSpinner = findViewById(R.id.model_type_spinner);
-        controlLevelSpinner = findViewById(R.id.control_level_spinner);
-        changeNationSpinner = findViewById(R.id.change_nation_spinner);
+    private class GetDataTask extends AsyncTask<String, Integer, String> {
+        // 方法1：onPreExecute（）
+        // 作用：执行 线程任务前的操作
+//        @Override
+//        protected void onPreExecute(){
+//        }
+        // 方法2：doInBackground（）
+        // 作用：接收输入参数、执行任务中的耗时操作、返回 线程任务执行的结果
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Thread.sleep(5000);
+//                Log.i(TAG, "当前国家"+currentNation);
+//                while (WebConnect.isDataGotten == false){
+//                    WebConnect.getWorld(currentNation);
+//                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+//        // 方法3：onProgressUpdate（）
+//        // 作用：在主线程 显示线程任务执行的进度
+//        @Override
+//        protected void onProgressUpdate(Integer... progresses) {
+//            progressBar.setProgress(progresses[0]);
+//
+//        }
 
-        //3行参数
-        paramLine1 = findViewById(R.id.param_line_1);
-        paramLine2 = findViewById(R.id.param_line_2);
-        paramLine3 = findViewById(R.id.param_line_3);
+        // 方法4：onPostExecute（）
+        // 作用：接收线程任务执行结果、将执行结果显示到UI组件
+        @Override
+        protected void onPostExecute(String result) {
+            // 执行完毕后，则更新UI
+            progressBar.setVisibility(View.INVISIBLE);
+        }
 
-        //switch
-        forecastSwitch = findViewById(R.id.forecast_switch);
+//        // 方法5：onCancelled()
+//        // 作用：将异步任务设置为：取消状态
+//        @Override
+//        protected void onCancelled() {
+//            progressBar.setProgress(0);
+//            progressBar.setVisibility(View.INVISIBLE);
+//
+//        }
 
-        //edit text
-        controlDurationInput = findViewById(R.id.control_duration_input);
-        controlStartDateMonthInput = findViewById(R.id.control_start_date_month_input);
-        controlStartDateDayInput = findViewById(R.id.control_start_date_day_input);
-        toolbarTitle = findViewById(R.id.toolbar_title);
-
-        //people num 4个col对应4个数字 需要改数就setText
-        peopleNumBarCol1 = findViewById(R.id.people_num_bar_col_1_num);
-        peopleNumBarCol2 = findViewById(R.id.people_num_bar_col_2_num);
-        peopleNumBarCol3 = findViewById(R.id.people_num_bar_col_3_num);
-        peopleNumBarCol4 = findViewById(R.id.people_num_bar_col_4_num);
-        /*peopleNumBarCol1.setText((int) WebConnect.getLineData().get(0)[WebConnect.getNumOfRealPoints()]);
-        peopleNumBarCol2.setText((int) WebConnect.getLineData().get(1)[WebConnect.getNumOfRealPoints()]);
-        peopleNumBarCol3.setText((int) WebConnect.getLineData().get(2)[WebConnect.getNumOfRealPoints()]);
-        peopleNumBarCol4.setText((int) WebConnect.getLineData().get(3)[WebConnect.getNumOfRealPoints()]);*/
-        peopleNumBarCol1.setText("1142777");
-        peopleNumBarCol2.setText("3578240");
-        peopleNumBarCol3.setText("102429");
-        peopleNumBarCol4.setText("6088");
-
-
-        //static element
-        controlLevelLabel = findViewById(R.id.control_level_label);
-        controlStartDateLabel = findViewById(R.id.control_start_date_label);
-        controlDurationLabel = findViewById(R.id.control_duration_label);
-        dayLabel = findViewById(R.id.day_label);
     }
 
-    public void setListener() {
-        //switch设置listener
-        forecastSwitch.setOnCheckedChangeListener(this);
-        //spinner设置listener
-        lineTypeSpinner.setOnItemSelectedListener(this);
-        modelTypeSpinner.setOnItemSelectedListener(this);
-        controlLevelSpinner.setOnItemSelectedListener(this);
-        changeNationSpinner.setOnItemSelectedListener(this);
-        //input设置listener
+    /*————————————数据相关————————————*/
+
+    /**
+     * 启动下载数据线程。
+     *
+     * @author xjy
+     */
+    public void startGetDataTaskThread() {
+        getDataTask = new GetDataTask();
+        getDataTask.execute();
     }
 
     /**
@@ -168,6 +152,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //预测
         WebConnect.getPredict(currentNation);
     }
+
+    /*————————————画图相关————————————*/
 
     /**
      * 生成线并且调整线条格式
@@ -275,6 +261,77 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /*————————————控件相关————————————*/
+
+    /**
+     * 绑定组件。
+     * 绑定xml的组件
+     *
+     * @author xjy
+     */
+    public void bindingElements() {
+        //chart
+        myLineChartView = findViewById(R.id.chart);
+        //spinner 页面的4个spinner并绑定listener
+        lineTypeSpinner = findViewById(R.id.line_type_spinner);
+        modelTypeSpinner = findViewById(R.id.model_type_spinner);
+        controlLevelSpinner = findViewById(R.id.control_level_spinner);
+        changeNationSpinner = findViewById(R.id.change_nation_spinner);
+
+        //3行参数
+        paramLine1 = findViewById(R.id.param_line_1);
+        paramLine2 = findViewById(R.id.param_line_2);
+        paramLine3 = findViewById(R.id.param_line_3);
+
+        //switch
+        forecastSwitch = findViewById(R.id.forecast_switch);
+
+        //edit text
+        controlDurationInput = findViewById(R.id.control_duration_input);
+        controlStartDateMonthInput = findViewById(R.id.control_start_date_month_input);
+        controlStartDateDayInput = findViewById(R.id.control_start_date_day_input);
+        toolbarTitle = findViewById(R.id.toolbar_title);
+
+        //people num 4个col对应4个数字 需要改数就setText
+        peopleNumBarCol1 = findViewById(R.id.people_num_bar_col_1_num);
+        peopleNumBarCol2 = findViewById(R.id.people_num_bar_col_2_num);
+        peopleNumBarCol3 = findViewById(R.id.people_num_bar_col_3_num);
+        peopleNumBarCol4 = findViewById(R.id.people_num_bar_col_4_num);
+
+        //progress bar
+        progressBar = findViewById(R.id.progress_bar);
+
+        /*peopleNumBarCol1.setText((int) WebConnect.getLineData().get(0)[WebConnect.getNumOfRealPoints()]);
+        peopleNumBarCol2.setText((int) WebConnect.getLineData().get(1)[WebConnect.getNumOfRealPoints()]);
+        peopleNumBarCol3.setText((int) WebConnect.getLineData().get(2)[WebConnect.getNumOfRealPoints()]);
+        peopleNumBarCol4.setText((int) WebConnect.getLineData().get(3)[WebConnect.getNumOfRealPoints()]);*/
+        peopleNumBarCol1.setText("1142777");
+        peopleNumBarCol2.setText("3578240");
+        peopleNumBarCol3.setText("102429");
+        peopleNumBarCol4.setText("6088");
+
+
+        //static element
+        controlLevelLabel = findViewById(R.id.control_level_label);
+        controlStartDateLabel = findViewById(R.id.control_start_date_label);
+        controlDurationLabel = findViewById(R.id.control_duration_label);
+        dayLabel = findViewById(R.id.day_label);
+    }
+
+    /**
+     * 设置多个监听器
+     *
+     * @author xjy
+     */
+    public void setListener() {
+        //switch设置listener
+        forecastSwitch.setOnCheckedChangeListener(this);
+        //spinner设置listener
+        lineTypeSpinner.setOnItemSelectedListener(this);
+        modelTypeSpinner.setOnItemSelectedListener(this);
+        controlLevelSpinner.setOnItemSelectedListener(this);
+        changeNationSpinner.setOnItemSelectedListener(this);
+        //input设置listener
+    }
 
     /**
      * 下拉菜单，选项控制事件。
@@ -460,5 +517,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         //无论怎样，点击了预测开关就刷新一下线图
         drawChart();
+    }
+
+    /**
+     * 活动生命周期：“创建”
+     *
+     * @param savedInstanceState ？？？系统使用参数
+     * @author lym, xjy
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        //绑定组件
+        bindingElements();
+        //开始获取数据线程
+        startGetDataTaskThread();
+        //设置监听
+        setListener();
+        //折线图数据
+        lineViewModel = ViewModelProviders.of(this).get(LineViewModel.class);
+        //画折线图
+        drawChart();
+
     }
 }
