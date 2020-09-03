@@ -282,8 +282,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //日志调试
         Log.i(TAG, "onItemSelected 进入函数");
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
+
+        int parentID = parent.getId();
+
         //判断是哪个spinner
-        switch (parent.getId()) {
+        switch (parentID) {
             //第1个spinner 曲线类型
             case R.id.line_type_spinner: {
                 //只要不是选择了第一条线，都不应该出现预测按钮；选择了第一条线，就出现按钮
@@ -344,13 +347,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlLevelSpinner.setVisibility(View.INVISIBLE);
                     controlLevelLabel.setVisibility(View.INVISIBLE);
                 }
-
-//                //从网络获取数据
-//                getDataFromWeb();
-//                //世界真实
-//                WebConnect.getWorld(currentNation);
-                //预测
-                WebConnect.getPredict(currentNation);
                 //画图
                 drawChart();
                 break;
@@ -392,13 +388,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlDurationInput.setTextColor(Color.BLACK);
 
                 }
-
-//                //从网络获取数据
-//                getDataFromWeb();
-//                //世界真实
-//                WebConnect.getWorld(currentNation);
-                //预测
-                WebConnect.getPredict(currentNation);
                 drawChart();
                 break;
             }
@@ -409,13 +398,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //设置toolbar标题
                 toolbarTitle.setText(currentNation + getResources().getString(R.string.national_title));
                 Log.i(TAG, "onItemSelected:国家名 " + currentNation);
-
-//                //从网络获取数据
-//                getDataFromWeb();
-                //世界真实
-                WebConnect.getWorld(currentNation);
-                //预测
-                WebConnect.getPredict(currentNation);
                 drawChart();
                 break;
             }
@@ -436,6 +418,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //            }
         }
 
+        //网络获取
+        if (parentID == R.id.change_nation_spinner) {
+            //获取世界真实
+            WebConnect.getWorld(currentNation);
+        } else {
+            //获取预测
+            WebConnect.getPredict(currentNation);
+        }
     }
 
     /**
