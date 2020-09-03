@@ -402,15 +402,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Button: submit button clicked");
+                //设置控制或群体免疫
                 WebConnect.setHasControl(modelTypeSpinner.getSelectedItemPosition() == 0 ? true : false);
                 Log.i(TAG, "Button: hasControl:" + (modelTypeSpinner.getSelectedItemPosition() == 0 ? true : false));
+                //设置控制等级
                 WebConnect.setControlGrade(controlLevelSpinner.getSelectedItemPosition() + 1);
                 Log.i(TAG, "Button: ControlLevel:" + (controlLevelSpinner.getSelectedItemPosition() + 1));
-                String month = (Integer.parseInt(controlStartDateMonthInput.getText().toString()) >= 10) ? (controlStartDateMonthInput.getText().toString()) : ("0" + controlStartDateMonthInput.getText());
-                String day = (Integer.parseInt(controlStartDateDayInput.getText().toString()) >= 10) ? (controlStartDateDayInput.getText().toString()) : ("0" + controlStartDateDayInput.getText());
-                String date = "2020" + "-" + month + "-" + day;
-                WebConnect.setStartControlDate(date);
-                Log.i(TAG, "Button: ControlStartDate:" + date);
+                //设置控制开始日期
+                try {
+                    int monthInt = Integer.parseInt(controlStartDateMonthInput.getText().toString());
+                    int dayInt = Integer.parseInt(controlStartDateDayInput.getText().toString());
+                    if (monthInt <= 12 && dayInt <= 31) {
+                        //如果日期格式正确 则格式化表示日期
+                        String month = (monthInt >= 10) ? (controlStartDateMonthInput.getText().toString()) : ("0" + controlStartDateMonthInput.getText());
+                        String day = (dayInt >= 10) ? (controlStartDateDayInput.getText().toString()) : ("0" + controlStartDateDayInput.getText());
+                        String date = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
+                        WebConnect.setStartControlDate(date);
+                        Log.i(TAG, "Button: ControlStartDate:" + date);
+                    } else {
+                        //
+                        Log.i(TAG, "Button: Too big number");
+                    }
+                } catch (Exception e) {
+                    Log.i(TAG, "Button: Bad input type");
+                }
+
+
             }
         });
         resetButton.setOnClickListener(new View.OnClickListener() {
@@ -644,4 +661,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         drawChart();
 
     }
+
 }
