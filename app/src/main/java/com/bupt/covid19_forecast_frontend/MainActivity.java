@@ -5,9 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -15,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.room.Room;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,12 @@ import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
-import viewModel.WebConnect;
+import room.Alltime_provinceDao;
+import room.Alltime_worldDao;
+import room.AppDatabase;
 import viewModel.LineViewModel;
+import viewModel.WebConnect;
+
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
@@ -67,6 +71,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int curLineIndex = 0;
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
+
+    //数据库
+    AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "app_database").build();
+
 
 
     /**
@@ -167,6 +175,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         WebConnect.getWorld(currentNation);
         //预测
         WebConnect.getPredict(currentNation);
+    }
+
+    /**
+     * 从网络获取数据存到数据库
+     *
+     * @author yk
+     */
+    void databaseGetData(){
+
+
     }
 
     /**
