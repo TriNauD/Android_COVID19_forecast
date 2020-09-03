@@ -42,7 +42,6 @@
                         android:id="@+id/people_num_bar_col_1_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="19024"
                         android:textColor="@color/red"
                         android:textSize="20sp" />
                 </LinearLayout>
@@ -66,7 +65,6 @@
                         android:id="@+id/people_num_bar_col_2_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="156"
                         android:textColor="@color/orange"
                         android:textSize="20sp" />
                 </LinearLayout>
@@ -90,7 +88,6 @@
                         android:id="@+id/people_num_bar_col_3_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="13783"
                         android:textColor="@color/green"
                         android:textSize="20sp" />
                 </LinearLayout>
@@ -114,7 +111,6 @@
                         android:id="@+id/people_num_bar_col_4_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1753"
                         android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
