@@ -30,7 +30,7 @@ public class WebConnect {
     //“真实线”的节点数
     private static int numOfRealPoints = 9999;
     //“预测线”的节点数
-    private static int numOfForecastPoints = 555;
+    private static int numOfForecastPoints = 5;
 
 
     //预测参数
@@ -116,11 +116,20 @@ public class WebConnect {
                     }
 
                 }
+
+                //已经获取完毕
+                isDataGotten = true;
+                Log.i(TAG, "isDataGotten省份成功" + isDataGotten);
+
             }
 
             @Override
             public void onFailure(Call<List<Alltime_province>> call, Throwable t) {
                 Log.i(TAG, "省份onFailure..." + t.toString());
+                //已经获取完毕
+                isDataGotten = true;
+                Log.i(TAG, "isDataGotten省份失败" + isDataGotten);
+
             }
         });
 
@@ -185,14 +194,22 @@ public class WebConnect {
                         //累计死亡
                         xyReal[3][i] = oneDay1.getTotal_dead();
                     }
-                    //已经获取完毕
-                    isDataGotten = true;
+
                 }
+                //已经获取完毕
+                isDataGotten = true;
+                Log.i(TAG, "isDataGotten世界成功" + isDataGotten);
+
             }
 
             @Override
             public void onFailure(Call<List<Alltime_world>> call, Throwable t) {
                 Log.i(TAG, "世界onFailure..." + t.toString());
+
+                //已经获取完毕
+                isDataGotten = true;
+                Log.i(TAG, "isDataGotten世界失败" + isDataGotten);
+
             }
         });
 
@@ -232,22 +249,22 @@ public class WebConnect {
                     //预测线的节点数量要根据传入数量
                     numOfForecastPoints = predict.size();
 
-//
-//                    //判定是否要刷新
-//                    int size = lineDataList.size();
-//                    if (size < numOfRealLines + numOfForecastLines) {
-//                        //如果线组里面还没有预测线，就新添加
-//                        lineDataList.add(linePoints);
-//                    } else {
-//                        //如果已经有预测线，就更新
-//                        lineDataList.set(numOfRealLines, linePoints);
-//                    }
+
                 }
+                //已经获取完毕
+                isDataGotten = true;
+                Log.i(TAG, "isDataGotten预测成功" + isDataGotten);
+
             }
 
             @Override
             public void onFailure(Call<List<Integer>> call, Throwable t) {
                 Log.i(TAG, "预测onFailure..." + t.toString());
+
+                //已经获取完毕
+                isDataGotten = true;
+                Log.i(TAG, "isDataGotten预测失败" + isDataGotten);
+
             }
         });
 

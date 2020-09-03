@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //获取数据线程
     private GetDataTask getDataTask;
+    private GetPredictDataTask getPredictDataTask;
     //当前国家
     private String currentNation = "中国";
 
@@ -68,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int curLineIndex = 0;
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
-    //数据是否加载完毕
-    private boolean isDataGotten = false;
 
 
     /**
@@ -81,30 +80,47 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private class GetDataTask extends AsyncTask<String, Integer, String> {
         // 方法1：onPreExecute（）
         // 作用：执行 线程任务前的操作
-//        @Override
-//        protected void onPreExecute(){
-//        }
+        @Override
+        protected void onPreExecute() {
+        }
+
         // 方法2：doInBackground（）
         // 作用：接收输入参数、执行任务中的耗时操作、返回 线程任务执行的结果
         @Override
         protected String doInBackground(String... params) {
             try {
-                Thread.sleep(5000);
-//                Log.i(TAG, "当前国家"+currentNation);
-//                while (WebConnect.isDataGotten == false){
-//                    WebConnect.getWorld(currentNation);
-//                }
+                Log.i(TAG, "Loading...真实当前国家：" + currentNation);
+
+                //先设置为没有开始获取
+                WebConnect.isDataGotten = false;
+                progressBar.setVisibility(View.VISIBLE);
+                Log.i(TAG, "Loading...isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
+
+
+                //去获取数据，如果成功会将isDataGotten设置为true
+                WebConnect.getWorld(currentNation);
+
+                //如果没有得到数据，就一直刷新图表
+                while (!WebConnect.isDataGotten) {
+                    Thread.sleep(1);
+                }
+
+                //成功之后，最后一次再刷新一下图表
+                drawChart();
+
+                Log.i(TAG, "Loading" + currentNation + "结束真实线");
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
         }
+
 //        // 方法3：onProgressUpdate（）
 //        // 作用：在主线程 显示线程任务执行的进度
 //        @Override
 //        protected void onProgressUpdate(Integer... progresses) {
 //            progressBar.setProgress(progresses[0]);
-//
 //        }
 
         // 方法4：onPostExecute（）
@@ -127,17 +143,73 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    /*————————————数据相关————————————*/
+    private class GetPredictDataTask extends AsyncTask<String, Integer, String> {
+        // 方法1：onPreExecute（）
+        // 作用：执行 线程任务前的操作
+        @Override
+        protected void onPreExecute() {
+        }
 
-    /**
-     * 启动下载数据线程。
-     *
-     * @author xjy
-     */
-    public void startGetDataTaskThread() {
-        getDataTask = new GetDataTask();
-        getDataTask.execute();
+        // 方法2：doInBackground（）
+        // 作用：接收输入参数、执行任务中的耗时操作、返回 线程任务执行的结果
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Log.i(TAG, "Loading...预测当前国家：" + currentNation);
+
+                //先设置为没有开始获取
+                WebConnect.isDataGotten = false;
+                progressBar.setVisibility(View.VISIBLE);
+                Log.i(TAG, "Loading...isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
+
+
+                //去获取数据，如果成功会将isDataGotten设置为true
+                WebConnect.getPredict(currentNation);
+
+                //如果没有得到数据，就一直刷新图表
+                while (!WebConnect.isDataGotten) {
+                    Thread.sleep(1);
+                }
+
+                //成功之后，最后一次再刷新一下图表
+                drawChart();
+
+                Log.i(TAG, "Loading" + currentNation + "结束预测线");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+//        // 方法3：onProgressUpdate（）
+//        // 作用：在主线程 显示线程任务执行的进度
+//        @Override
+//        protected void onProgressUpdate(Integer... progresses) {
+//            progressBar.setProgress(progresses[0]);
+//        }
+
+        // 方法4：onPostExecute（）
+        // 作用：接收线程任务执行结果、将执行结果显示到UI组件
+        @Override
+        protected void onPostExecute(String result) {
+            // 执行完毕后，则更新UI
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+
+
+//        // 方法5：onCancelled()
+//        // 作用：将异步任务设置为：取消状态
+//        @Override
+//        protected void onCancelled() {
+//            progressBar.setProgress(0);
+//            progressBar.setVisibility(View.INVISIBLE);
+//
+//        }
+
     }
+
+
 
 
     /*————————————画图相关————————————*/
@@ -472,12 +544,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //网络获取
         if (parentID == R.id.change_nation_spinner) {
-            //获取世界真实
-            WebConnect.getWorld(currentNation);
-        } else {
-            //获取预测
-            WebConnect.getPredict(currentNation);
+            //获取世界
+            getDataTask = new GetDataTask();
+            getDataTask.execute();
         }
+
     }
 
     /**
@@ -508,6 +579,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             curLineIndex = lineViewModel.getNumOfRealLines();
             paramLine2.setVisibility(View.VISIBLE);
             paramLine3.setVisibility(View.VISIBLE);
+
+            //获取预测
+            getPredictDataTask = new GetPredictDataTask();
+            getPredictDataTask.execute();
+
         } else {
             Log.i(TAG, "onCheckedChanged 开关状态：关闭");
             //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
@@ -515,13 +591,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             paramLine2.setVisibility(View.INVISIBLE);
             paramLine3.setVisibility(View.INVISIBLE);
         }
-
-//        //从网络获取数据
-//        getDataFromWeb();
-//        //世界真实
-//        WebConnect.getWorld(currentNation);
-//        //预测
-//        WebConnect.getPredict(currentNation);
         //无论怎样，点击了预测开关就刷新一下线图
         drawChart();
     }
@@ -538,8 +607,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         //绑定组件
         bindingElements();
-        //开始获取数据线程
-        startGetDataTaskThread();
         //设置监听
         setListener();
         //折线图数据
