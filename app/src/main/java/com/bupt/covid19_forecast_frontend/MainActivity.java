@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private boolean isForecastSwitchedOn = true;
 
 
-
     /**
      * 获取数据线程类
      * 异步运行获取数据 获取结束后反映在ui组件上（加载中图标消失）
@@ -80,23 +79,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private class GetDataTask extends AsyncTask<String, Integer, String> {
         // 方法1：onPreExecute（）
         // 作用：执行 线程任务前的操作
-//        @Override
-//        protected void onPreExecute(){
-//        }
-        // 方法2：doInBackground（）
-        // 作用：接收输入参数、执行任务中的耗时操作、返回 线程任务执行的结果
-
-        GetDataTask() {
+        @Override
+        protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
         }
 
-
+        // 方法2：doInBackground（）
+        // 作用：接收输入参数、执行任务中的耗时操作、返回 线程任务执行的结果
         @Override
         protected String doInBackground(String... params) {
             try {
                 Log.i(TAG, "Loading...当前国家：" + currentNation);
                 //先设置为没有开始获取
                 WebConnect.isDataGotten = false;
+
                 //去获取数据，如果成功会将isDataGotten设置为true
                 WebConnect.getWorld(currentNation);
 
@@ -115,12 +111,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             return null;
         }
+
 //        // 方法3：onProgressUpdate（）
 //        // 作用：在主线程 显示线程任务执行的进度
 //        @Override
 //        protected void onProgressUpdate(Integer... progresses) {
 //            progressBar.setProgress(progresses[0]);
-//
 //        }
 
         // 方法4：onPostExecute（）
