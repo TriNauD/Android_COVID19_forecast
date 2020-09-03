@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 //如果没有得到数据，就一直刷新图表
                 while (!WebConnect.isDataGotten) {
-                    Log.d(TAG, "Loading...While " + WebConnect.isDataGotten);
+                    Thread.sleep(1);
                 }
 
                 //成功之后，最后一次再刷新一下图表
