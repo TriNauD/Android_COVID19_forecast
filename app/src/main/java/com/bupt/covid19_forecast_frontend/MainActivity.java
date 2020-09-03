@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int curLineIndex = 0;
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
+    //最大y轴
+    private int MaxY = 2200000;
 
 
     /**
@@ -263,6 +265,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol2.setText(strings[1]);
         peopleNumBarCol3.setText(strings[2]);
         peopleNumBarCol4.setText(strings[3]);
+
+        //最大y轴，赋值为累计确诊数量
+        if(!strings[0].equals("null")){
+            MaxY = WebConnect.getMaxY();
+        }
     }
 
     /**
@@ -317,7 +324,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         int numOfFP = WebConnect.getNumOfForecastPoints();
 
         //y轴-最大数目
-        int MaxY = 220000;
 
         //总体的图表范围
         Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());

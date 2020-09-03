@@ -452,4 +452,8 @@ public class WebConnect {
     public static Integer[] getOneDayFourNum() {
         return oneDayFourNum;
     }
+
+    public static Integer getMaxY() {
+        return oneDayFourNum[1];
+    }
 }
