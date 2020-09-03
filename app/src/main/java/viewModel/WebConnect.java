@@ -253,7 +253,7 @@ public class WebConnect {
             float[] linePoints = new float[numOfRealPoints];//一条线上面的点
             for (int j = 0; j < numOfRealPoints; ++j) {
                 //debug TAG
-                Log.d(TAG, "initReal：xyReal[i][j]: " + xyReal[i][j]);
+//                Log.d(TAG, "initReal：xyReal[i][j]: " + xyReal[i][j]);
                 linePoints[j] = xyReal[i][j];
             }
             if (lineDataList.size() < numOfRealLines) {
