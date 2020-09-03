@@ -295,7 +295,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
                 android:layout_below="@+id/people_num_bar"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="60dp" />
 
             <!--calendar-->
             <!--            <CalendarView-->
@@ -330,11 +331,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/toolbar_title"
-                android:visibility="invisible"
                 android:max="100"
                 android:progress="0"
                 android:scaleX="0.5"
-                android:scaleY="0.5"></ProgressBar>
+                android:scaleY="0.5"
+                android:visibility="invisible"></ProgressBar>
 
             <Spinner
                 android:id="@+id/change_nation_spinner"
