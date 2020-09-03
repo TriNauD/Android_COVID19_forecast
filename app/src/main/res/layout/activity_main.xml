@@ -44,7 +44,7 @@
                         android:layout_height="wrap_content"
                         android:text="19024"
                         android:textColor="@color/red"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
                 </LinearLayout>
                 <!--bar col2-->
                 <LinearLayout
@@ -68,7 +68,7 @@
                         android:layout_height="wrap_content"
                         android:text="156"
                         android:textColor="@color/orange"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
                 </LinearLayout>
                 <!--bar col3-->
                 <LinearLayout
@@ -92,7 +92,7 @@
                         android:layout_height="wrap_content"
                         android:text="13783"
                         android:textColor="@color/green"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
                 </LinearLayout>
                 <!--bar col4-->
                 <LinearLayout
@@ -115,7 +115,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1753"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -224,7 +224,7 @@
                         android:inputType="text"
                         android:maxLength="2"
                         android:maxLines="1"
-                        android:textSize="15dp" />
+                        android:textSize="15sp" />
 
                     <EditText
                         android:id="@+id/control_start_date_day_input"
@@ -234,7 +234,7 @@
                         android:layout_toRightOf="@+id/control_start_date_month_label"
                         android:maxLength="2"
                         android:maxLines="1"
-                        android:textSize="15dp" />
+                        android:textSize="15sp" />
                     <!--day input-->
                     <EditText
                         android:id="@+id/control_duration_input"
@@ -244,7 +244,7 @@
                         android:layout_toLeftOf="@+id/day_label"
                         android:maxLength="2"
                         android:maxLines="1"
-                        android:textSize="15dp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/control_start_date_day_label"
@@ -351,7 +351,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="@string/national_title"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>

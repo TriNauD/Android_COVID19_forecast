@@ -369,7 +369,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol3.setText("102429");
         peopleNumBarCol4.setText("6088");
 
-
         //static element
         controlLevelLabel = findViewById(R.id.control_level_label);
         controlStartDateLabel = findViewById(R.id.control_start_date_label);
