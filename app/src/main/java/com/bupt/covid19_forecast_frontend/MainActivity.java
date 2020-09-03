@@ -86,6 +86,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        }
         // 方法2：doInBackground（）
         // 作用：接收输入参数、执行任务中的耗时操作、返回 线程任务执行的结果
+
+        GetDataTask(){
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+
         @Override
         protected String doInBackground(String... params) {
             try {
@@ -482,8 +488,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //            //获取世界真实
 //            WebConnect.getWorld(currentNation);
         } else {
-            //获取预测
-            WebConnect.getPredict(currentNation);
+//            //获取预测
+//            WebConnect.getPredict(currentNation);
         }
     }
 
@@ -522,13 +528,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             paramLine2.setVisibility(View.INVISIBLE);
             paramLine3.setVisibility(View.INVISIBLE);
         }
-
-//        //从网络获取数据
-//        getDataFromWeb();
-//        //世界真实
-//        WebConnect.getWorld(currentNation);
-//        //预测
-//        WebConnect.getPredict(currentNation);
         //无论怎样，点击了预测开关就刷新一下线图
         drawChart();
     }
