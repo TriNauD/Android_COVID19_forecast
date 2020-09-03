@@ -82,6 +82,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // 作用：执行 线程任务前的操作
         @Override
         protected void onPreExecute() {
+            Log.i(TAG, "Loading...真实当前国家：" + currentNation);
+
+            //先设置为没有开始获取
+            WebConnect.isDataGotten = false;
+            progressBar.setVisibility(View.VISIBLE);
+            Log.i(TAG, "Loading...isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
         }
 
         // 方法2：doInBackground（）
@@ -89,14 +95,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected String doInBackground(String... params) {
             try {
-                Log.i(TAG, "Loading...真实当前国家：" + currentNation);
-
-                //先设置为没有开始获取
-                WebConnect.isDataGotten = false;
-                progressBar.setVisibility(View.VISIBLE);
-                Log.i(TAG, "Loading...isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
-
-
                 //去获取数据，如果成功会将isDataGotten设置为true
                 WebConnect.getWorld(currentNation);
 
@@ -104,12 +102,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 while (!WebConnect.isDataGotten) {
                     Thread.sleep(1);
                 }
-
-                //成功之后，最后一次再刷新一下图表
-                drawChart();
-
-                Log.i(TAG, "Loading" + currentNation + "结束真实线");
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -127,8 +119,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // 作用：接收线程任务执行结果、将执行结果显示到UI组件
         @Override
         protected void onPostExecute(String result) {
+            //成功之后，最后一次再刷新一下图表
+            drawChart();
+
             // 执行完毕后，则更新UI
             progressBar.setVisibility(View.INVISIBLE);
+
+            Log.i(TAG, "Loading" + currentNation + "结束真实线");
         }
 
 
@@ -241,6 +238,31 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //画画和调整视图
         draw();
+
+        //更新上方4个数
+        updateFourNum();
+
+    }
+
+    /**
+     * 更新上方4个数
+     *
+     * @author lym
+     */
+    private void updateFourNum() {
+        Integer[] integers = WebConnect.getOneDayFourNum();
+        String[] strings = new String[4];
+
+        //int -> String
+        for (int i = 0; i < 4; i++) {
+            strings[i] = String.valueOf(integers[i]);
+            Log.i(TAG, "updateFourNum第" + i + "个字符串：" + strings[i]);
+        }
+
+        peopleNumBarCol1.setText(strings[0]);
+        peopleNumBarCol2.setText(strings[1]);
+        peopleNumBarCol3.setText(strings[2]);
+        peopleNumBarCol4.setText(strings[3]);
     }
 
     /**
@@ -291,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "drawChart 调参师");
 
         //获取后端的节点数目
-        int numOfPoint = lineViewModel.getNumOfRealPoint();
+        int numOfPoint = lineViewModel.getNumOfPoint();
 
         //总体的图表范围
         Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
@@ -360,14 +382,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //progress bar
         progressBar = findViewById(R.id.progress_bar);
 
-        /*peopleNumBarCol1.setText((int) WebConnect.getLineData().get(0)[WebConnect.getNumOfRealPoints()]);
-        peopleNumBarCol2.setText((int) WebConnect.getLineData().get(1)[WebConnect.getNumOfRealPoints()]);
-        peopleNumBarCol3.setText((int) WebConnect.getLineData().get(2)[WebConnect.getNumOfRealPoints()]);
-        peopleNumBarCol4.setText((int) WebConnect.getLineData().get(3)[WebConnect.getNumOfRealPoints()]);*/
-        peopleNumBarCol1.setText("1142777");
-        peopleNumBarCol2.setText("3578240");
-        peopleNumBarCol3.setText("102429");
-        peopleNumBarCol4.setText("6088");
+        peopleNumBarCol1.setText("现存确诊");
+        peopleNumBarCol2.setText("累计确诊");
+        peopleNumBarCol3.setText("累计治愈");
+        peopleNumBarCol4.setText("累计死亡");
 
 
         //static element
