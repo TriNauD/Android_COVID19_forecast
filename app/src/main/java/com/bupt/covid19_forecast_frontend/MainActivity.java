@@ -68,8 +68,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int curLineIndex = 0;
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
-    //数据是否加载完毕
-    private boolean isDataGotten = false;
+
 
 
     /**
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // 方法2：doInBackground（）
         // 作用：接收输入参数、执行任务中的耗时操作、返回 线程任务执行的结果
 
-        GetDataTask(){
+        GetDataTask() {
             progressBar.setVisibility(View.VISIBLE);
         }
 
@@ -95,15 +94,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected String doInBackground(String... params) {
             try {
-                Log.i(TAG, "当前国家：" + currentNation);
+                Log.i(TAG, "Loading...当前国家：" + currentNation);
                 //先设置为没有开始获取
-                isDataGotten = false;
+                WebConnect.isDataGotten = false;
                 //去获取数据，如果成功会将isDataGotten设置为true
                 WebConnect.getWorld(currentNation);
+
                 //如果没有得到数据，就一直刷新图表
                 while (!WebConnect.isDataGotten) {
                     drawChart();
                 }
+
+                //成功之后，最后一次再刷新一下图表
+                drawChart();
+
+                Log.i(TAG, "Loading" + currentNation + "结束");
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
