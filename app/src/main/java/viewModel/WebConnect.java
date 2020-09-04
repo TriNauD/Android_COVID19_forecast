@@ -169,6 +169,13 @@ public class WebConnect {
                     nationList = world;
                     //一天的所有数据
                     Alltime_world oneDay = nationList.get(nationList.size() - 1);
+                    String dateStr = oneDay.getDate().toString();
+                    Log.i(TAG, "onResponse: 最后一天日期是： " +
+                            dateStr.substring(0, 4) + " 年 " +
+                            dateStr.substring(5, 7).replaceFirst("0", "") + " 月 " +
+                            dateStr.substring(8, 10).replaceFirst("0", "") + " 日 ");
+                    String month = dateStr.substring(5, 7).replaceFirst("0", "");
+                    String day = dateStr.substring(8, 10).replaceFirst("0", "");
                     //一天的现存确诊
                     Integer oneDayPresent = oneDay.getPresent_confirm();
                     Log.i(TAG, "onResponse: 最后一天的的现存确诊： " + oneDayPresent);
