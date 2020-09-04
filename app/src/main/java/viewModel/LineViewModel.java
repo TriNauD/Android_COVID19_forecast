@@ -23,6 +23,10 @@ public class LineViewModel extends ViewModel {
     //所有坐标轴
     private List<Axis[]> axesList = new ArrayList<>();
 
+    //画图参数
+    //y轴字体大小
+    private int yFontSize = 5;
+
 
     /**
      * 初始化预测的图表
@@ -85,6 +89,9 @@ public class LineViewModel extends ViewModel {
             }
             axisX.setValues(valueListX);//将列表设置到x轴上面
             Axis axisY = new Axis();//Y轴没有任何设定，就初始化
+            axisY.setName(" ");//y轴的名称显示，设置为空格可以把数字显示全
+            axisY.setTextSize(yFontSize);//y轴字体大小
+
             Axis[] axisXY = {axisX, axisY};//把XY放到一起
             axesList.add(axisXY);//加入总的坐标轴列表
         }
@@ -174,10 +181,10 @@ public class LineViewModel extends ViewModel {
             //将标签列表设置到x轴上面
             axisX.setValues(valueListX);
 
-            //TODO step of y ? 是时候考虑y轴的步长问题了
             //y轴
             Axis axisY = new Axis();//Y轴没有任何设定，就初始化
-
+            axisY.setName(" ");//y轴的名称显示，设置为空格可以把数字显示全
+            axisY.setTextSize(yFontSize);//y轴字体大小
 
             //把XY放到一起
             Axis[] axisXY = {axisX, axisY};
