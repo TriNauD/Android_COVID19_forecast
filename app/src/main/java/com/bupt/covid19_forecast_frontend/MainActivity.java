@@ -672,7 +672,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     //当前省份置null
                     currentProvince = null;
                 }
-                Log.i(TAG, "onItemSelected: nationSpinner " + "国家名 " + currentNation + " 省名 " + currentProvince);
+                Log.i(TAG, "onItemSelected: nationSpinner " + "国家: " + currentNation + " 省: " + currentProvince);
                 drawChart();
                 break;
             }
@@ -680,7 +680,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.change_province_spinner: {
                 //从spinner选项得到当前选择的省
                 currentProvince = changeProvinceSpinner.getSelectedItem().toString();
-                Log.i(TAG, "onItemSelected: provinceSpinner " + "国家名 " + currentNation + " 省名 " + currentProvince);
+                Log.i(TAG, "onItemSelected: provinceSpinner " + "国家: " + currentNation + " 省: " + currentProvince);
                 break;
             }
 
