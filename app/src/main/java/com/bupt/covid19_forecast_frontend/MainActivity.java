@@ -2,12 +2,14 @@ package com.bupt.covid19_forecast_frontend;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Spinner lineTypeSpinner;
     private Spinner modelTypeSpinner;
     private Switch forecastSwitch;
+    private Button submitButton;
+    private Button resetButton;
     private EditText controlDurationInput;
     private EditText controlStartDateMonthInput;
     private EditText controlStartDateDayInput;
@@ -367,6 +371,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //switch
         forecastSwitch = findViewById(R.id.forecast_switch);
 
+        //button
+        submitButton = findViewById(R.id.submit_button);
+        resetButton = findViewById(R.id.reset_button);
+
         //edit text
         controlDurationInput = findViewById(R.id.control_duration_input);
         controlStartDateMonthInput = findViewById(R.id.control_start_date_month_input);
@@ -386,7 +394,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol2.setText("累计确诊");
         peopleNumBarCol3.setText("累计治愈");
         peopleNumBarCol4.setText("累计死亡");
-
 
         //static element
         controlLevelLabel = findViewById(R.id.control_level_label);
@@ -408,6 +415,45 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         modelTypeSpinner.setOnItemSelectedListener(this);
         controlLevelSpinner.setOnItemSelectedListener(this);
         changeNationSpinner.setOnItemSelectedListener(this);
+        //button设置listener
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Button: submit button clicked");
+                //设置控制或群体免疫
+                WebConnect.setHasControl(modelTypeSpinner.getSelectedItemPosition() == 0 ? true : false);
+                Log.i(TAG, "Button: hasControl:" + (modelTypeSpinner.getSelectedItemPosition() == 0 ? true : false));
+                //设置控制等级
+                WebConnect.setControlGrade(controlLevelSpinner.getSelectedItemPosition() + 1);
+                Log.i(TAG, "Button: ControlLevel:" + (controlLevelSpinner.getSelectedItemPosition() + 1));
+                //设置控制开始日期
+                try {
+                    int monthInt = Integer.parseInt(controlStartDateMonthInput.getText().toString());
+                    int dayInt = Integer.parseInt(controlStartDateDayInput.getText().toString());
+                    if (monthInt <= 12 && dayInt <= 31) {
+                        //如果日期格式正确 则格式化表示日期
+                        String month = (monthInt >= 10) ? (controlStartDateMonthInput.getText().toString()) : ("0" + controlStartDateMonthInput.getText());
+                        String day = (dayInt >= 10) ? (controlStartDateDayInput.getText().toString()) : ("0" + controlStartDateDayInput.getText());
+                        String date = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
+                        WebConnect.setStartControlDate(date);
+                        Log.i(TAG, "Button: ControlStartDate:" + date);
+                    } else {
+                        //
+                        Log.i(TAG, "Button: Too big number");
+                    }
+                } catch (Exception e) {
+                    Log.i(TAG, "Button: Bad input type");
+                }
+
+
+            }
+        });
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Button: reset button clicked");
+            }
+        });
         //input设置listener
     }
 
@@ -633,4 +679,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         drawChart();
 
     }
+
 }

@@ -43,7 +43,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/red"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
                 </LinearLayout>
                 <!--bar col2-->
                 <LinearLayout
@@ -66,7 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/orange"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
                 </LinearLayout>
                 <!--bar col3-->
                 <LinearLayout
@@ -89,7 +89,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/green"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
                 </LinearLayout>
                 <!--bar col4-->
                 <LinearLayout
@@ -111,22 +111,24 @@
                         android:id="@+id/people_num_bar_col_4_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
+
                 </LinearLayout>
+
             </LinearLayout>
 
-            <!--chart-->
+            <!--param lines-->
             <LinearLayout
                 android:id="@+id/param_lines"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/chart"
                 android:orientation="vertical">
                 <!--param line 1-->
                 <RelativeLayout
                     android:id="@+id/param_line_1"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1">
                     <!--line type spinner-->
                     <Spinner
@@ -161,7 +163,7 @@
                 <RelativeLayout
                     android:id="@+id/param_line_2"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:visibility="visible">
                     <!--model type spinner-->
@@ -205,7 +207,7 @@
                 <RelativeLayout
                     android:id="@+id/param_line_3"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:visibility="visible">
                     <!--control start date-->
@@ -220,7 +222,7 @@
                         android:inputType="text"
                         android:maxLength="2"
                         android:maxLines="1"
-                        android:textSize="15dp" />
+                        android:textSize="15sp" />
 
                     <EditText
                         android:id="@+id/control_start_date_day_input"
@@ -230,7 +232,7 @@
                         android:layout_toRightOf="@+id/control_start_date_month_label"
                         android:maxLength="2"
                         android:maxLines="1"
-                        android:textSize="15dp" />
+                        android:textSize="15sp" />
                     <!--day input-->
                     <EditText
                         android:id="@+id/control_duration_input"
@@ -240,7 +242,7 @@
                         android:layout_toLeftOf="@+id/day_label"
                         android:maxLength="2"
                         android:maxLines="1"
-                        android:textSize="15dp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/control_start_date_day_label"
@@ -283,26 +285,42 @@
                         android:layout_marginRight="20dp"
                         android:text="@string/day_label" />
                 </RelativeLayout>
+                <!--buttons-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/param_lines"
+                    android:layout_marginTop="40dp"
+                    android:gravity="center">
+                    <!--submit button-->
+                    <Button
+                        android:id="@+id/reset_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reset_button_text">
+                    </Button>
+                    <!--submit button-->
+                    <Button
+                        android:id="@+id/submit_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/reset_button"
+                        android:layout_marginLeft="50dp"
+                        android:text="@string/submit_button_text">
+                    </Button>
+                </RelativeLayout>
             </LinearLayout>
 
-            <!--param lines-->
+
+            <!--chart-->
             <lecho.lib.hellocharts.view.LineChartView
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
                 android:layout_below="@+id/people_num_bar"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="60dp" />
 
-            <!--calendar-->
-            <!--            <CalendarView-->
-            <!--                android:id="@+id/control_start_date_calendar"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_alignParentBottom="true"-->
-            <!--                android:layout_centerHorizontal="true"-->
-            <!--                android:background="@color/white"-->
-            <!--                android:visibility="invisible">-->
-            <!--            </CalendarView>-->
 
         </RelativeLayout>
 
@@ -326,11 +344,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/toolbar_title"
-                android:visibility="invisible"
                 android:max="100"
                 android:progress="0"
                 android:scaleX="0.5"
-                android:scaleY="0.5"></ProgressBar>
+                android:scaleY="0.5"
+                android:visibility="invisible"></ProgressBar>
 
             <Spinner
                 android:id="@+id/change_nation_spinner"
@@ -346,7 +364,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="@string/national_title"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>

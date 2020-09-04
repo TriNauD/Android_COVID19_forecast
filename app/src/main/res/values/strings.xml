@@ -19,7 +19,8 @@
     <string name="control_start_date_year_label">年</string>
     <string name="control_start_date_month_label">月</string>
     <string name="control_start_date_day_label">日</string>
-
+    <string name="submit_button_text">提交</string>
+    <string name="reset_button_text">重置</string>
 
 
     <string-array name="item_choices">
