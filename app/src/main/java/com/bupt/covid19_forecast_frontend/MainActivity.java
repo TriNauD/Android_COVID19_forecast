@@ -415,14 +415,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i(TAG,"Swipe: is refreshed");
+                Log.i(TAG, "Swipe: is refreshed");
                 drawChart();
 //                try {
 //                    Thread.sleep(2000);
 //                } catch (InterruptedException e) {
 //                    e.printStackTrace();
 //                }
-                Log.i(TAG,"Swipe: fresh finished");
+                Log.i(TAG, "Swipe: fresh finished");
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -474,7 +474,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
         //input设置listener
     }
-
 
 
     /**
