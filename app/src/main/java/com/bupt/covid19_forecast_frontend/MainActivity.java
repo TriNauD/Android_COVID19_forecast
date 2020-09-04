@@ -613,7 +613,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //从spinner选项得到当前选择的国家
                 currentRegionName = changeNationSpinner.getSelectedItem().toString();
                 //设置toolbar标题
-                toolbarTitle.setText(currentRegionName + getResources().getString(R.string.national_title));
+                toolbarTitle.setText(getResources().getString(R.string.national_title));
                 //判断是中国还是其他国家
                 if (currentRegionName.equals("中国")) {
                     //如果是中国 显示省份spinner
