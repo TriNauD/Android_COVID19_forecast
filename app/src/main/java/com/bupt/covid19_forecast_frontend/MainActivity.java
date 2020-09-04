@@ -338,7 +338,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         maxViewPort.left = 0;
         maxViewPort.bottom = 0;
         //x轴最大坐标值
-        maxViewPort.right = numOfRP + numOfFP;
+        int rightMargin = 4;//右边距，留出一点白用来滑动
+        if (isForecast) {
+            //如果在预测
+            Log.i(TAG, "setChartShow 函数：【预测】设置当前范围");
+            //真实120预测15
+            maxViewPort.right = numOfRP + numOfFP + rightMargin;
+        } else {
+            Log.i(TAG, "setChartShow 函数：【真实】设置当前范围");
+            maxViewPort.right = numOfRP + rightMargin;
+        }
         //y轴最大坐标值
         maxViewPort.top = MaxY;
         myLineChartView.setMaximumViewport(maxViewPort);
@@ -347,16 +356,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
         halfViewport.top = MaxY;
         halfViewport.bottom = 0;
-        halfViewport.left = 0;
-        if (isForecast) {
-            //如果在预测
-            Log.i(TAG, "setChartShow 函数：【预测】设置当前范围");
-            //真实120预测15
-            halfViewport.right = numOfRP + numOfFP - 1;
-        } else {
-            Log.i(TAG, "setChartShow 函数：【真实】设置当前范围");
-            halfViewport.right = numOfRP - 1;
-        }
+        //先显示后100天
+        halfViewport.left = numOfRP - 100;
+        halfViewport.right = numOfRP;
         myLineChartView.setCurrentViewport(halfViewport);
     }
 
