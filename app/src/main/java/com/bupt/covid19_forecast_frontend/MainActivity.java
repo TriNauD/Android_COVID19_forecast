@@ -623,8 +623,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 } else {
                     //如果是别国 隐藏省份spinner
                     changeProvinceSpinner.setVisibility(View.INVISIBLE);
-                    //当前省份置null
-                    currentRegionName = null;
+                    //从spinner选项得到当前选择的国家
+                    currentRegionName = changeNationSpinner.getSelectedItem().toString();
                 }
                 Log.i(TAG, "onItemSelected: nationSpinner  省: " + currentRegionName);
                 drawChart();

@@ -105,6 +105,12 @@ public class WebConnect {
                     //赋值列表
                     provinceList = province;
 
+                    if (provinceList.size() <= 0) {
+                        //已经获取完毕
+                        isDataGotten = true;
+                        Log.i(TAG, "isDataGotten省份失败" + isDataGotten);
+                        return;
+                    }
                     //最后一天的所有数据
                     Alltime_province lastDay = provinceList.get(provinceList.size() - 1);
 
@@ -235,6 +241,12 @@ public class WebConnect {
                     //赋值列表
                     nationList = world;
 
+                    if (nationList.size() <= 0) {
+                        //已经获取完毕
+                        isDataGotten = true;
+                        Log.i(TAG, "isDataGotten世界失败" + isDataGotten);
+                        return;
+                    }
                     //最后一天的所有数据
                     Alltime_world lastDay = nationList.get(nationList.size() - 1);
 
