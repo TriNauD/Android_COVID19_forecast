@@ -24,6 +24,8 @@ public class LineViewModel extends ViewModel {
     private List<Axis[]> axesList = new ArrayList<>();
 
     //画图参数
+    //x轴字体大小
+    private int xFontSize = 5;
     //y轴字体大小
     private int yFontSize = 5;
 
@@ -87,7 +89,10 @@ public class LineViewModel extends ViewModel {
                 }
                 valueListX.add(valueX);//添加一个值
             }
+            axisX.setName(" ");//名称显示
+            axisX.setTextSize(xFontSize);//字体大小
             axisX.setValues(valueListX);//将列表设置到x轴上面
+
             Axis axisY = new Axis();//Y轴没有任何设定，就初始化
             axisY.setName(" ");//y轴的名称显示，设置为空格可以把数字显示全
             axisY.setTextSize(yFontSize);//y轴字体大小
@@ -178,6 +183,8 @@ public class LineViewModel extends ViewModel {
             //做轴
             //x轴
             Axis axisX = new Axis();
+            axisX.setName(" ");//名称显示
+            axisX.setTextSize(xFontSize);//字体大小
             //将标签列表设置到x轴上面
             axisX.setValues(valueListX);
 
