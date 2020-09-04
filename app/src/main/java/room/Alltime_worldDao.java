@@ -1,5 +1,7 @@
 package room;
 
+import android.arch.lifecycle.LiveData;
+
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -13,7 +15,7 @@ public interface Alltime_worldDao {
 
     //插入数据
     @Insert
-    void insertWorld(Alltime_world...alltime_worlds);
+    void insertWorlds(Alltime_world...alltime_worlds);
 
     //删除数据，默认根据主键删除
     @Delete
@@ -27,13 +29,14 @@ public interface Alltime_worldDao {
     void updateWorld(Alltime_world...alltime_worlds);
 
     //查询数据
-    @Query("SELECT * FROM Alltime_world")
-    List<Alltime_world> getAllWorlds();
+    @Query(" SELECT * FROM Alltime_world")
+    LiveData<List<Alltime_world>> getAllWorldsLive();
     //根据国家名查询
     @Query("SELECT * FROM Alltime_world WHERE name= :name")
     Alltime_world getWorldByName(String name);
+
     //根据名字查询某个国家是否存在，存在返回1
     @Query("SELECT * FROM Alltime_world WHERE name LIKE :name LIMIT 1")
-    Alltime_world findWorldByName(String name);
+    int findWorldByName(String name);
 
 }

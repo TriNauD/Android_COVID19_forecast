@@ -2,6 +2,7 @@ package com.bupt.covid19_forecast_frontend;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,6 +26,7 @@ import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 import room.Alltime_provinceDao;
+import room.Alltime_world;
 import room.Alltime_worldDao;
 import room.AppDatabase;
 import viewModel.LineViewModel;
@@ -71,10 +73,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int curLineIndex = 0;
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
-
-    //数据库
-    AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "app_database").build();
-
 
 
     /**
@@ -177,14 +175,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         WebConnect.getPredict(currentNation);
     }
 
-    /**
-     * 从网络获取数据存到数据库
-     *
-     * @author yk
-     */
-    void databaseGetData(){
 
+    static class InsertAsyncTask extends AsyncTask<Alltime_world,Void,Void>{
+        private Alltime_worldDao alltime_worldDao;
 
+        public InsertAsyncTask(Alltime_worldDao alltime_worldDao) {
+            this.alltime_worldDao = alltime_worldDao;
+        }
+
+        //后台
+        @Override
+        protected Void doInBackground(Alltime_world... alltime_worlds) {
+            alltime_worldDao.insertWorld(alltime_worlds);
+            return null;
+        }
+
+        //把结果带回给主线程
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
     }
 
     /**

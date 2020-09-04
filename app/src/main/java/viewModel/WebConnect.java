@@ -1,5 +1,7 @@
 package viewModel;
 
+import android.arch.lifecycle.LiveData;
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -18,6 +20,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import room.AppDatabase;
 
 public class WebConnect {
     //调试使用的日志标签
@@ -415,4 +418,36 @@ public class WebConnect {
         WebConnect.lineDataList = lineDataList;
     }
 
+    /**
+     * 数据库相关
+     *
+     * @author yk
+     */
+
+    private LiveData<List<room.Alltime_world>> allWorldsLive;
+    private room.Alltime_worldDao worldDao;
+    private AppDatabase appDatabase;
+    WebConnect(Context context){
+        appDatabase=AppDatabase.getDatabase(context.getApplicationContext());
+        allWorldsLive=worldDao.getAllWorldsLive();
+    }
+    public LiveData<List<room.Alltime_world>> getAllWorldsLive() {
+        return allWorldsLive;
+    }
+    public room.Alltime_world getWorldByName(String name) {
+        return worldDao.getWorldByName(name);
+    }
+    public int findWorldByName(final String name){
+        return worldDao.findWorldByName(name);
+    }
+
+    void insertWorlds(room.Alltime_world...alltime_worlds){
+
+    }
+    void deleteWords(final String name){
+
+    }
+
+    void updateWords(final String wordname,final String wordclass) {
+    }
 }
