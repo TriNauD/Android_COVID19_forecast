@@ -417,12 +417,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onRefresh() {
                 Log.i(TAG, "Swipe: is refreshed");
                 drawChart();
-//                try {
-//                    Thread.sleep(2000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
                 Log.i(TAG, "Swipe: fresh finished");
+                //画完图后把刷新状态设为false
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
