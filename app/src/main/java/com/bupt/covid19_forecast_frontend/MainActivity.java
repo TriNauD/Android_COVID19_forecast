@@ -653,21 +653,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 drawChart();
                 break;
             }
-            //第4个spinner 控制开始日期
-//            case R.id.control_start_date_spinner: {
-//                //选了非最后一项
-//                if (pos != 3) {
-//                    Log.i(TAG, "onItemSelected 选了第4个spinner的前3个选项");
-//                    //天数输入框不可编辑&灰色
-//                }
-//                //选了最后一项
-//                else {
-//                    Log.i(TAG, "onItemSelected 选了第4个spinner的最后一个选项");
-//                    //天数输入框可以编辑&正常颜色
-//                }
-//                drawChart();
-//                break;
-//            }
         }
 
         //网络获取
