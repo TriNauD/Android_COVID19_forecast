@@ -7,6 +7,9 @@ import com.google.gson.GsonBuilder;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -171,10 +174,14 @@ public class WebConnect {
                     //网络拿到的一个地区的列表，里面是所有时间的数据
                     //赋值列表
                     nationList = world;
-                    //一天的所有数据
-                    Alltime_world oneDay = nationList.get(nationList.size() - 1);
+
+                    //最后一天的所有数据
+                    Alltime_world lastDay = nationList.get(nationList.size() - 1);
+
                     //日期
-                    String dateStr = oneDay.getDate().toString();
+                    Date lastDate = lastDay.getDate();
+                    //log一下
+                    String dateStr = lastDate.toString();
                     Log.i(TAG, "onResponse: 最后一天日期是： " +
                             dateStr.substring(0, 4) + " 年 " +
                             dateStr.substring(5, 7).replaceFirst("0", "") + " 月 " +
@@ -185,14 +192,34 @@ public class WebConnect {
                     //x轴用的标签
                     String xDateString = month + "/" + day;
                     Log.i(TAG, "onResponse: x轴显示日期： " + xDateString);
+
+                    //加一天
+                    Calendar calendar = new GregorianCalendar();
+                    calendar.setTime(lastDate);
+                    calendar.add(Calendar.DATE, 1); //把日期往后增加一天,正数往后推,负数往前移动
+                    //log一下
+                    // 获得年份
+                    int predictYear = calendar.get(Calendar.YEAR);
+                    // 获得月份
+                    int predictMonth = calendar.get(Calendar.MONTH) + 1;
+                    // 获得日期
+                    int predictDate = calendar.get(Calendar.DATE);
+                    Log.i(TAG, "onResponse: 预测的第一天日期是： " +
+                            predictYear + " 年 " +
+                            predictMonth + " 月 " +
+                            predictDate + " 日 ");
+                    String xPredictDateString = predictMonth + "/" + predictDate;
+                    Log.i(TAG, "onResponse: x轴显示预测日期： " + xPredictDateString);
+
                     //最后一天的四个数
-                    Integer oneDayPresent = oneDay.getPresent_confirm();
+                    Integer oneDayPresent = lastDay.getPresent_confirm();
                     Log.i(TAG, "onResponse: 最后一天的的现存确诊： " + oneDayPresent);
                     oneDayFourNum[0] = oneDayPresent;
-                    oneDayFourNum[1] = oneDay.getTotal_confirm();
-                    oneDayFourNum[2] = oneDay.getTotal_heal();
-                    oneDayFourNum[3] = oneDay.getTotal_dead();
+                    oneDayFourNum[1] = lastDay.getTotal_confirm();
+                    oneDayFourNum[2] = lastDay.getTotal_heal();
+                    oneDayFourNum[3] = lastDay.getTotal_dead();
                     Log.i(TAG, "onResponse: 最后一天的的累计死亡： " + oneDayFourNum[3]);
+
                     //真实线的节点数量，要根据传进来的数量啦
                     numOfRealPoints = nationList.size();
                     Log.i(TAG, "onResponse: 世界真实线的节点数量：" + numOfRealPoints);
