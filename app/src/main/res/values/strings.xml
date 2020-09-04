@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">COVID19_forecast_frontend</string>
+    <string name="app_name">疫情预测</string>
     <string name="national_title">疫情趋势</string>
     <string name="line_type_label">曲线类型</string>
     <string name="forecast_switch_label">预测</string>
