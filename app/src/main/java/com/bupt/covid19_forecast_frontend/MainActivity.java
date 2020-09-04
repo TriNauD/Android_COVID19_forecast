@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //获取数据线程
     private GetDataTask getDataTask;
-    private GetPredictDataTask getPredictDataTask;
+//    private GetPredictDataTask getPredictDataTask;
     //当前国家
     private String currentNation = "中国";
     private String currentProvince = "北京";
@@ -157,13 +157,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+
+
+
     /**
      * 获取预测数据
      * 异步线程
      *
      * @author lym
      */
-    private class GetPredictDataTask extends AsyncTask<String, Integer, String> {
+        /*
+
+        private class GetPredictDataTask extends AsyncTask<String, Integer, String> {
         // 方法1：onPreExecute（）
         // 作用：执行 线程任务前的操作
         @Override
@@ -226,6 +231,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        }
 
     }
+
+     */
 
 
     /*————————————画图相关————————————*/
@@ -484,8 +491,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                     //发送
                     //获取预测
-                    getPredictDataTask = new GetPredictDataTask();
-                    getPredictDataTask.execute();
+//                    getPredictDataTask = new GetPredictDataTask();
+//                    getPredictDataTask.execute();
+                    getDataTask.execute("Predict");
 
                 } catch (Exception e) {
                     Log.i(TAG, "Button: Bad input type");
@@ -696,7 +704,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (parentID == R.id.change_nation_spinner) {
             //获取世界
             getDataTask = new GetDataTask();
-            getDataTask.execute();
+            getDataTask.execute("World");
         }
 
     }
