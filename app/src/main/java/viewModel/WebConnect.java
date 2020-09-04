@@ -434,18 +434,27 @@ public class WebConnect {
      * @author lym
      */
     public static void initForecastAxis() {
+        //防止null报错，做一个标志
+        boolean haveData;
+        if (xPredictLabel == null || xPredictLabel[0] == null || xPredictLabel[0].equals("")) {
+            Log.i(TAG, "initRealAxis还没加载数据");
+            haveData = false;
+        } else {
+            Log.i(TAG, "initRealAxis已经加载数据，准备建立标签");
+            haveData = true;
+        }
+
+        List<String> strings = new ArrayList<>();
+
         //建立预测标签
         for (int i = 0; i < numOfForecastLines; i++) {
             //对于每一条预测线
-            List<String> strings = new ArrayList<>();
-            int day = 0;
             for (int j = 0; j < numOfForecastPoints; j++) {
-                day++;
-                if (day > 30) {
-                    day %= 30;
+                if (!haveData) {
+                    strings.add("");
+                } else {
+                    strings.add(xPredictLabel[j]);
                 }
-                String s = (i + 6) + "/" + day;
-                strings.add(s);
             }
             if (axisLableList.size() < numOfRealLines + numOfForecastLines) {
                 //如果线组里面还没有预测线，就新添加
