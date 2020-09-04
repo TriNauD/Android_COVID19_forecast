@@ -309,6 +309,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         List<Axis[]> allAxes = lineViewModel.getAxesList();
         //选择要显示的轴
         Axis[] showAxisXY = allAxes.get(curLineIndex);
+        String temps = String.copyValueOf(showAxisXY[0].getValues().get(0).getLabel());
+        Log.i(TAG, "draw 标签：" + temps);
 
         //-------------------- 图 ---------------------------------
         //线组放到线图数据里面

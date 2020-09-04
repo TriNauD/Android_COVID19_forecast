@@ -101,7 +101,14 @@ public class LineViewModel extends ViewModel {
             axisY.setTextSize(yFontSize);//y轴字体大小
 
             Axis[] axisXY = {axisX, axisY};//把XY放到一起
-            axesList.add(axisXY);//加入总的坐标轴列表
+
+            //加入总的坐标轴列表
+            if (axesList.size() >= WebConnect.getNumOfRealLines() + WebConnect.getNumOfForecastLines()) {
+                //如果已经有了
+                axesList.set(i + WebConnect.getNumOfRealLines(), axisXY);
+            } else {
+                axesList.add(axisXY);
+            }
         }
     }
 
@@ -198,8 +205,16 @@ public class LineViewModel extends ViewModel {
 
             //把XY放到一起
             Axis[] axisXY = {axisX, axisY};
+
             //加入总的坐标轴列表
-            axesList.add(axisXY);
+            //刷新和初始化
+            if (axesList.size() < numOflines) {
+                //如果是空的就初始化
+                axesList.add(axisXY);
+            } else {
+                //如果不是空的就应该更新
+                axesList.set(i, axisXY);
+            }
         }
     }
 
