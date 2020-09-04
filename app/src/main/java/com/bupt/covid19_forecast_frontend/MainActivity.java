@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * 获取数据线程类
      * 异步运行获取数据 获取结束后反映在ui组件上（加载中图标消失）
      *
-     * @author xjy
+     * @author xjy, lym
      */
     private class GetDataTask extends AsyncTask<String, Integer, String> {
         // 方法1：onPreExecute（）
@@ -157,6 +157,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    /**
+     * 获取预测数据
+     * 异步线程
+     *
+     * @author lym
+     */
     private class GetPredictDataTask extends AsyncTask<String, Integer, String> {
         // 方法1：onPreExecute（）
         // 作用：执行 线程任务前的操作
