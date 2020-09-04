@@ -356,7 +356,8 @@
                 android:progress="0"
                 android:scaleX="0.5"
                 android:scaleY="0.5"
-                android:visibility="invisible"></ProgressBar>
+                android:visibility="invisible"
+                android:indeterminateTint="@color/colorPrimary"></ProgressBar>
 
             <Spinner
                 android:id="@+id/change_nation_spinner"
