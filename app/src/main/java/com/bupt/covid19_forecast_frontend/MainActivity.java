@@ -3,8 +3,6 @@ package com.bupt.covid19_forecast_frontend;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
-import android.hardware.input.InputManager;
-import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -32,8 +30,6 @@ import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 import viewModel.WebConnect;
 import viewModel.LineViewModel;
-
-import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
@@ -71,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //获取数据线程
     private GetDataTask getDataTask;
     //当前国家
-    private String currentNation = "中国";
+    private String currentRegionName = "中国";
 
     //折线视图
     private LineChartView myLineChartView;
@@ -97,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // 作用：执行 线程任务前的操作
         @Override
         protected void onPreExecute() {
-            Log.i(TAG, "Loading... 当前地区：" + currentNation);
+            Log.i(TAG, "Loading... 当前地区：" + currentRegionName);
 
             //先设置为没有开始获取
             WebConnect.isDataGotten = false;
@@ -113,13 +109,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //去获取数据，如果成功会将isDataGotten设置为true
                 switch (params[0]) {
                     case "World":
-                        WebConnect.getWorld(currentNation);
+                        WebConnect.getWorld(currentRegionName);
                         break;
                     case "Predict":
-                        WebConnect.getPredict(currentNation);
+                        WebConnect.getPredict(currentRegionName);
                         break;
                     case "Province":
-                        WebConnect.getProvince(currentNation);
+                        WebConnect.getProvince(currentRegionName);
                 }
 
                 //如果没有得到数据，就一直等待
@@ -150,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // 执行完毕后，则更新UI
             progressBar.setVisibility(View.INVISIBLE);
 
-            Log.i(TAG, "Loading " + currentNation + " 结束");
+            Log.i(TAG, "Loading " + currentRegionName + " 结束");
         }
 
 
@@ -600,30 +596,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //选择国家spinner
             case R.id.change_nation_spinner: {
                 //从spinner选项得到当前选择的国家
-                currentNation = changeNationSpinner.getSelectedItem().toString();
+                currentRegionName = changeNationSpinner.getSelectedItem().toString();
                 //设置toolbar标题
-                toolbarTitle.setText(currentNation + getResources().getString(R.string.national_title));
+                toolbarTitle.setText(currentRegionName + getResources().getString(R.string.national_title));
                 //判断是中国还是其他国家
-                if (currentNation.equals("中国")) {
+                if (currentRegionName.equals("中国")) {
                     //如果是中国 显示省份spinner
                     changeProvinceSpinner.setVisibility(View.VISIBLE);
                     //重新获取当前省份
-                    currentNation = changeProvinceSpinner.getSelectedItem().toString();
+                    currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
                 } else {
                     //如果是别国 隐藏省份spinner
                     changeProvinceSpinner.setVisibility(View.INVISIBLE);
                     //当前省份置null
-                    currentNation = null;
+                    currentRegionName = null;
                 }
-                Log.i(TAG, "onItemSelected: nationSpinner  省: " + currentNation);
+                Log.i(TAG, "onItemSelected: nationSpinner  省: " + currentRegionName);
                 drawChart();
                 break;
             }
             //选择省spinner
             case R.id.change_province_spinner: {
                 //从spinner选项得到当前选择的省
-                currentNation = changeProvinceSpinner.getSelectedItem().toString();
-                Log.i(TAG, "onItemSelected: nationSpinner  省: " + currentNation);
+                currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
+                Log.i(TAG, "onItemSelected: nationSpinner  省: " + currentRegionName);
                 break;
             }
 
@@ -635,8 +631,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             getDataTask = new GetDataTask();
             getDataTask.execute("World");
         } else if (parentID == R.id.change_province_spinner) {
-            if (currentNation.equals("全国")) {
-                currentNation = "中国";
+            if (currentRegionName.equals("全国")) {
+                currentRegionName = "中国";
                 //获取世界
                 getDataTask = new GetDataTask();
                 getDataTask.execute("World");
