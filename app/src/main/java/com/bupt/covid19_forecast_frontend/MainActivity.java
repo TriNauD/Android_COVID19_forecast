@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final String TAG = "MainActivity";
 
     //ui控件
+    private SwipeRefreshLayout swipeRefreshLayout;
     private Spinner controlLevelSpinner;
     private Spinner changeNationSpinner;
     private Spinner lineTypeSpinner;
@@ -76,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //最大y轴
     private int MaxY = 2200000;
 
+    /*————————————获取数据相关————————————*/
 
     /**
      * 获取数据线程类
@@ -209,8 +212,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        }
 
     }
-
-
 
 
     /*————————————画图相关————————————*/
@@ -363,6 +364,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @author xjy
      */
     public void bindingElements() {
+        //滑动刷新视图
+        swipeRefreshLayout = findViewById(R.id.swipe);
         //chart
         myLineChartView = findViewById(R.id.chart);
         //spinner 页面的4个spinner并绑定listener
@@ -416,6 +419,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @author xjy
      */
     public void setListener() {
+        //下拉布局listener
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.i(TAG, "Swipe: is refreshed");
+                drawChart();
+                Log.i(TAG, "Swipe: fresh finished");
+                //画完图后把刷新状态设为false
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         //switch设置listener
         forecastSwitch.setOnCheckedChangeListener(this);
         //spinner设置listener
@@ -464,6 +478,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
         //input设置listener
     }
+
 
     /**
      * 下拉菜单，选项控制事件。
