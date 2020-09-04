@@ -437,10 +437,8 @@ public class WebConnect {
         //防止null报错，做一个标志
         boolean haveData;
         if (xPredictLabel == null || xPredictLabel[0] == null || xPredictLabel[0].equals("")) {
-            Log.i(TAG, "initRealAxis还没加载数据");
             haveData = false;
         } else {
-            Log.i(TAG, "initRealAxis已经加载数据，准备建立标签");
             haveData = true;
         }
 
