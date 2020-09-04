@@ -664,14 +664,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (currentNation.equals("中国")) {
                     //如果是中国 显示省份spinner
                     changeProvinceSpinner.setVisibility(View.VISIBLE);
-                    Log.i(TAG, "onItemSelected:选择中国");
+                    //重新获取当前省份
+                    currentProvince = changeProvinceSpinner.getSelectedItem().toString();
                 } else {
                     //如果是别国 隐藏省份spinner
                     changeProvinceSpinner.setVisibility(View.INVISIBLE);
                     //当前省份置null
                     currentProvince = null;
                 }
-                Log.i(TAG, "onItemSelected:国家名 " + currentNation);
+                Log.i(TAG, "onItemSelected: nationSpinner " + "国家名 " + currentNation + " 省名 " + currentProvince);
                 drawChart();
                 break;
             }
@@ -679,7 +680,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.change_province_spinner: {
                 //从spinner选项得到当前选择的省
                 currentProvince = changeProvinceSpinner.getSelectedItem().toString();
-                Log.i(TAG, "onItemSelected:省名 " + currentProvince);
+                Log.i(TAG, "onItemSelected: provinceSpinner " + "国家名 " + currentNation + " 省名 " + currentProvince);
                 break;
             }
 
