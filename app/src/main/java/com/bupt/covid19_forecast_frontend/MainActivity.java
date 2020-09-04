@@ -470,6 +470,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         //
                         Log.i(TAG, "Button: Too big number");
                     }
+
+                    //发送
+                    //获取预测
+                    getPredictDataTask = new GetPredictDataTask();
+                    getPredictDataTask.execute();
+
                 } catch (Exception e) {
                     Log.i(TAG, "Button: Bad input type");
                 }
@@ -653,21 +659,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 drawChart();
                 break;
             }
-            //第4个spinner 控制开始日期
-//            case R.id.control_start_date_spinner: {
-//                //选了非最后一项
-//                if (pos != 3) {
-//                    Log.i(TAG, "onItemSelected 选了第4个spinner的前3个选项");
-//                    //天数输入框不可编辑&灰色
-//                }
-//                //选了最后一项
-//                else {
-//                    Log.i(TAG, "onItemSelected 选了第4个spinner的最后一个选项");
-//                    //天数输入框可以编辑&正常颜色
-//                }
-//                drawChart();
-//                break;
-//            }
         }
 
         //网络获取
@@ -707,11 +698,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             curLineIndex = lineViewModel.getNumOfRealLines();
             paramLine2.setVisibility(View.VISIBLE);
             paramLine3.setVisibility(View.VISIBLE);
-
-            //获取预测
-            getPredictDataTask = new GetPredictDataTask();
-            getPredictDataTask.execute();
-
         } else {
             Log.i(TAG, "onCheckedChanged 开关状态：关闭");
             //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
