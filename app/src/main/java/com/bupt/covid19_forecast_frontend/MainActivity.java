@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int curLineIndex = 0;
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
+    //最大y轴
+    private int MaxY = 2200000;
 
 
     /**
@@ -149,6 +151,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // 作用：执行 线程任务前的操作
         @Override
         protected void onPreExecute() {
+            Log.i(TAG, "Loading...预测当前国家：" + currentNation);
+
+            //先设置为没有开始获取
+            WebConnect.isDataGotten = false;
+            progressBar.setVisibility(View.VISIBLE);
+            Log.i(TAG, "Loading...isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
         }
 
         // 方法2：doInBackground（）
@@ -156,14 +164,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected String doInBackground(String... params) {
             try {
-                Log.i(TAG, "Loading...预测当前国家：" + currentNation);
-
-                //先设置为没有开始获取
-                WebConnect.isDataGotten = false;
-                progressBar.setVisibility(View.VISIBLE);
-                Log.i(TAG, "Loading...isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
-
-
                 //去获取数据，如果成功会将isDataGotten设置为true
                 WebConnect.getPredict(currentNation);
 
@@ -171,11 +171,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 while (!WebConnect.isDataGotten) {
                     Thread.sleep(1);
                 }
-
-                //成功之后，最后一次再刷新一下图表
-                drawChart();
-
-                Log.i(TAG, "Loading" + currentNation + "结束预测线");
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -194,6 +189,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // 作用：接收线程任务执行结果、将执行结果显示到UI组件
         @Override
         protected void onPostExecute(String result) {
+            //成功之后，最后一次再刷新一下图表
+            drawChart();
+
+            Log.i(TAG, "Loading" + currentNation + "结束预测线");
+
             // 执行完毕后，则更新UI
             progressBar.setVisibility(View.INVISIBLE);
         }
@@ -267,6 +267,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol2.setText(strings[1]);
         peopleNumBarCol3.setText(strings[2]);
         peopleNumBarCol4.setText(strings[3]);
+
+        //最大y轴，赋值为累计确诊数量
+        if(!strings[0].equals("null")){
+            MaxY = WebConnect.getMaxY();
+        }
     }
 
     /**
@@ -316,32 +321,35 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         Log.i(TAG, "drawChart 调参师");
 
-        //获取后端的节点数目
-        int numOfPoint = lineViewModel.getNumOfPoint();
+        //x轴-获取后端的节点数目
+        int numOfRP = WebConnect.getNumOfRealPoints();
+        int numOfFP = WebConnect.getNumOfForecastPoints();
+
+        //y轴-最大数目
 
         //总体的图表范围
         Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
         maxViewPort.left = 0;
         maxViewPort.bottom = 0;
         //x轴最大坐标值
-        maxViewPort.right = numOfPoint;
+        maxViewPort.right = numOfRP + numOfFP;
         //y轴最大坐标值
-        maxViewPort.top = 2200000;
+        maxViewPort.top = MaxY;
         myLineChartView.setMaximumViewport(maxViewPort);
 
         //显示的小界面，可以滑动
         Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
-        halfViewport.top = 2200000;
+        halfViewport.top = MaxY;
         halfViewport.bottom = 0;
         halfViewport.left = 0;
         if (isForecast) {
             //如果在预测
             Log.i(TAG, "setChartShow 函数：【预测】设置当前范围");
             //真实120预测15
-            halfViewport.right = numOfPoint;
+            halfViewport.right = numOfRP + numOfFP - 1;
         } else {
             Log.i(TAG, "setChartShow 函数：【真实】设置当前范围");
-            halfViewport.right = numOfPoint;
+            halfViewport.right = numOfRP - 1;
         }
         myLineChartView.setCurrentViewport(halfViewport);
     }
