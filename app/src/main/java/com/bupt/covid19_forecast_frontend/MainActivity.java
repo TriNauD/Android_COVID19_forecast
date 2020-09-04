@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //获取数据线程
     private GetDataTask getDataTask;
-//    private GetPredictDataTask getPredictDataTask;
+    //    private GetPredictDataTask getPredictDataTask;
     //当前国家
     private String currentNation = "中国";
     private String currentProvince = "北京";
@@ -99,12 +99,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // 作用：执行 线程任务前的操作
         @Override
         protected void onPreExecute() {
-            Log.i(TAG, "Loading...真实当前国家：" + currentNation);
+            Log.i(TAG, "Loading... 当前地区：" + currentNation);
 
             //先设置为没有开始获取
             WebConnect.isDataGotten = false;
             progressBar.setVisibility(View.VISIBLE);
-            Log.i(TAG, "Loading...isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
+            Log.i(TAG, "Loading...开始转圈圈 isDataGotten设为F：" + WebConnect.isDataGotten);
         }
 
         // 方法2：doInBackground（）
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // 执行完毕后，则更新UI
             progressBar.setVisibility(View.INVISIBLE);
 
-            Log.i(TAG, "Loading" + currentNation + "结束真实线");
+            Log.i(TAG, "Loading " + currentNation + " 结束");
         }
 
 
@@ -156,8 +156,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        }
 
     }
-
-
 
 
     /**
