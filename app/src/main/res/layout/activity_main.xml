@@ -292,6 +292,7 @@
                 </RelativeLayout>
                 <!--buttons-->
                 <RelativeLayout
+                    android:id="@+id/buttonLine"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/param_lines"
@@ -371,7 +372,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/progress_bar"
+                android:visibility="visible"
                 android:entries="@array/province_name"></Spinner>
 
             <TextView

@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private SwipeRefreshLayout swipeRefreshLayout;
     private Spinner controlLevelSpinner;
     private Spinner changeNationSpinner;
+    private Spinner changeProvinceSpinner;
     private Spinner lineTypeSpinner;
     private Spinner modelTypeSpinner;
     private Switch forecastSwitch;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private RelativeLayout paramLine1;
     private RelativeLayout paramLine2;
     private RelativeLayout paramLine3;
+    private RelativeLayout buttonLine;
     private ProgressBar progressBar;
 
     //获取数据线程
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private GetPredictDataTask getPredictDataTask;
     //当前国家
     private String currentNation = "中国";
+    private String currentProvince = "北京";
 
     //折线视图
     private LineChartView myLineChartView;
@@ -380,12 +383,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         modelTypeSpinner = findViewById(R.id.model_type_spinner);
         controlLevelSpinner = findViewById(R.id.control_level_spinner);
         changeNationSpinner = findViewById(R.id.change_nation_spinner);
+        changeProvinceSpinner = findViewById(R.id.change_province_spinner);
 
-        //3行参数
+        //3行参数 + 按钮行
         paramLine1 = findViewById(R.id.param_line_1);
         paramLine2 = findViewById(R.id.param_line_2);
         paramLine3 = findViewById(R.id.param_line_3);
-
+        buttonLine = findViewById(R.id.buttonLine);
         //switch
         forecastSwitch = findViewById(R.id.forecast_switch);
 
@@ -444,6 +448,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         modelTypeSpinner.setOnItemSelectedListener(this);
         controlLevelSpinner.setOnItemSelectedListener(this);
         changeNationSpinner.setOnItemSelectedListener(this);
+        changeProvinceSpinner.setOnItemSelectedListener(this);
         //button设置listener
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -649,16 +654,36 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 drawChart();
                 break;
             }
-            //选择国家
+            //选择国家spinner
             case R.id.change_nation_spinner: {
                 //从spinner选项得到当前选择的国家
                 currentNation = changeNationSpinner.getSelectedItem().toString();
                 //设置toolbar标题
                 toolbarTitle.setText(currentNation + getResources().getString(R.string.national_title));
-                Log.i(TAG, "onItemSelected:国家名 " + currentNation);
+                //判断是中国还是其他国家
+                if (currentNation.equals("中国")) {
+                    //如果是中国 显示省份spinner
+                    changeProvinceSpinner.setVisibility(View.VISIBLE);
+                    //重新获取当前省份
+                    currentProvince = changeProvinceSpinner.getSelectedItem().toString();
+                } else {
+                    //如果是别国 隐藏省份spinner
+                    changeProvinceSpinner.setVisibility(View.INVISIBLE);
+                    //当前省份置null
+                    currentProvince = null;
+                }
+                Log.i(TAG, "onItemSelected: nationSpinner " + "国家: " + currentNation + " 省: " + currentProvince);
                 drawChart();
                 break;
             }
+            //选择省spinner
+            case R.id.change_province_spinner: {
+                //从spinner选项得到当前选择的省
+                currentProvince = changeProvinceSpinner.getSelectedItem().toString();
+                Log.i(TAG, "onItemSelected: provinceSpinner " + "国家: " + currentNation + " 省: " + currentProvince);
+                break;
+            }
+
         }
 
         //网络获取
@@ -686,7 +711,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * 预测开关，监听开关事件。
      * 重载CompoundButton.OnCheckedChangeListener的函数，监听switch按钮有没有被选中
      *
-     * @author lym
+     * @author lym, xjy
      */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -698,12 +723,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             curLineIndex = lineViewModel.getNumOfRealLines();
             paramLine2.setVisibility(View.VISIBLE);
             paramLine3.setVisibility(View.VISIBLE);
+            buttonLine.setVisibility(View.VISIBLE);
         } else {
             Log.i(TAG, "onCheckedChanged 开关状态：关闭");
             //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
             curLineIndex = 0;
             paramLine2.setVisibility(View.INVISIBLE);
             paramLine3.setVisibility(View.INVISIBLE);
+            buttonLine.setVisibility(View.INVISIBLE);
         }
         //无论怎样，点击了预测开关就刷新一下线图
         drawChart();
