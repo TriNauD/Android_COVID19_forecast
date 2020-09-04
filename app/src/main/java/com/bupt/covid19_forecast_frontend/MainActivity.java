@@ -147,6 +147,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // 作用：执行 线程任务前的操作
         @Override
         protected void onPreExecute() {
+            Log.i(TAG, "Loading...预测当前国家：" + currentNation);
+
+            //先设置为没有开始获取
+            WebConnect.isDataGotten = false;
+            progressBar.setVisibility(View.VISIBLE);
+            Log.i(TAG, "Loading...isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
         }
 
         // 方法2：doInBackground（）
@@ -154,14 +160,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected String doInBackground(String... params) {
             try {
-                Log.i(TAG, "Loading...预测当前国家：" + currentNation);
-
-                //先设置为没有开始获取
-                WebConnect.isDataGotten = false;
-                progressBar.setVisibility(View.VISIBLE);
-                Log.i(TAG, "Loading...isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
-
-
                 //去获取数据，如果成功会将isDataGotten设置为true
                 WebConnect.getPredict(currentNation);
 
@@ -169,11 +167,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 while (!WebConnect.isDataGotten) {
                     Thread.sleep(1);
                 }
-
-                //成功之后，最后一次再刷新一下图表
-                drawChart();
-
-                Log.i(TAG, "Loading" + currentNation + "结束预测线");
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -192,6 +185,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // 作用：接收线程任务执行结果、将执行结果显示到UI组件
         @Override
         protected void onPostExecute(String result) {
+            //成功之后，最后一次再刷新一下图表
+            drawChart();
+
+            Log.i(TAG, "Loading" + currentNation + "结束预测线");
+
             // 执行完毕后，则更新UI
             progressBar.setVisibility(View.INVISIBLE);
         }
