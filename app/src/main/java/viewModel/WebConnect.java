@@ -54,7 +54,9 @@ public class WebConnect {
     //预测数据
     private static float[] xyPredict = new float[numOfForecastPoints];
     //真实日期标签
-    private static String[] xLabel = new String[numOfRealPoints];
+    private static String[] xRealLabel = new String[numOfRealPoints];
+    //预测日期标签
+    private static String[] xPredictLabel = new String[numOfForecastPoints];
 
     //拿到的一个地区的列表，里面是所有时间的数据
     private static List<Alltime_province> provinceList = new ArrayList<>();
@@ -215,7 +217,7 @@ public class WebConnect {
                         String day1 = dateStr1.substring(8, 10).replaceFirst("0", "");
                         //x轴用的标签
                         String xDateString1 = month1 + "/" + day1;
-                        xLabel[i] = xDateString1;
+                        xRealLabel[i] = xDateString1;
                     }
 
                 }
@@ -363,7 +365,7 @@ public class WebConnect {
      */
     public static void initRealAxis() {
         //如果还没有加载国家，就用空坐标轴
-        if (xLabel == null || xLabel[0] == null || xLabel[0].equals("")) {
+        if (xRealLabel == null || xRealLabel[0] == null || xRealLabel[0].equals("")) {
             Log.i(TAG, "initRealAxis还没加载数据");
             for (int i = 0; i < numOfRealLines; i++) {
                 List<String> strings = new ArrayList<>();
@@ -384,7 +386,7 @@ public class WebConnect {
             for (int i = 0; i < numOfRealLines; i++) {
                 List<String> strings = new ArrayList<>();
                 for (int j = 0; j < numOfRealPoints; j++) {
-                    strings.add(xLabel[j]);
+                    strings.add(xRealLabel[j]);
                     //Log.i(TAG, "initRealAxis标签：" + xLabel[j]);
                 }
                 //更新
