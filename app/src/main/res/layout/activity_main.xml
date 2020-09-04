@@ -366,6 +366,14 @@
                 android:layout_centerVertical="true"
                 android:entries="@array/nation_name"></Spinner>
 
+            <Spinner
+                android:id="@+id/change_province_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:entries="@array/province_name"></Spinner>
+
             <TextView
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
