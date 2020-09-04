@@ -396,36 +396,34 @@ public class WebConnect {
      * @author lym
      */
     public static void initRealAxis() {
-        //如果还没有加载国家，就用空坐标轴
+        //防止null报错，做一个标志
+        boolean haveData;
         if (xRealLabel == null || xRealLabel[0] == null || xRealLabel[0].equals("")) {
             Log.i(TAG, "initRealAxis还没加载数据");
-            for (int i = 0; i < numOfRealLines; i++) {
-                List<String> strings = new ArrayList<>();
-                for (int j = 0; j < numOfRealPoints; j++) {
-                    strings.add("");
-                }
-                if (axisLableList.size() < numOfRealLines) {
-                    //如果是空的就初始化
-                    axisLableList.add(strings);
-                } else {
-                    //如果不是空的就应该更新
-                    axisLableList.set(i, strings);
-                }
-            }
+            haveData = false;
         } else {
             Log.i(TAG, "initRealAxis已经加载数据，准备建立标签");
-            //建立标签
-            for (int i = 0; i < numOfRealLines; i++) {
-                List<String> strings = new ArrayList<>();
-                for (int j = 0; j < numOfRealPoints; j++) {
+            haveData = true;
+        }
+
+        //实际的标签列表
+        List<String> strings = new ArrayList<>();
+
+        //如果还没有加载，就用空坐标轴
+        for (int i = 0; i < numOfRealLines; i++) {
+            for (int j = 0; j < numOfRealPoints; j++) {
+                if (!haveData) {
+                    strings.add("");
+                } else {
                     strings.add(xRealLabel[j]);
-                    //Log.i(TAG, "initRealAxis标签：" + xLabel[j]);
                 }
-                //更新
-                axisLableList.set(i, strings);
             }
-            for (int i = 0; i < axisLableList.size(); i++) {
-                Log.i(TAG, "initRealAxis标签 第" + i + "条线第一个：" + axisLableList.get(i).get(0));
+            if (axisLableList.size() < numOfRealLines) {
+                //如果是空的就初始化
+                axisLableList.add(strings);
+            } else {
+                //如果不是空的就应该更新
+                axisLableList.set(i, strings);
             }
         }
     }
