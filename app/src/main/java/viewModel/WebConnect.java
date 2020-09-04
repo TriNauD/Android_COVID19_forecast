@@ -53,6 +53,8 @@ public class WebConnect {
     private static float[][] xyReal = new float[numOfRealLines][numOfRealPoints];
     //预测数据
     private static float[] xyPredict = new float[numOfForecastPoints];
+    //真实日期标签
+    private static String[] xLabel = new String[numOfRealPoints];
 
     //拿到的一个地区的列表，里面是所有时间的数据
     private static List<Alltime_province> provinceList = new ArrayList<>();
@@ -175,8 +177,12 @@ public class WebConnect {
                             dateStr.substring(0, 4) + " 年 " +
                             dateStr.substring(5, 7).replaceFirst("0", "") + " 月 " +
                             dateStr.substring(8, 10).replaceFirst("0", "") + " 日 ");
+                    //分离月/日
                     String month = dateStr.substring(5, 7).replaceFirst("0", "");
                     String day = dateStr.substring(8, 10).replaceFirst("0", "");
+                    //x轴用的标签
+                    String xDateString = month + "/" + day;
+                    Log.i(TAG, "onResponse: x轴显示日期： " + xDateString);
                     //最后一天的四个数
                     Integer oneDayPresent = oneDay.getPresent_confirm();
                     Log.i(TAG, "onResponse: 最后一天的的现存确诊： " + oneDayPresent);
@@ -202,6 +208,13 @@ public class WebConnect {
                         xyReal[2][i] = oneDay1.getTotal_heal();
                         //累计死亡
                         xyReal[3][i] = oneDay1.getTotal_dead();
+                        //x轴标签
+                        //分离月/日
+                        String month1 = dateStr.substring(5, 7).replaceFirst("0", "");
+                        String day1 = dateStr.substring(8, 10).replaceFirst("0", "");
+                        //x轴用的标签
+                        String xDateString1 = month1 + "/" + day1;
+                        xLabel[i] = xDateString1;
                     }
 
                 }
@@ -348,20 +361,24 @@ public class WebConnect {
      * @author lym
      */
     public static void initRealAxis() {
-        //真实
-        //建立标签
-        for (int i = 0; i < numOfRealLines; i++) {
-            List<String> strings = new ArrayList<>();
-            int day = 0;
-            for (int j = 0; j < numOfRealPoints; j++) {
-                day++;
-                if (day > 30) {
-                    day %= 30;
+        //如果还没有加载国家，就用空坐标轴
+        if (!isDataGotten) {
+            for (int i = 0; i < numOfRealLines; i++) {
+                List<String> strings = new ArrayList<>();
+                for (int j = 0; j < numOfRealPoints; j++) {
+                    strings.add("");
                 }
-                String s = (i + 1) + "/" + day;
-                strings.add(s);
+                axisLableList.add(strings);
             }
-            axisLableList.add(strings);
+        } else {
+            //建立标签
+            for (int i = 0; i < numOfRealLines; i++) {
+                List<String> strings = new ArrayList<>();
+                for (int j = 0; j < numOfRealPoints; j++) {
+                    strings.add(xLabel[j]);
+                }
+                axisLableList.add(strings);
+            }
         }
     }
 
