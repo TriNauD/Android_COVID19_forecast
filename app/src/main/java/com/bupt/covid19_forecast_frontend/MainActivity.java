@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private GetPredictDataTask getPredictDataTask;
     //当前国家
     private String currentNation = "中国";
-    private String currentProvince = null;
+    private String currentProvince = "北京";
 
     //折线视图
     private LineChartView myLineChartView;
