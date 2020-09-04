@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //获取数据线程
     private GetDataTask getDataTask;
-    //    private GetPredictDataTask getPredictDataTask;
     //当前国家
     private String currentNation = "中国";
     private String currentProvince = "北京";
@@ -164,82 +163,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        }
 
     }
-
-
-    /**
-     * 获取预测数据
-     * 异步线程
-     *
-     * @author lym
-     */
-        /*
-
-        private class GetPredictDataTask extends AsyncTask<String, Integer, String> {
-        // 方法1：onPreExecute（）
-        // 作用：执行 线程任务前的操作
-        @Override
-        protected void onPreExecute() {
-            Log.i(TAG, "Loading...预测当前国家：" + currentNation);
-
-            //先设置为没有开始获取
-            WebConnect.isDataGotten = false;
-            progressBar.setVisibility(View.VISIBLE);
-            Log.i(TAG, "Loading...isDataGotten开始转圈圈所以设为F：" + WebConnect.isDataGotten);
-        }
-
-        // 方法2：doInBackground（）
-        // 作用：接收输入参数、执行任务中的耗时操作、返回 线程任务执行的结果
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                //去获取数据，如果成功会将isDataGotten设置为true
-                WebConnect.getPredict(currentNation);
-
-                //如果没有得到数据，就一直刷新图表
-                while (!WebConnect.isDataGotten) {
-                    Thread.sleep(1);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-//        // 方法3：onProgressUpdate（）
-//        // 作用：在主线程 显示线程任务执行的进度
-//        @Override
-//        protected void onProgressUpdate(Integer... progresses) {
-//            progressBar.setProgress(progresses[0]);
-//        }
-
-        // 方法4：onPostExecute（）
-        // 作用：接收线程任务执行结果、将执行结果显示到UI组件
-        @Override
-        protected void onPostExecute(String result) {
-            //成功之后，最后一次再刷新一下图表
-            drawChart();
-
-            Log.i(TAG, "Loading" + currentNation + "结束预测线");
-
-            // 执行完毕后，则更新UI
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-
-
-//        // 方法5：onCancelled()
-//        // 作用：将异步任务设置为：取消状态
-//        @Override
-//        protected void onCancelled() {
-//            progressBar.setProgress(0);
-//            progressBar.setVisibility(View.INVISIBLE);
-//
-//        }
-
-    }
-
-     */
-
 
     /*————————————画图相关————————————*/
 
@@ -497,8 +420,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                     //发送
                     //获取预测
-//                    getPredictDataTask = new GetPredictDataTask();
-//                    getPredictDataTask.execute();
                     getDataTask = new GetDataTask();
                     getDataTask.execute("Predict");
 
