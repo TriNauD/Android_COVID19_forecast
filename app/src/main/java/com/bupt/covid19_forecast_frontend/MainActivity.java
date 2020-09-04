@@ -113,12 +113,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         protected String doInBackground(String... params) {
             try {
                 //去获取数据，如果成功会将isDataGotten设置为true
-                WebConnect.getWorld(currentNation);
+                switch (params[0]) {
+                    case "World":
+                        WebConnect.getWorld(currentNation);
+                        break;
+                    case "Predict":
+                        WebConnect.getPredict(currentNation);
+                        break;
+                }
 
-                //如果没有得到数据，就一直刷新图表
+                //如果没有得到数据，就一直等待
                 while (!WebConnect.isDataGotten) {
                     Thread.sleep(1);
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -491,6 +499,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     //获取预测
 //                    getPredictDataTask = new GetPredictDataTask();
 //                    getPredictDataTask.execute();
+                    getDataTask = new GetDataTask();
                     getDataTask.execute("Predict");
 
                 } catch (Exception e) {
