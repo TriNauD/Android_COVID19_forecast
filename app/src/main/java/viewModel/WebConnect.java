@@ -169,6 +169,7 @@ public class WebConnect {
                     nationList = world;
                     //一天的所有数据
                     Alltime_world oneDay = nationList.get(nationList.size() - 1);
+                    //日期
                     String dateStr = oneDay.getDate().toString();
                     Log.i(TAG, "onResponse: 最后一天日期是： " +
                             dateStr.substring(0, 4) + " 年 " +
@@ -176,7 +177,7 @@ public class WebConnect {
                             dateStr.substring(8, 10).replaceFirst("0", "") + " 日 ");
                     String month = dateStr.substring(5, 7).replaceFirst("0", "");
                     String day = dateStr.substring(8, 10).replaceFirst("0", "");
-                    //一天的现存确诊
+                    //最后一天的四个数
                     Integer oneDayPresent = oneDay.getPresent_confirm();
                     Log.i(TAG, "onResponse: 最后一天的的现存确诊： " + oneDayPresent);
                     oneDayFourNum[0] = oneDayPresent;
@@ -184,7 +185,7 @@ public class WebConnect {
                     oneDayFourNum[2] = oneDay.getTotal_heal();
                     oneDayFourNum[3] = oneDay.getTotal_dead();
                     Log.i(TAG, "onResponse: 最后一天的的累计死亡： " + oneDayFourNum[3]);
-                    //真实线的数量，要根据传进来的数量啦
+                    //真实线的节点数量，要根据传进来的数量啦
                     numOfRealPoints = nationList.size();
                     Log.i(TAG, "onResponse: 世界真实线的节点数量：" + numOfRealPoints);
 
