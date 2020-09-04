@@ -7,6 +7,9 @@ import com.google.gson.GsonBuilder;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -53,6 +56,10 @@ public class WebConnect {
     private static float[][] xyReal = new float[numOfRealLines][numOfRealPoints];
     //预测数据
     private static float[] xyPredict = new float[numOfForecastPoints];
+    //真实日期标签
+    private static String[] xRealLabel = new String[numOfRealPoints];
+    //预测日期标签
+    private static String[] xPredictLabel = new String[numOfForecastPoints];
 
     //拿到的一个地区的列表，里面是所有时间的数据
     private static List<Alltime_province> provinceList = new ArrayList<>();
@@ -167,17 +174,58 @@ public class WebConnect {
                     //网络拿到的一个地区的列表，里面是所有时间的数据
                     //赋值列表
                     nationList = world;
-                    //一天的所有数据
-                    Alltime_world oneDay = nationList.get(nationList.size() - 1);
-                    //一天的现存确诊
-                    Integer oneDayPresent = oneDay.getPresent_confirm();
+
+                    //最后一天的所有数据
+                    Alltime_world lastDay = nationList.get(nationList.size() - 1);
+
+                    //日期
+                    Date lastDate = lastDay.getDate();
+                    //log一下
+                    String dateStr = lastDate.toString();
+                    Log.i(TAG, "onResponse: 最后一天日期是： " +
+                            dateStr.substring(0, 4) + " 年 " +
+                            dateStr.substring(5, 7).replaceFirst("0", "") + " 月 " +
+                            dateStr.substring(8, 10).replaceFirst("0", "") + " 日 ");
+                    //分离月/日
+                    String month = dateStr.substring(5, 7).replaceFirst("0", "");
+                    String day = dateStr.substring(8, 10).replaceFirst("0", "");
+                    //x轴用的标签
+                    String xDateString = month + "/" + day;
+                    Log.i(TAG, "onResponse: x轴显示日期： " + xDateString);
+
+                    Date tempDate = lastDate;
+                    for (int i = 0; i < numOfForecastPoints; i++) {
+                        //加一天
+                        Calendar calendar = new GregorianCalendar();
+                        calendar.setTime(tempDate);
+                        calendar.add(Calendar.DATE, 1); //把日期往后增加一天,正数往后推,负数往前移动
+                        tempDate = calendar.getTime();//滚雪球++
+                        //log一下
+                        // 获得年份
+                        int predictYear = calendar.get(Calendar.YEAR);
+                        // 获得月份
+                        int predictMonth = calendar.get(Calendar.MONTH) + 1;
+                        // 获得日期
+                        int predictDate = calendar.get(Calendar.DATE);
+                        Log.i(TAG, "onResponse: 预测的第" + i + "天日期是： " +
+                                predictYear + " 年 " +
+                                predictMonth + " 月 " +
+                                predictDate + " 日 ");
+                        String xPredictDateString = predictMonth + "/" + predictDate;
+//                        Log.i(TAG, "onResponse: x轴显示预测日期： " + xPredictDateString);
+                        xPredictLabel[i] = xPredictDateString;
+                    }
+
+                    //最后一天的四个数
+                    Integer oneDayPresent = lastDay.getPresent_confirm();
                     Log.i(TAG, "onResponse: 最后一天的的现存确诊： " + oneDayPresent);
                     oneDayFourNum[0] = oneDayPresent;
-                    oneDayFourNum[1] = oneDay.getTotal_confirm();
-                    oneDayFourNum[2] = oneDay.getTotal_heal();
-                    oneDayFourNum[3] = oneDay.getTotal_dead();
+                    oneDayFourNum[1] = lastDay.getTotal_confirm();
+                    oneDayFourNum[2] = lastDay.getTotal_heal();
+                    oneDayFourNum[3] = lastDay.getTotal_dead();
                     Log.i(TAG, "onResponse: 最后一天的的累计死亡： " + oneDayFourNum[3]);
-                    //真实线的数量，要根据传进来的数量啦
+
+                    //真实线的节点数量，要根据传进来的数量啦
                     numOfRealPoints = nationList.size();
                     Log.i(TAG, "onResponse: 世界真实线的节点数量：" + numOfRealPoints);
 
@@ -194,6 +242,14 @@ public class WebConnect {
                         xyReal[2][i] = oneDay1.getTotal_heal();
                         //累计死亡
                         xyReal[3][i] = oneDay1.getTotal_dead();
+                        //x轴标签
+                        String dateStr1 = oneDay1.getDate().toString();
+                        //分离月/日
+                        String month1 = dateStr1.substring(5, 7).replaceFirst("0", "");
+                        String day1 = dateStr1.substring(8, 10).replaceFirst("0", "");
+                        //x轴用的标签
+                        String xDateString1 = month1 + "/" + day1;
+                        xRealLabel[i] = xDateString1;
                     }
 
                 }
@@ -340,20 +396,35 @@ public class WebConnect {
      * @author lym
      */
     public static void initRealAxis() {
-        //真实
-        //建立标签
+        //防止null报错，做一个标志
+        boolean haveData;
+        if (xRealLabel == null || xRealLabel[0] == null || xRealLabel[0].equals("")) {
+            Log.i(TAG, "initRealAxis还没加载数据");
+            haveData = false;
+        } else {
+            Log.i(TAG, "initRealAxis已经加载数据，准备建立标签");
+            haveData = true;
+        }
+
+        //实际的标签列表
+        List<String> strings = new ArrayList<>();
+
+        //如果还没有加载，就用空坐标轴
         for (int i = 0; i < numOfRealLines; i++) {
-            List<String> strings = new ArrayList<>();
-            int day = 0;
             for (int j = 0; j < numOfRealPoints; j++) {
-                day++;
-                if (day > 30) {
-                    day %= 30;
+                if (!haveData) {
+                    strings.add("");
+                } else {
+                    strings.add(xRealLabel[j]);
                 }
-                String s = (i + 1) + "/" + day;
-                strings.add(s);
             }
-            axisLableList.add(strings);
+            if (axisLableList.size() < numOfRealLines) {
+                //如果是空的就初始化
+                axisLableList.add(strings);
+            } else {
+                //如果不是空的就应该更新
+                axisLableList.set(i, strings);
+            }
         }
     }
 
@@ -363,23 +434,33 @@ public class WebConnect {
      * @author lym
      */
     public static void initForecastAxis() {
-        //预测
-        //todo 预测的坐标轴应该是真实轴的延申
+        //防止null报错，做一个标志
+        boolean haveData;
+        if (xPredictLabel == null || xPredictLabel[0] == null || xPredictLabel[0].equals("")) {
+            haveData = false;
+        } else {
+            haveData = true;
+        }
+
+        List<String> strings = new ArrayList<>();
+
         //建立预测标签
         for (int i = 0; i < numOfForecastLines; i++) {
             //对于每一条预测线
-            List<String> strings = new ArrayList<>();
-            int day = 0;
             for (int j = 0; j < numOfForecastPoints; j++) {
-                day++;
-                if (day > 30) {
-                    day %= 30;
+                if (!haveData) {
+                    strings.add("");
+                } else {
+                    strings.add(xPredictLabel[j]);
                 }
-                //todo 需要接着真实线来做日期标签
-                String s = (i + 6) + "/" + day;
-                strings.add(s);
             }
-            axisLableList.add(strings);
+            if (axisLableList.size() < numOfRealLines + numOfForecastLines) {
+                //如果线组里面还没有预测线，就新添加
+                axisLableList.add(strings);
+            } else {
+                //如果已经有预测线，就更新
+                axisLableList.set(i + numOfRealLines, strings);
+            }
         }
     }
 
