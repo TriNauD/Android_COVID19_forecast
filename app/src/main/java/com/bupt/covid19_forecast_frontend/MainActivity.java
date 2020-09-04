@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private GetDataTask getDataTask;
     //当前国家
     private String currentNation = "中国";
-    private String currentProvince = "北京";
 
     //折线视图
     private LineChartView myLineChartView;
@@ -119,6 +118,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     case "Predict":
                         WebConnect.getPredict(currentNation);
                         break;
+                    case "Province":
+                        WebConnect.getProvince(currentNation);
                 }
 
                 //如果没有得到数据，就一直等待
@@ -607,22 +608,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     //如果是中国 显示省份spinner
                     changeProvinceSpinner.setVisibility(View.VISIBLE);
                     //重新获取当前省份
-                    currentProvince = changeProvinceSpinner.getSelectedItem().toString();
+                    currentNation = changeProvinceSpinner.getSelectedItem().toString();
                 } else {
                     //如果是别国 隐藏省份spinner
                     changeProvinceSpinner.setVisibility(View.INVISIBLE);
                     //当前省份置null
-                    currentProvince = null;
+                    currentNation = null;
                 }
-                Log.i(TAG, "onItemSelected: nationSpinner " + "国家: " + currentNation + " 省: " + currentProvince);
+                Log.i(TAG, "onItemSelected: nationSpinner  省: " + currentNation);
                 drawChart();
                 break;
             }
             //选择省spinner
             case R.id.change_province_spinner: {
                 //从spinner选项得到当前选择的省
-                currentProvince = changeProvinceSpinner.getSelectedItem().toString();
-                Log.i(TAG, "onItemSelected: provinceSpinner " + "国家: " + currentNation + " 省: " + currentProvince);
+                currentNation = changeProvinceSpinner.getSelectedItem().toString();
+                Log.i(TAG, "onItemSelected: nationSpinner  省: " + currentNation);
                 break;
             }
 
@@ -634,6 +635,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             getDataTask = new GetDataTask();
             getDataTask.execute("World");
         }
+        else if(parentID == R.id.change_province_spinner){
+            if (currentNation.equals("全国")) {
+                currentNation = "中国";
+            }
+            //获取省份
+            getDataTask = new GetDataTask();
+            getDataTask.execute("Province");
+        }
+
 
     }
 
