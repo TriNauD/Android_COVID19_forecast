@@ -76,20 +76,26 @@ public class WebConnect {
      * 从后端获取省份疫情数据
      *
      * @param name 传给后端的国家名
-     * @author qy
+     * @author qy, lym
      */
     public static void getProvince(String name) {
         Log.i(TAG, "获取省份：" + name);
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        //解决超时问题
+        OkHttpClient client = new OkHttpClient.Builder().
+                connectTimeout(60, TimeUnit.SECONDS).
+                readTimeout(60, TimeUnit.SECONDS).
+                writeTimeout(60, TimeUnit.SECONDS).build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://39.96.80.224:8080")
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         API api = retrofit.create(API.class);
-        Call<List<Alltime_province>> province_task = api.getProvince(name);
-        province_task.enqueue(new Callback<List<Alltime_province>>() {
+        Call<List<Alltime_province>> task = api.getProvince(name);
+        task.enqueue(new Callback<List<Alltime_province>>() {
             @Override
             public void onResponse(Call<List<Alltime_province>> call, Response<List<Alltime_province>> response) {
                 Log.i(TAG, "省份onResponse --> " + response.code());
@@ -98,12 +104,58 @@ public class WebConnect {
                     //网络拿到的一个地区的列表，里面是所有时间的数据
                     //赋值列表
                     provinceList = province;
-                    //一天的所有数据
-                    Alltime_province oneDay = provinceList.get(0);
-                    //一天的现存确诊
-                    Integer oneDayPresent = oneDay.getPresent_confirm();
-                    Log.i(TAG, "onResponse: 第一天的的现存确诊： " + oneDayPresent);
-                    //真实线的数量，要根据传进来的数量啦
+
+                    //最后一天的所有数据
+                    Alltime_province lastDay = provinceList.get(provinceList.size() - 1);
+
+                    //日期
+                    Date lastDate = lastDay.getDate();
+                    //log一下
+                    String dateStr = lastDate.toString();
+                    Log.i(TAG, "onResponse: 最后一天日期是： " +
+                            dateStr.substring(0, 4) + " 年 " +
+                            dateStr.substring(5, 7).replaceFirst("0", "") + " 月 " +
+                            dateStr.substring(8, 10).replaceFirst("0", "") + " 日 ");
+                    //分离月/日
+                    String month = dateStr.substring(5, 7).replaceFirst("0", "");
+                    String day = dateStr.substring(8, 10).replaceFirst("0", "");
+                    //x轴用的标签
+                    String xDateString = month + "/" + day;
+                    Log.i(TAG, "onResponse: x轴显示日期： " + xDateString);
+
+                    Date tempDate = lastDate;
+                    for (int i = 0; i < numOfForecastPoints; i++) {
+                        //加一天
+                        Calendar calendar = new GregorianCalendar();
+                        calendar.setTime(tempDate);
+                        calendar.add(Calendar.DATE, 1); //把日期往后增加一天,正数往后推,负数往前移动
+                        tempDate = calendar.getTime();//滚雪球++
+                        //log一下
+                        // 获得年份
+                        int predictYear = calendar.get(Calendar.YEAR);
+                        // 获得月份
+                        int predictMonth = calendar.get(Calendar.MONTH) + 1;
+                        // 获得日期
+                        int predictDate = calendar.get(Calendar.DATE);
+                        Log.i(TAG, "onResponse: 预测的第" + i + "天日期是： " +
+                                predictYear + " 年 " +
+                                predictMonth + " 月 " +
+                                predictDate + " 日 ");
+                        String xPredictDateString = predictMonth + "/" + predictDate;
+//                        Log.i(TAG, "onResponse: x轴显示预测日期： " + xPredictDateString);
+                        xPredictLabel[i] = xPredictDateString;
+                    }
+
+                    //最后一天的四个数
+                    Integer oneDayPresent = lastDay.getPresent_confirm();
+                    Log.i(TAG, "onResponse: 最后一天的的现存确诊： " + oneDayPresent);
+                    oneDayFourNum[0] = oneDayPresent;
+                    oneDayFourNum[1] = lastDay.getTotal_confirm();
+                    oneDayFourNum[2] = lastDay.getTotal_heal();
+                    oneDayFourNum[3] = lastDay.getTotal_dead();
+                    Log.i(TAG, "onResponse: 最后一天的的累计死亡： " + oneDayFourNum[3]);
+
+                    //真实线的节点数量，要根据传进来的数量啦
                     numOfRealPoints = provinceList.size();
                     Log.i(TAG, "onResponse: 省份真实线的节点数量：" + numOfRealPoints);
 
@@ -120,6 +172,14 @@ public class WebConnect {
                         xyReal[2][i] = oneDay1.getTotal_heal();
                         //累计死亡
                         xyReal[3][i] = oneDay1.getTotal_dead();
+                        //x轴标签
+                        String dateStr1 = oneDay1.getDate().toString();
+                        //分离月/日
+                        String month1 = dateStr1.substring(5, 7).replaceFirst("0", "");
+                        String day1 = dateStr1.substring(8, 10).replaceFirst("0", "");
+                        //x轴用的标签
+                        String xDateString1 = month1 + "/" + day1;
+                        xRealLabel[i] = xDateString1;
                     }
 
                 }
@@ -146,7 +206,7 @@ public class WebConnect {
      * 从后端获取国家疫情数据
      *
      * @param name 传给后端的国家名
-     * @author qy
+     * @author qy, lym
      */
     public static void getWorld(String name) {
         Log.i(TAG, "获取世界：" + name);
@@ -276,7 +336,7 @@ public class WebConnect {
      * 从后端获取预测数据
      *
      * @param name 传给后端的地区名
-     * @author qy
+     * @author qy, lym
      */
     public static void getPredict(String name) {
         Log.i(TAG, "进入获取预测：" + name);

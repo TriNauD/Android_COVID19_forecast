@@ -634,14 +634,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //获取世界
             getDataTask = new GetDataTask();
             getDataTask.execute("World");
-        }
-        else if(parentID == R.id.change_province_spinner){
+        } else if (parentID == R.id.change_province_spinner) {
             if (currentNation.equals("全国")) {
                 currentNation = "中国";
+                //获取世界
+                getDataTask = new GetDataTask();
+                getDataTask.execute("World");
+            } else {
+                //获取省份
+                getDataTask = new GetDataTask();
+                getDataTask.execute("Province");
             }
-            //获取省份
-            getDataTask = new GetDataTask();
-            getDataTask.execute("Province");
         }
 
 
