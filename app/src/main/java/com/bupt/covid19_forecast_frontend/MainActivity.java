@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -21,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private RelativeLayout paramLine3;
     private RelativeLayout buttonLine;
     private ProgressBar progressBar;
+    //提示消息
+    Toast toast;
 
     //获取数据线程
     private GetDataTask getDataTask;
@@ -422,6 +426,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlStartDateLabel = findViewById(R.id.control_start_date_label);
         controlDurationLabel = findViewById(R.id.control_duration_label);
         dayLabel = findViewById(R.id.day_label);
+
+        //提示消息
+        toast = Toast.makeText(MainActivity.this, "", Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
     }
 
     /**
@@ -470,22 +478,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         String day = (dayInt >= 10) ? (controlStartDateDayInput.getText().toString()) : ("0" + controlStartDateDayInput.getText());
                         String date = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
                         WebConnect.setStartControlDate(date);
+                        toast.setText("正在预测……");
                         Log.i(TAG, "Button: ControlStartDate:" + date);
                     } else {
-                        //
+                        //提示 并清空输入框
+                        toast.setText("输入错误");
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        controlStartDateDayInput.setText("");
+                        controlStartDateMonthInput.setText("");
                         Log.i(TAG, "Button: Too big number");
                     }
-
                     //发送
                     //获取预测
                     getPredictDataTask = new GetPredictDataTask();
                     getPredictDataTask.execute();
 
                 } catch (Exception e) {
+                    toast.setText("输入错误");
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    controlStartDateDayInput.setText("");
+                    controlStartDateMonthInput.setText("");
                     Log.i(TAG, "Button: Bad input type");
                 }
-
-
+                toast.show();
             }
         });
         resetButton.setOnClickListener(new View.OnClickListener() {
