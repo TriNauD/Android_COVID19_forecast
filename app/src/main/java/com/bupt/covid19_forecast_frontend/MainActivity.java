@@ -1,7 +1,9 @@
 package com.bupt.covid19_forecast_frontend;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.graphics.Color;
+import android.hardware.input.InputManager;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -29,6 +32,8 @@ import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 import viewModel.WebConnect;
 import viewModel.LineViewModel;
+
+import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
@@ -270,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol4.setText(strings[3]);
 
         //最大y轴，赋值为累计确诊数量
-        if(!strings[0].equals("null")){
+        if (!strings[0].equals("null")) {
             MaxY = WebConnect.getMaxY();
         }
     }
@@ -477,6 +482,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
         //input设置listener
+        controlDurationInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    InputMethodManager inputMethodManager = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
+                    if (inputMethodManager != null) {
+                        inputMethodManager.hideSoftInputFromWindow(myLineChartView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    }
+                }
+            }
+        });
+        controlStartDateMonthInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    InputMethodManager inputMethodManager = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
+                    if (inputMethodManager != null) {
+                        inputMethodManager.hideSoftInputFromWindow(myLineChartView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    }
+                }
+            }
+        });
+        controlStartDateDayInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    InputMethodManager inputMethodManager = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
+                    if (inputMethodManager != null) {
+                        inputMethodManager.hideSoftInputFromWindow(myLineChartView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    }
+                }
+            }
+        });
+
     }
 
 

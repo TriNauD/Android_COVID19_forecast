@@ -16,7 +16,10 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
             <!--people num bar-->
             <LinearLayout
                 android:id="@+id/people_num_bar"
@@ -219,7 +222,7 @@
                         android:layout_alignBaseline="@+id/control_start_date_label"
                         android:layout_toRightOf="@+id/control_start_date_label"
                         android:imeOptions="actionSearch"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:maxLength="2"
                         android:maxLines="1"
                         android:textSize="15sp" />
@@ -230,6 +233,7 @@
                         android:layout_height="40dp"
                         android:layout_alignBaseline="@+id/control_start_date_label"
                         android:layout_toRightOf="@+id/control_start_date_month_label"
+                        android:inputType="number"
                         android:maxLength="2"
                         android:maxLines="1"
                         android:textSize="15sp" />
@@ -240,6 +244,7 @@
                         android:layout_height="40dp"
                         android:layout_alignBaseline="@+id/control_start_date_label"
                         android:layout_toLeftOf="@+id/day_label"
+                        android:inputType="number"
                         android:maxLength="2"
                         android:maxLines="1"
                         android:textSize="15sp" />
@@ -319,7 +324,10 @@
                 android:layout_height="280dp"
                 android:layout_below="@+id/people_num_bar"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="60dp" />
+                android:layout_marginLeft="60dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"/>
 
 
         </RelativeLayout>
