@@ -193,23 +193,28 @@ public class WebConnect {
                     String xDateString = month + "/" + day;
                     Log.i(TAG, "onResponse: x轴显示日期： " + xDateString);
 
-                    //加一天
-                    Calendar calendar = new GregorianCalendar();
-                    calendar.setTime(lastDate);
-                    calendar.add(Calendar.DATE, 1); //把日期往后增加一天,正数往后推,负数往前移动
-                    //log一下
-                    // 获得年份
-                    int predictYear = calendar.get(Calendar.YEAR);
-                    // 获得月份
-                    int predictMonth = calendar.get(Calendar.MONTH) + 1;
-                    // 获得日期
-                    int predictDate = calendar.get(Calendar.DATE);
-                    Log.i(TAG, "onResponse: 预测的第一天日期是： " +
-                            predictYear + " 年 " +
-                            predictMonth + " 月 " +
-                            predictDate + " 日 ");
-                    String xPredictDateString = predictMonth + "/" + predictDate;
-                    Log.i(TAG, "onResponse: x轴显示预测日期： " + xPredictDateString);
+                    Date tempDate = lastDate;
+                    for (int i = 0; i < numOfForecastPoints; i++) {
+                        //加一天
+                        Calendar calendar = new GregorianCalendar();
+                        calendar.setTime(tempDate);
+                        calendar.add(Calendar.DATE, 1); //把日期往后增加一天,正数往后推,负数往前移动
+                        tempDate = calendar.getTime();//滚雪球++
+                        //log一下
+                        // 获得年份
+                        int predictYear = calendar.get(Calendar.YEAR);
+                        // 获得月份
+                        int predictMonth = calendar.get(Calendar.MONTH) + 1;
+                        // 获得日期
+                        int predictDate = calendar.get(Calendar.DATE);
+                        Log.i(TAG, "onResponse: 预测的第" + i + "天日期是： " +
+                                predictYear + " 年 " +
+                                predictMonth + " 月 " +
+                                predictDate + " 日 ");
+                        String xPredictDateString = predictMonth + "/" + predictDate;
+//                        Log.i(TAG, "onResponse: x轴显示预测日期： " + xPredictDateString);
+                        xPredictLabel[i] = xPredictDateString;
+                    }
 
                     //最后一天的四个数
                     Integer oneDayPresent = lastDay.getPresent_confirm();
