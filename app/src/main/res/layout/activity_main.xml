@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <!--scroll-->
-    <ScrollView
-        android:id="@+id/scroll"
+    <!--swipe-->
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
@@ -324,7 +324,7 @@
 
         </RelativeLayout>
 
-    </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <!--tool bar-->
     <android.support.v7.widget.Toolbar
