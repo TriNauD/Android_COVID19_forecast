@@ -78,9 +78,12 @@ public class LineViewModel extends ViewModel {
                 //将坐标的数值和对应的文字标签绑定起来
                 //分为前（真实）后（预测）
                 if (p < WebConnect.getNumOfRealPoints())
-                    //前，是真实线0的标签
-                    valueX.setLabel(WebConnect.getAxisLableList().get(0).get(p));
-                else
+                //前，是真实线0的标签
+                {
+                    List<String> stringList = WebConnect.getAxisLableList().get(0);
+                    String tempS = stringList.get(p);
+                    valueX.setLabel(tempS);
+                } else
                 //后，是预测线i的标签，此时的点值应该剪掉前面的真实点总数
                 {
                     int thisLineIndex = i + WebConnect.getNumOfRealLines();

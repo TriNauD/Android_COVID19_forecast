@@ -209,9 +209,10 @@ public class WebConnect {
                         //累计死亡
                         xyReal[3][i] = oneDay1.getTotal_dead();
                         //x轴标签
+                        String dateStr1 = oneDay1.getDate().toString();
                         //分离月/日
-                        String month1 = dateStr.substring(5, 7).replaceFirst("0", "");
-                        String day1 = dateStr.substring(8, 10).replaceFirst("0", "");
+                        String month1 = dateStr1.substring(5, 7).replaceFirst("0", "");
+                        String day1 = dateStr1.substring(8, 10).replaceFirst("0", "");
                         //x轴用的标签
                         String xDateString1 = month1 + "/" + day1;
                         xLabel[i] = xDateString1;
@@ -362,22 +363,35 @@ public class WebConnect {
      */
     public static void initRealAxis() {
         //如果还没有加载国家，就用空坐标轴
-        if (!isDataGotten) {
+        if (xLabel == null || xLabel[0] == null || xLabel[0].equals("")) {
+            Log.i(TAG, "initRealAxis还没加载数据");
             for (int i = 0; i < numOfRealLines; i++) {
                 List<String> strings = new ArrayList<>();
                 for (int j = 0; j < numOfRealPoints; j++) {
                     strings.add("");
                 }
-                axisLableList.add(strings);
+                if (axisLableList.size() < numOfRealLines) {
+                    //如果是空的就初始化
+                    axisLableList.add(strings);
+                } else {
+                    //如果不是空的就应该更新
+                    axisLableList.set(i, strings);
+                }
             }
         } else {
+            Log.i(TAG, "initRealAxis已经加载数据，准备建立标签");
             //建立标签
             for (int i = 0; i < numOfRealLines; i++) {
                 List<String> strings = new ArrayList<>();
                 for (int j = 0; j < numOfRealPoints; j++) {
                     strings.add(xLabel[j]);
+                    //Log.i(TAG, "initRealAxis标签：" + xLabel[j]);
                 }
-                axisLableList.add(strings);
+                //更新
+                axisLableList.set(i, strings);
+            }
+            for (int i = 0; i < axisLableList.size(); i++) {
+                Log.i(TAG, "initRealAxis标签 第" + i + "条线第一个：" + axisLableList.get(i).get(0));
             }
         }
     }
@@ -388,8 +402,6 @@ public class WebConnect {
      * @author lym
      */
     public static void initForecastAxis() {
-        //预测
-        //todo 预测的坐标轴应该是真实轴的延申
         //建立预测标签
         for (int i = 0; i < numOfForecastLines; i++) {
             //对于每一条预测线
@@ -400,11 +412,16 @@ public class WebConnect {
                 if (day > 30) {
                     day %= 30;
                 }
-                //todo 需要接着真实线来做日期标签
                 String s = (i + 6) + "/" + day;
                 strings.add(s);
             }
-            axisLableList.add(strings);
+            if (axisLableList.size() < numOfRealLines + numOfForecastLines) {
+                //如果线组里面还没有预测线，就新添加
+                axisLableList.add(strings);
+            } else {
+                //如果已经有预测线，就更新
+                axisLableList.set(i + numOfRealLines, strings);
+            }
         }
     }
 
