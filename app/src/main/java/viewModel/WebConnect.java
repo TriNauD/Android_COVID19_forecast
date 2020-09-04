@@ -454,6 +454,11 @@ public class WebConnect {
     }
 
     public static Integer getMaxY() {
-        return oneDayFourNum[1];
+        Integer maxY = 0;
+        //最大的就是最后一天的累计确诊
+        maxY = oneDayFourNum[1];
+        //留出10%的余地
+        maxY = (int) (maxY + maxY * 0.1);
+        return maxY;
     }
 }
