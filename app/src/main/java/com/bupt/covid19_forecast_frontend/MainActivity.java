@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int curLineIndex = 0;
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
+    //省份下拉框是不是第一次调用
+    private boolean isFirstChooseProvince = true;
     //最大y轴
     private int MaxY = 2200000;
 
@@ -617,9 +619,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.change_nation_spinner: {
                 //从spinner选项得到当前选择的国家
                 currentRegionName = changeNationSpinner.getSelectedItem().toString();
+                Log.i(TAG, "onItemSelected: Nation Spinner  : " + currentRegionName);
+
+                //设置国内外标志位
+                WebConnect.setIsProvince(false);//不是省份，是世界
+
                 //设置toolbar标题
                 toolbarTitle.setText(getResources().getString(R.string.national_title));
-                //判断是中国还是其他国家
+                //判断省份显示隐藏
                 if (currentRegionName.equals("中国")) {
                     //如果是中国 显示省份spinner
                     changeProvinceSpinner.setVisibility(View.VISIBLE);
@@ -627,11 +634,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     //如果是别国 隐藏省份spinner
                     changeProvinceSpinner.setVisibility(View.INVISIBLE);
                 }
-                Log.i(TAG, "onItemSelected: Nation Spinner  : " + currentRegionName);
-
-                //设置国内外标志位
-                //都不是省份
-                WebConnect.setIsProvince(false);
 
                 drawChart();
                 break;
@@ -642,18 +644,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
                 Log.i(TAG, "onItemSelected: Province Spinner  : " + currentRegionName);
 
-
                 //设置国内外标志位
+                WebConnect.setIsProvince(true);//是省份
+
+                //“全国”->“中国”
                 if (currentRegionName.equals("全国")) {
-                    //世界
-                    WebConnect.setIsProvince(false);
-                    //无论怎样、把地区名字改为中国
+                    //无论怎样、把“全国”改为中国
                     currentRegionName = "中国";
-                } else {
-                    //省份
-                    WebConnect.setIsProvince(true);
                 }
 
+                drawChart();
                 break;
             }
 
@@ -669,15 +669,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             if (currentRegionName.equals("中国")) {
                 Log.i(TAG, "onItemSelected：点击切换“全国”: " + currentRegionName);
 
-                //如果已经是中国（不是省份），就不用再获取中国了
-                //否则（是省份），还是要正常获取一次的
-                if (!WebConnect.getIsProvince()) {
+                //如果是第一次调用省份，就不用重复获取中国
+                //如果已经调用过，就可以再次获取数据了
+                if (isFirstChooseProvince) {
                     Log.i(TAG, "onItemSelected：不用重复获取中国了: " + currentRegionName);
                 } else {
                     Log.i(TAG, "onItemSelected：还没有正确数据，所以要获取中国: " + currentRegionName);
+                    //地区状态改为世界
+                    WebConnect.setIsProvince(false);
+                    //去获取中国啦
                     getDataTask = new GetDataTask();
                     getDataTask.execute("World");
                 }
+                //调用过之后，就设置为“不是第一次调用了”
+                isFirstChooseProvince = false;
             } else {
                 //获取省份
                 getDataTask = new GetDataTask();
