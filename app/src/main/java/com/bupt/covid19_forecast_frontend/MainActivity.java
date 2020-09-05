@@ -537,6 +537,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         //同时隐藏参数们
                         paramLine2.setVisibility(View.INVISIBLE);
                         paramLine3.setVisibility(View.INVISIBLE);
+                        buttonLine.setVisibility(View.INVISIBLE);
                     }
                 }
                 //只需要重新绘制即可
