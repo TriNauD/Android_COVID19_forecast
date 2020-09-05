@@ -417,11 +417,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         String day = (dayInt >= 10) ? (controlStartDateDayInput.getText().toString()) : ("0" + controlStartDateDayInput.getText());
                         String date = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
                         WebConnect.setStartControlDate(date);
-                        toast.setText("正在预测……");
+                        toast.setText(R.string.alert_msg_forecasting);
                         Log.i(TAG, "Button: ControlStartDate:" + date);
                     } else {
-                        //提示 并清空输入框
-                        toast.setText("输入错误");
+                        //提示输入错误 并清空输入框
+                        toast.setText(R.string.alert_msg_input_err);
                         toast.setDuration(Toast.LENGTH_SHORT);
                         controlStartDateDayInput.setText("");
                         controlStartDateMonthInput.setText("");
@@ -433,7 +433,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     getDataTask.execute("Predict");
 
                 } catch (Exception e) {
-                    toast.setText("输入错误");
+                    toast.setText(R.string.alert_msg_input_err);
                     toast.setDuration(Toast.LENGTH_SHORT);
                     controlStartDateDayInput.setText("");
                     controlStartDateMonthInput.setText("");
