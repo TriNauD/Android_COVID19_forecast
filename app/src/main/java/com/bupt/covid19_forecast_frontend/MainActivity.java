@@ -428,10 +428,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         //提示输入错误 并清空输入框
                         toast.setText(R.string.alert_msg_input_err);
                         toast.setDuration(Toast.LENGTH_SHORT);
-                        controlStartDateDayInput.setText("");
-                        controlStartDateMonthInput.setText("");
-                        //如果是不可编辑状态则不清空持续时间输入框
-                        controlDurationInput.setText(controlDurationInput.isFocusable() ? "" : controlDurationInput.getText());
+                        clearFocusableInputBoxes();
                         Log.i(TAG, "Button: Too big number");
                     }
                     //发送
@@ -442,10 +439,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 } catch (Exception e) {
                     toast.setText(R.string.alert_msg_input_err);
                     toast.setDuration(Toast.LENGTH_SHORT);
-                    controlStartDateDayInput.setText("");
-                    controlStartDateMonthInput.setText("");
-                    //如果是不可编辑状态则不清空持续时间输入框
-                    controlDurationInput.setText(controlDurationInput.isFocusable() ? "" : controlDurationInput.getText());
+                    clearFocusableInputBoxes();
                     Log.i(TAG, "Button: Bad input type");
                 }
                 toast.show();
@@ -454,10 +448,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                controlStartDateDayInput.setText("");
-                controlStartDateMonthInput.setText("");
-                //如果是不可编辑状态则不清空持续时间输入框
-                controlDurationInput.setText(controlDurationInput.isFocusable() ? "" : controlDurationInput.getText());
+                clearFocusableInputBoxes();
                 Log.i(TAG, "Button: reset button clicked");
             }
         });
@@ -498,6 +489,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    /**
+     * 清空可编辑状态的输入框组件内容
+     *
+     * @author: xjy
+     */
+    public void clearFocusableInputBoxes() {
+        controlStartDateDayInput.setText("");
+        controlStartDateMonthInput.setText("");
+        controlDurationInput.setText(controlDurationInput.isFocusable() ? "" : controlDurationInput.getText());
+    }
 
     /**
      * 下拉菜单，选项控制事件。
