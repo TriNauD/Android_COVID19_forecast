@@ -146,10 +146,7 @@ public class WebConnect {
                         int predictMonth = calendar.get(Calendar.MONTH) + 1;
                         // 获得日期
                         int predictDate = calendar.get(Calendar.DATE);
-                        Log.i(TAG, "onResponse: 预测的第" + i + "天日期是： " +
-                                predictYear + " 年 " +
-                                predictMonth + " 月 " +
-                                predictDate + " 日 ");
+//                        Log.i(TAG, "onResponse: 预测的第" + i + "天日期是： " + predictYear + " 年 " + predictMonth + " 月 " + predictDate + " 日 ");
                         String xPredictDateString = predictMonth + "/" + predictDate;
 //                        Log.i(TAG, "onResponse: x轴显示预测日期： " + xPredictDateString);
                         xPredictLabel[i] = xPredictDateString;
@@ -287,10 +284,7 @@ public class WebConnect {
                         int predictMonth = calendar.get(Calendar.MONTH) + 1;
                         // 获得日期
                         int predictDate = calendar.get(Calendar.DATE);
-                        Log.i(TAG, "onResponse: 预测的第" + i + "天日期是： " +
-                                predictYear + " 年 " +
-                                predictMonth + " 月 " +
-                                predictDate + " 日 ");
+//                        Log.i(TAG, "onResponse: 预测的第" + i + "天日期是： " + predictYear + " 年 " + predictMonth + " 月 " + predictDate + " 日 ");
                         String xPredictDateString = predictMonth + "/" + predictDate;
 //                        Log.i(TAG, "onResponse: x轴显示预测日期： " + xPredictDateString);
                         xPredictLabel[i] = xPredictDateString;
@@ -618,10 +612,12 @@ public class WebConnect {
 
     public static Integer getMaxY() {
         Integer maxY = 0;
-        //最大的就是最后一天的累计确诊
-        maxY = oneDayFourNum[1];
-        //留出10%的余地
-        maxY = (int) (maxY + maxY * 0.1);
+        if (oneDayFourNum[1] != null) {
+            //最大的就是最后一天的累计确诊
+            maxY = oneDayFourNum[1];
+            //留出10%的余地
+            maxY = (int) (maxY + maxY * 0.1);
+        }
         return maxY;
     }
 }

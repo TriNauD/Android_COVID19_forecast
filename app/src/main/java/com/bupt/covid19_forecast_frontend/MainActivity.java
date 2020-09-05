@@ -194,6 +194,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //生成线并且调整线条格式
         getLines();
 
+        //最大y轴，赋值为累计确诊数量
+        MaxY = WebConnect.getMaxY();
+
         //画画和调整视图
         draw();
 
@@ -222,10 +225,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol3.setText(strings[2]);
         peopleNumBarCol4.setText(strings[3]);
 
-        //最大y轴，赋值为累计确诊数量
-        if (!strings[0].equals("null")) {
-            MaxY = WebConnect.getMaxY();
-        }
     }
 
     /**
