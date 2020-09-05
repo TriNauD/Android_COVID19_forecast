@@ -633,6 +633,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 } else {
                     //如果是别国 隐藏省份spinner
                     changeProvinceSpinner.setVisibility(View.INVISIBLE);
+                    changeProvinceSpinner.setSelection(0);
                 }
 
                 drawChart();
