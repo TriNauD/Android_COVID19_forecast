@@ -646,9 +646,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //网络获取
         if (parentID == R.id.change_nation_spinner) {
-            //获取世界
-            getDataTask = new GetDataTask();
-            getDataTask.execute("World");
+            //如果是外国就获取 是中国就直接看省份
+            if (!currentRegionName.equals("中国")) {
+                //获取世界
+                getDataTask = new GetDataTask();
+                getDataTask.execute("World");
+            }
         } else if (parentID == R.id.change_province_spinner) {
             if (currentRegionName.equals("全国")) {
                 currentRegionName = "中国";

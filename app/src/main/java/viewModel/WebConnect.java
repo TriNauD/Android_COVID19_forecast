@@ -99,7 +99,7 @@ public class WebConnect {
         task.enqueue(new Callback<List<Alltime_province>>() {
             @Override
             public void onResponse(Call<List<Alltime_province>> call, Response<List<Alltime_province>> response) {
-                Log.i(TAG, "省份onResponse --> " + response.code());
+                Log.i(TAG, name + "省份onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Alltime_province> province = response.body();
                     //网络拿到的一个地区的列表，里面是所有时间的数据
@@ -237,7 +237,7 @@ public class WebConnect {
         task.enqueue(new Callback<List<Alltime_world>>() {
             @Override
             public void onResponse(Call<List<Alltime_world>> call, Response<List<Alltime_world>> response) {
-                Log.i(TAG, "世界onResponse --> " + response.code());
+                Log.i(TAG, name + "世界onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Alltime_world> world = response.body();
                     //网络拿到的一个地区的列表，里面是所有时间的数据
@@ -368,7 +368,7 @@ public class WebConnect {
         task.enqueue(new Callback<List<Integer>>() {
             @Override
             public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
-                Log.i(TAG, "预测onResponse --> " + response.code());
+                Log.i(TAG, name + "预测onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Integer> predict = response.body();
                     //第一天预测的数据
