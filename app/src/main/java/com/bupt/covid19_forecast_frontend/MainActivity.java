@@ -623,13 +623,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (currentRegionName.equals("中国")) {
                     //如果是中国 显示省份spinner
                     changeProvinceSpinner.setVisibility(View.VISIBLE);
-                    //重新获取当前省份
-                    currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
                 } else {
                     //如果是别国 隐藏省份spinner
                     changeProvinceSpinner.setVisibility(View.INVISIBLE);
-                    //从spinner选项得到当前选择的国家
-                    currentRegionName = changeNationSpinner.getSelectedItem().toString();
                 }
                 Log.i(TAG, "onItemSelected: nationSpinner  省: " + currentRegionName);
                 drawChart();
@@ -648,7 +644,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //网络获取
         if (parentID == R.id.change_nation_spinner) {
             //如果是外国就获取 是中国就直接看省份
-            if (!currentRegionName.equals("全国")) {
+            if (currentRegionName.equals("全国")) {
+                Log.i(TAG, "点击切换国家，Web去获取全国？？？: " + currentRegionName);
+            }
+            else{
                 //获取世界
                 getDataTask = new GetDataTask();
                 Log.i(TAG, "点击切换国家，Web去获取世界: " + currentRegionName);
