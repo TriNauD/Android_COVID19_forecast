@@ -514,6 +514,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     //同时隐藏参数们
                     paramLine2.setVisibility(View.INVISIBLE);
                     paramLine3.setVisibility(View.INVISIBLE);
+                    buttonLine.setVisibility(View.INVISIBLE);
                     //线是选择的pos那条
                     curLineIndex = pos;
                 } else {
@@ -529,6 +530,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         //同时显示参数们
                         paramLine2.setVisibility(View.VISIBLE);
                         paramLine3.setVisibility(View.VISIBLE);
+                        buttonLine.setVisibility(View.VISIBLE);
                     } else {
                         //如果没在预测就正常0
                         curLineIndex = 0;
