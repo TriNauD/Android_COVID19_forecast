@@ -100,9 +100,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Log.i(TAG, "Loading... 当前地区：" + currentRegionName);
 
             //先设置为没有开始获取
-            WebConnect.isDataGotten = false;
+            WebConnect.isGetFinished = false;
             progressBar.setVisibility(View.VISIBLE);
-            Log.i(TAG, "Loading...开始转圈圈 isDataGotten设为F：" + WebConnect.isDataGotten);
+            Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished);
         }
 
         // 方法2：doInBackground（）
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected String doInBackground(String... params) {
             try {
-                //去获取数据，如果成功会将isDataGotten设置为true
+                //去获取数据，如果成功会将isGetFinished设置为true
                 switch (params[0]) {
                     case "World":
                         WebConnect.getWorld(currentRegionName);
@@ -122,8 +122,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         WebConnect.getProvince(currentRegionName);
                 }
 
-                //如果没有得到数据，就一直等待
-                while (!WebConnect.isDataGotten) {
+                //如果没有得到数据，就一直等待，并提示
+                while (!WebConnect.isGetFinished) {
                     Thread.sleep(1);
                 }
 
@@ -149,7 +149,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             // 执行完毕后，则更新UI
             progressBar.setVisibility(View.INVISIBLE);
-
+            toast.setText(R.string.alert_msg_get_data_success);
+            toast.show();
             Log.i(TAG, "Loading " + currentRegionName + " 结束");
         }
 
