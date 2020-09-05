@@ -70,7 +70,8 @@ public class WebConnect {
     private static Integer[] oneDayFourNum = new Integer[4];
 
     //数据是否获取完毕 用于通知前端 已加载
-    public static boolean isDataGotten = false;
+    public static boolean isGetFinished = false;
+    public static boolean isGetSuccess = false;
 
     /**
      * 从后端获取省份疫情数据
@@ -98,7 +99,7 @@ public class WebConnect {
         task.enqueue(new Callback<List<Alltime_province>>() {
             @Override
             public void onResponse(Call<List<Alltime_province>> call, Response<List<Alltime_province>> response) {
-                Log.i(TAG, "省份onResponse --> " + response.code());
+                Log.i(TAG, name + "省份onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Alltime_province> province = response.body();
                     //网络拿到的一个地区的列表，里面是所有时间的数据
@@ -107,8 +108,10 @@ public class WebConnect {
 
                     if (provinceList.size() <= 0) {
                         //已经获取完毕
-                        isDataGotten = true;
-                        Log.i(TAG, "isDataGotten省份失败" + isDataGotten);
+                        isGetFinished = true;
+                        isGetSuccess = false;
+                        Log.i(TAG, "isGetFinished省份失败" + isGetFinished);
+                        Log.i(TAG, "isGetSuccess省份失败" + isGetSuccess);
                         return;
                     }
                     //最后一天的所有数据
@@ -188,17 +191,20 @@ public class WebConnect {
                 }
 
                 //已经获取完毕
-                isDataGotten = true;
-                Log.i(TAG, "isDataGotten省份成功" + isDataGotten);
-
+                isGetFinished = true;
+                isGetSuccess = true;
+                Log.i(TAG, "isGetFinished省份成功" + isGetFinished);
+                Log.i(TAG, "isGetSuccess省份成功" + isGetSuccess);
             }
 
             @Override
             public void onFailure(Call<List<Alltime_province>> call, Throwable t) {
                 Log.i(TAG, "省份onFailure..." + t.toString());
                 //已经获取完毕
-                isDataGotten = true;
-                Log.i(TAG, "isDataGotten省份失败" + isDataGotten);
+                isGetFinished = true;
+                isGetSuccess = false;
+                Log.i(TAG, "isGetFinished省份失败" + isGetFinished);
+                Log.i(TAG, "isGetSuccess省份失败" + isGetSuccess);
 
             }
         });
@@ -231,7 +237,7 @@ public class WebConnect {
         task.enqueue(new Callback<List<Alltime_world>>() {
             @Override
             public void onResponse(Call<List<Alltime_world>> call, Response<List<Alltime_world>> response) {
-                Log.i(TAG, "世界onResponse --> " + response.code());
+                Log.i(TAG, name + "世界onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Alltime_world> world = response.body();
                     //网络拿到的一个地区的列表，里面是所有时间的数据
@@ -240,8 +246,10 @@ public class WebConnect {
 
                     if (nationList.size() <= 0) {
                         //已经获取完毕
-                        isDataGotten = true;
-                        Log.i(TAG, "isDataGotten世界失败" + isDataGotten);
+                        isGetFinished = true;
+                        isGetSuccess = false;
+                        Log.i(TAG, "isGetFinished世界失败" + isGetFinished);
+                        Log.i(TAG, "isGetSuccess世界失败" + isGetSuccess);
                         return;
                     }
                     //最后一天的所有数据
@@ -320,9 +328,10 @@ public class WebConnect {
 
                 }
                 //已经获取完毕
-                isDataGotten = true;
-                Log.i(TAG, "isDataGotten世界成功" + isDataGotten);
-
+                isGetFinished = true;
+                isGetSuccess = true;
+                Log.i(TAG, "isGetFinished世界成功" + isGetFinished);
+                Log.i(TAG, "isGetSuccess世界成功" + isGetSuccess);
             }
 
             @Override
@@ -330,9 +339,10 @@ public class WebConnect {
                 Log.i(TAG, "世界onFailure..." + t.toString());
 
                 //已经获取完毕
-                isDataGotten = true;
-                Log.i(TAG, "isDataGotten世界失败" + isDataGotten);
-
+                isGetFinished = true;
+                isGetSuccess = false;
+                Log.i(TAG, "isGetFinished世界失败" + isGetFinished);
+                Log.i(TAG, "isGetSuccess世界失败" + isGetSuccess);
             }
         });
 
@@ -358,7 +368,7 @@ public class WebConnect {
         task.enqueue(new Callback<List<Integer>>() {
             @Override
             public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
-                Log.i(TAG, "预测onResponse --> " + response.code());
+                Log.i(TAG, name + "预测onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Integer> predict = response.body();
                     //第一天预测的数据
@@ -375,8 +385,8 @@ public class WebConnect {
 
                 }
                 //已经获取完毕
-                isDataGotten = true;
-                Log.i(TAG, "isDataGotten预测成功" + isDataGotten);
+                isGetFinished = true;
+                Log.i(TAG, "isGetFinished预测成功" + isGetFinished);
 
             }
 
@@ -385,8 +395,8 @@ public class WebConnect {
                 Log.i(TAG, "预测onFailure..." + t.toString());
 
                 //已经获取完毕
-                isDataGotten = true;
-                Log.i(TAG, "isDataGotten预测失败" + isDataGotten);
+                isGetFinished = true;
+                Log.i(TAG, "isGetFinished预测失败" + isGetFinished);
 
             }
         });

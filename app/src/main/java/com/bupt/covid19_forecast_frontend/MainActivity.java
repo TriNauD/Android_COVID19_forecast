@@ -100,9 +100,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Log.i(TAG, "Loading... 当前地区：" + currentRegionName);
 
             //先设置为没有开始获取
-            WebConnect.isDataGotten = false;
+            WebConnect.isGetFinished = false;
             progressBar.setVisibility(View.VISIBLE);
-            Log.i(TAG, "Loading...开始转圈圈 isDataGotten设为F：" + WebConnect.isDataGotten);
+            Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished);
         }
 
         // 方法2：doInBackground（）
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected String doInBackground(String... params) {
             try {
-                //去获取数据，如果成功会将isDataGotten设置为true
+                //去获取数据，如果成功会将isGetFinished设置为true
                 switch (params[0]) {
                     case "World":
                         WebConnect.getWorld(currentRegionName);
@@ -122,8 +122,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         WebConnect.getProvince(currentRegionName);
                 }
 
-                //如果没有得到数据，就一直等待
-                while (!WebConnect.isDataGotten) {
+                //如果没有得到数据，就一直等待，并提示
+                while (!WebConnect.isGetFinished) {
                     Thread.sleep(1);
                 }
 
@@ -149,7 +149,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             // 执行完毕后，则更新UI
             progressBar.setVisibility(View.INVISIBLE);
-
+            //根据isGetSuccess结果是否成功 选择提示数据获取失败/成功
+            toast.setText(WebConnect.isGetSuccess ? (R.string.alert_msg_get_data_success) : (R.string.alert_msg_get_data_failure));
+            toast.show();
             Log.i(TAG, "Loading " + currentRegionName + " 结束");
         }
 
@@ -416,11 +418,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         String day = (dayInt >= 10) ? (controlStartDateDayInput.getText().toString()) : ("0" + controlStartDateDayInput.getText());
                         String date = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
                         WebConnect.setStartControlDate(date);
-                        toast.setText("正在预测……");
+                        toast.setText(R.string.alert_msg_forecasting);
                         Log.i(TAG, "Button: ControlStartDate:" + date);
                     } else {
-                        //提示 并清空输入框
-                        toast.setText("输入错误");
+                        //提示输入错误 并清空输入框
+                        toast.setText(R.string.alert_msg_input_err);
                         toast.setDuration(Toast.LENGTH_SHORT);
                         controlStartDateDayInput.setText("");
                         controlStartDateMonthInput.setText("");
@@ -432,7 +434,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     getDataTask.execute("Predict");
 
                 } catch (Exception e) {
-                    toast.setText("输入错误");
+                    toast.setText(R.string.alert_msg_input_err);
                     toast.setDuration(Toast.LENGTH_SHORT);
                     controlStartDateDayInput.setText("");
                     controlStartDateMonthInput.setText("");
@@ -644,9 +646,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //网络获取
         if (parentID == R.id.change_nation_spinner) {
-            //获取世界
-            getDataTask = new GetDataTask();
-            getDataTask.execute("World");
+            //如果是外国就获取 是中国就直接看省份
+            if (!currentRegionName.equals("中国")) {
+                //获取世界
+                getDataTask = new GetDataTask();
+                getDataTask.execute("World");
+            }
         } else if (parentID == R.id.change_province_spinner) {
             if (currentRegionName.equals("全国")) {
                 currentRegionName = "中国";
