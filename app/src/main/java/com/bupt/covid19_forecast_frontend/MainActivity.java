@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -429,6 +430,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         toast.setDuration(Toast.LENGTH_SHORT);
                         controlStartDateDayInput.setText("");
                         controlStartDateMonthInput.setText("");
+                        //如果是不可编辑状态则不清空持续时间输入框
+                        controlDurationInput.setText(controlDurationInput.isFocusable() ? "" : controlDurationInput.getText());
                         Log.i(TAG, "Button: Too big number");
                     }
                     //发送
@@ -441,6 +444,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     toast.setDuration(Toast.LENGTH_SHORT);
                     controlStartDateDayInput.setText("");
                     controlStartDateMonthInput.setText("");
+                    //如果是不可编辑状态则不清空持续时间输入框
+                    controlDurationInput.setText(controlDurationInput.isFocusable() ? "" : controlDurationInput.getText());
                     Log.i(TAG, "Button: Bad input type");
                 }
                 toast.show();
@@ -449,6 +454,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                controlStartDateDayInput.setText("");
+                controlStartDateMonthInput.setText("");
+                //如果是不可编辑状态则不清空持续时间输入框
+                controlDurationInput.setText(controlDurationInput.isFocusable() ? "" : controlDurationInput.getText());
                 Log.i(TAG, "Button: reset button clicked");
             }
         });
