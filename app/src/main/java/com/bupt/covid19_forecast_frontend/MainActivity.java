@@ -628,6 +628,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     changeProvinceSpinner.setVisibility(View.INVISIBLE);
                 }
                 Log.i(TAG, "onItemSelected: nationSpinner  省: " + currentRegionName);
+
+                //设置国内外标志位
+                //都不是省份
+                WebConnect.setIsProvince(false);
+
                 drawChart();
                 break;
             }
@@ -636,6 +641,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //从spinner选项得到当前选择的省
                 currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
                 Log.i(TAG, "onItemSelected: nationSpinner  省: " + currentRegionName);
+
+
+                //设置国内外标志位
+                if (currentRegionName.equals("全国")) {
+                    //世界
+                    WebConnect.setIsProvince(false);
+                } else {
+                    //省份
+                    WebConnect.setIsProvince(true);
+                }
+
                 break;
             }
 
