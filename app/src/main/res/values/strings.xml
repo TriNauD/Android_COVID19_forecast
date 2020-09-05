@@ -49,9 +49,9 @@
     </string-array>
 
     <string-array name="nation_name">
+        <item>美国</item>
         <item>中国</item>
         <item>秘鲁</item>
-        <item>美国</item>
         <item>英国</item>
         <item>巴西</item>
         <item>俄罗斯</item>

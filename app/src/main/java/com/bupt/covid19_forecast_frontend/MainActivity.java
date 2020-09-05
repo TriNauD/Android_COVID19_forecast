@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //获取数据线程
     private GetDataTask getDataTask;
     //当前国家
-    private String currentRegionName = "中国";
+    private String currentRegionName;
 
     //折线视图
     private LineChartView myLineChartView;
