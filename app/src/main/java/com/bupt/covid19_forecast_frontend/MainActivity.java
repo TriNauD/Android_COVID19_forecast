@@ -647,9 +647,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //网络获取
         if (parentID == R.id.change_nation_spinner) {
             //如果是外国就获取 是中国就直接看省份
-            if (!currentRegionName.equals("中国")) {
+            if (!(currentRegionName.equals("中国") || currentRegionName.equals("全国"))) {
                 //获取世界
                 getDataTask = new GetDataTask();
+                Log.i(TAG, "点击切换国家，Web去获取世界: " + currentRegionName);
                 getDataTask.execute("World");
             }
         } else if (parentID == R.id.change_province_spinner) {
@@ -657,10 +658,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 currentRegionName = "中国";
                 //获取世界
                 getDataTask = new GetDataTask();
+                Log.i(TAG, "点击切换“全国”，Web去获取世界: " + currentRegionName);
                 getDataTask.execute("World");
             } else {
                 //获取省份
                 getDataTask = new GetDataTask();
+                Log.i(TAG, "点击切换省份，Web去获取省份: " + currentRegionName);
                 getDataTask.execute("Province");
             }
         }
