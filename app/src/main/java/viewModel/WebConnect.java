@@ -38,7 +38,7 @@ public class WebConnect {
 
     //预测参数
     //是否在国内，true表示省份，false表示国家
-    private static Boolean isNation = false;
+    private static Boolean isProvince = false;
     //是否进行控制
     private static Boolean hasControl = true;
     //控制开始时间
@@ -364,7 +364,7 @@ public class WebConnect {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         API api = retrofit.create(API.class);
-        Call<List<Integer>> task = api.getPredict(name, isNation, hasControl, startControlDate, raiseLastTime, controlGrade);
+        Call<List<Integer>> task = api.getPredict(name, isProvince, hasControl, startControlDate, raiseLastTime, controlGrade);
         task.enqueue(new Callback<List<Integer>>() {
             @Override
             public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
@@ -604,6 +604,14 @@ public class WebConnect {
 
     public static void setLineDataList(List<float[]> lineDataList) {
         WebConnect.lineDataList = lineDataList;
+    }
+
+    public static Boolean getIsProvince() {
+        return isProvince;
+    }
+
+    public static void setIsProvince(Boolean isProvince) {
+        WebConnect.isProvince = isProvince;
     }
 
     public static Integer[] getOneDayFourNum() {

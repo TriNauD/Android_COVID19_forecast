@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //获取数据线程
     private GetDataTask getDataTask;
     //当前国家
-    private String currentRegionName = "中国";
+    private String currentRegionName;
 
     //折线视图
     private LineChartView myLineChartView;
@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int curLineIndex = 0;
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
+    //省份下拉框是不是第一次调用
+    private boolean isFirstChooseProvince = true;
     //最大y轴
     private int MaxY = 2200000;
 
@@ -617,21 +619,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.change_nation_spinner: {
                 //从spinner选项得到当前选择的国家
                 currentRegionName = changeNationSpinner.getSelectedItem().toString();
+                Log.i(TAG, "onItemSelected: Nation Spinner  : " + currentRegionName);
+
+                //设置国内外标志位
+                WebConnect.setIsProvince(false);//不是省份，是世界
+
                 //设置toolbar标题
                 toolbarTitle.setText(getResources().getString(R.string.national_title));
-                //判断是中国还是其他国家
+                //判断省份显示隐藏
                 if (currentRegionName.equals("中国")) {
                     //如果是中国 显示省份spinner
                     changeProvinceSpinner.setVisibility(View.VISIBLE);
-                    //重新获取当前省份
-                    currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
                 } else {
                     //如果是别国 隐藏省份spinner
                     changeProvinceSpinner.setVisibility(View.INVISIBLE);
-                    //从spinner选项得到当前选择的国家
-                    currentRegionName = changeNationSpinner.getSelectedItem().toString();
+                    changeProvinceSpinner.setSelection(0);
                 }
-                Log.i(TAG, "onItemSelected: nationSpinner  省: " + currentRegionName);
+
                 drawChart();
                 break;
             }
@@ -639,7 +643,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.change_province_spinner: {
                 //从spinner选项得到当前选择的省
                 currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
-                Log.i(TAG, "onItemSelected: nationSpinner  省: " + currentRegionName);
+                Log.i(TAG, "onItemSelected: Province Spinner  : " + currentRegionName);
+
+                //设置国内外标志位
+                WebConnect.setIsProvince(true);//是省份
+
+                //“全国”->“中国”
+                if (currentRegionName.equals("全国")) {
+                    //无论怎样、把“全国”改为中国
+                    currentRegionName = "中国";
+                }
+
+                drawChart();
                 break;
             }
 
@@ -647,20 +662,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //网络获取
         if (parentID == R.id.change_nation_spinner) {
-            //如果是外国就获取 是中国就直接看省份
-            if (!currentRegionName.equals("全国")) {
-                //获取世界
-                getDataTask = new GetDataTask();
-                Log.i(TAG, "点击切换国家，Web去获取世界: " + currentRegionName);
-                getDataTask.execute("World");
-            }
+            //获取世界
+            getDataTask = new GetDataTask();
+            Log.i(TAG, "onItemSelected点击切换国家，Web去获取世界: " + currentRegionName);
+            getDataTask.execute("World");
         } else if (parentID == R.id.change_province_spinner) {
-            if (currentRegionName.equals("全国")) {
-                currentRegionName = "中国";
-                //获取世界
-                getDataTask = new GetDataTask();
-                Log.i(TAG, "点击切换“全国”，Web去获取世界: " + currentRegionName);
-                getDataTask.execute("World");
+            if (currentRegionName.equals("中国")) {
+                Log.i(TAG, "onItemSelected：点击切换“全国”: " + currentRegionName);
+
+                //如果是第一次调用省份，就不用重复获取中国
+                //如果已经调用过，就可以再次获取数据了
+                if (isFirstChooseProvince) {
+                    Log.i(TAG, "onItemSelected：不用重复获取中国了: " + currentRegionName);
+                } else {
+                    Log.i(TAG, "onItemSelected：还没有正确数据，所以要获取中国: " + currentRegionName);
+                    //地区状态改为世界
+                    WebConnect.setIsProvince(false);
+                    //去获取中国啦
+                    getDataTask = new GetDataTask();
+                    getDataTask.execute("World");
+                }
+                //调用过之后，就设置为“不是第一次调用了”
+                isFirstChooseProvince = false;
             } else {
                 //获取省份
                 getDataTask = new GetDataTask();
