@@ -71,6 +71,7 @@ public class WebConnect {
 
     //数据是否获取完毕 用于通知前端 已加载
     public static boolean isGetFinished = false;
+    public static boolean isGetSuccess = false;
 
     /**
      * 从后端获取省份疫情数据
@@ -108,7 +109,9 @@ public class WebConnect {
                     if (provinceList.size() <= 0) {
                         //已经获取完毕
                         isGetFinished = true;
+                        isGetSuccess = false;
                         Log.i(TAG, "isGetFinished省份失败" + isGetFinished);
+                        Log.i(TAG, "isGetSuccess省份失败" + isGetSuccess);
                         return;
                     }
                     //最后一天的所有数据
@@ -192,8 +195,9 @@ public class WebConnect {
 
                 //已经获取完毕
                 isGetFinished = true;
+                isGetSuccess = true;
                 Log.i(TAG, "isGetFinished省份成功" + isGetFinished);
-
+                Log.i(TAG, "isGetSuccess省份成功" + isGetSuccess);
             }
 
             @Override
@@ -201,7 +205,9 @@ public class WebConnect {
                 Log.i(TAG, "省份onFailure..." + t.toString());
                 //已经获取完毕
                 isGetFinished = true;
+                isGetSuccess = false;
                 Log.i(TAG, "isGetFinished省份失败" + isGetFinished);
+                Log.i(TAG, "isGetSuccess省份失败" + isGetSuccess);
 
             }
         });
@@ -244,7 +250,9 @@ public class WebConnect {
                     if (nationList.size() <= 0) {
                         //已经获取完毕
                         isGetFinished = true;
+                        isGetSuccess = false;
                         Log.i(TAG, "isGetFinished世界失败" + isGetFinished);
+                        Log.i(TAG, "isGetSuccess世界失败" + isGetSuccess);
                         return;
                     }
                     //最后一天的所有数据
@@ -327,8 +335,9 @@ public class WebConnect {
                 }
                 //已经获取完毕
                 isGetFinished = true;
+                isGetSuccess = true;
                 Log.i(TAG, "isGetFinished世界成功" + isGetFinished);
-
+                Log.i(TAG, "isGetSuccess世界成功" + isGetSuccess);
             }
 
             @Override
@@ -337,8 +346,9 @@ public class WebConnect {
 
                 //已经获取完毕
                 isGetFinished = true;
+                isGetSuccess = false;
                 Log.i(TAG, "isGetFinished世界失败" + isGetFinished);
-
+                Log.i(TAG, "isGetSuccess世界失败" + isGetSuccess);
             }
         });
 

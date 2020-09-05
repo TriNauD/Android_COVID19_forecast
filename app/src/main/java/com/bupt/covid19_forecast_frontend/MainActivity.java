@@ -149,7 +149,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             // 执行完毕后，则更新UI
             progressBar.setVisibility(View.INVISIBLE);
-            toast.setText(R.string.alert_msg_get_data_success);
+            //根据isGetSuccess结果是否成功 选择提示数据获取失败/成功
+            toast.setText(WebConnect.isGetSuccess ? (R.string.alert_msg_get_data_success) : (R.string.alert_msg_get_data_failure));
             toast.show();
             Log.i(TAG, "Loading " + currentRegionName + " 结束");
         }
