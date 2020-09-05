@@ -424,16 +424,15 @@ public class WebConnect {
      * @author yk
      */
 
-    private LiveData<List<room.Alltime_world>> allWorldsLive;
+    //private LiveData<List<room.Alltime_world>> allWorldsLive;
     private room.Alltime_worldDao worldDao;
     private AppDatabase appDatabase;
     WebConnect(Context context){
         appDatabase=AppDatabase.getDatabase(context.getApplicationContext());
-        allWorldsLive=worldDao.getAllWorldsLive();
+        //allWorldsLive=worldDao.getAllWorldsLive();
+
     }
-    public LiveData<List<room.Alltime_world>> getAllWorldsLive() {
-        return allWorldsLive;
-    }
+
     public room.Alltime_world getWorldByName(String name) {
         return worldDao.getWorldByName(name);
     }
@@ -442,9 +441,6 @@ public class WebConnect {
     }
 
     void insertWorlds(room.Alltime_world...alltime_worlds){
-
-    }
-    void deleteWords(final String name){
 
     }
 

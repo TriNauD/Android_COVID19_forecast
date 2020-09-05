@@ -1,6 +1,7 @@
 package room;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -8,6 +9,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -30,7 +32,7 @@ public interface Alltime_worldDao {
 
     //查询数据
     @Query(" SELECT * FROM Alltime_world")
-    LiveData<List<Alltime_world>> getAllWorldsLive();
+    List<Alltime_world> getAllWorldsLive();
     //根据国家名查询
     @Query("SELECT * FROM Alltime_world WHERE name= :name")
     Alltime_world getWorldByName(String name);

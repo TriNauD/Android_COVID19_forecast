@@ -74,6 +74,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
 
+    //初始化数据库
+    AppDatabase appDatabase;
+    Alltime_worldDao worldDao;
+
 
     /**
      * 活动生命周期：“创建”
@@ -85,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //绑定组件
         bindingElements();
         //设置监听
@@ -95,6 +100,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //画折线图
         drawChart();
 
+    }
+
+    /**
+     * 更新本地数据库
+     *
+     * @author yk
+     */
+    public void updateDB(){
+        appDatabase = Room.databaseBuilder(this,AppDatabase.class,"appdb")
+                .build();
+        worldDao = appDatabase.getAlltime_worldDao();
+        //Alltime_world world1 = new Alltime_world(WebConnect.getWorld(currentNation));
+        //Alltime_world world2 = new Alltime_world(WebConnect.getWorld(currentNation));
+        //worldDao.insertWorlds(WebConnect.getWorld(world1,world2));
     }
 
     /**
@@ -175,27 +194,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         WebConnect.getPredict(currentNation);
     }
 
-
-    static class InsertAsyncTask extends AsyncTask<Alltime_world,Void,Void>{
-        private Alltime_worldDao alltime_worldDao;
-
-        public InsertAsyncTask(Alltime_worldDao alltime_worldDao) {
-            this.alltime_worldDao = alltime_worldDao;
-        }
-
-        //后台
-        @Override
-        protected Void doInBackground(Alltime_world... alltime_worlds) {
-            alltime_worldDao.insertWorld(alltime_worlds);
-            return null;
-        }
-
-        //把结果带回给主线程
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
-    }
 
     /**
      * 生成线并且调整线条格式
