@@ -28,7 +28,9 @@ public class LineViewModel extends ViewModel {
     private int xFontSize = 12;
     //y轴字体大小
     private int yFontSize = 12;
-    //y轴最多显示位数
+    //x轴标签最多字符数
+    int xMaxLabelChars = 6;
+    //y轴标签最多字符数
     int yMaxLabelChars = 6;
 
 
@@ -96,6 +98,7 @@ public class LineViewModel extends ViewModel {
             }
             axisX.setName(" ");//名称显示
             axisX.setTextSize(xFontSize);//字体大小
+            axisX.setMaxLabelChars(xMaxLabelChars); //显示数据的位数
             axisX.setValues(valueListX);//将列表设置到x轴上面
 
             Axis axisY = new Axis();//Y轴没有任何设定，就初始化
@@ -199,6 +202,7 @@ public class LineViewModel extends ViewModel {
             Axis axisX = new Axis();
             axisX.setName(" ");//名称显示
             axisX.setTextSize(xFontSize);//字体大小
+            axisX.setMaxLabelChars(xMaxLabelChars); //显示数据的位数
             //将标签列表设置到x轴上面
             axisX.setValues(valueListX);
 
