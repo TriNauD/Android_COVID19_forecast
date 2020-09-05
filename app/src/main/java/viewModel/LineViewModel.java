@@ -25,9 +25,13 @@ public class LineViewModel extends ViewModel {
 
     //画图参数
     //x轴字体大小
-    private int xFontSize = 5;
+    private int xFontSize = 12;
     //y轴字体大小
-    private int yFontSize = 5;
+    private int yFontSize = 12;
+    //x轴标签最多字符数
+    int xMaxLabelChars = 6;
+    //y轴标签最多字符数
+    int yMaxLabelChars = 6;
 
 
     /**
@@ -94,11 +98,14 @@ public class LineViewModel extends ViewModel {
             }
             axisX.setName(" ");//名称显示
             axisX.setTextSize(xFontSize);//字体大小
+            axisX.setMaxLabelChars(xMaxLabelChars); //显示数据的位数
             axisX.setValues(valueListX);//将列表设置到x轴上面
 
             Axis axisY = new Axis();//Y轴没有任何设定，就初始化
             axisY.setName(" ");//y轴的名称显示，设置为空格可以把数字显示全
             axisY.setTextSize(yFontSize);//y轴字体大小
+            axisY.setHasLines(true);//y轴有图中间的横线
+            axisY.setMaxLabelChars(yMaxLabelChars); //固定y轴的数据位数
 
             Axis[] axisXY = {axisX, axisY};//把XY放到一起
 
@@ -195,6 +202,7 @@ public class LineViewModel extends ViewModel {
             Axis axisX = new Axis();
             axisX.setName(" ");//名称显示
             axisX.setTextSize(xFontSize);//字体大小
+            axisX.setMaxLabelChars(xMaxLabelChars); //显示数据的位数
             //将标签列表设置到x轴上面
             axisX.setValues(valueListX);
 
@@ -202,6 +210,8 @@ public class LineViewModel extends ViewModel {
             Axis axisY = new Axis();//Y轴没有任何设定，就初始化
             axisY.setName(" ");//y轴的名称显示，设置为空格可以把数字显示全
             axisY.setTextSize(yFontSize);//y轴字体大小
+            axisY.setHasLines(true);//y轴有图中间的横线
+            axisY.setMaxLabelChars(yMaxLabelChars); //固定y轴的数据位数
 
             //把XY放到一起
             Axis[] axisXY = {axisX, axisY};
