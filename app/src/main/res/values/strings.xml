@@ -66,6 +66,7 @@
     </string-array>
 
     <string-array name="province_name">
+        <item>全国</item>
         <item>北京</item>
         <item>上海</item>
         <item>广东</item>

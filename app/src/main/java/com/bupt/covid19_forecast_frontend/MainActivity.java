@@ -483,12 +483,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     changeProvinceSpinner.setVisibility(View.VISIBLE);
                     //设置当前地区为省份spinner的选中项
                     currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
-                    //isProvince设置为true 国内
-                    WebConnect.setIsProvince(true);
-                    //获取省份
                     getDataTask = new GetDataTask();
-                    Log.i(TAG, "点击切换省份，Web去获取省份: " + currentRegionName);
-                    getDataTask.execute("Province");
+                    if (currentRegionName.equals("全国")) {
+                        //如果是"全国" 则改成"中国"去世界找
+                        currentRegionName = "中国";
+                        Log.i(TAG, "点击切换省份为全国，Web去获取中国: " + currentRegionName);
+                        WebConnect.setIsProvince(false);
+                        getDataTask.execute("World");
+
+                    } else {
+                        //如果不是"全国" 则正常获取省份
+                        Log.i(TAG, "点击切换省份，Web去获取省份: " + currentRegionName);
+                        WebConnect.setIsProvince(true);
+                        getDataTask.execute("Province");
+                    }
+
                 }
             }
         });
@@ -680,9 +689,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.change_province_spinner: {
                 //从spinner选项得到当前选择的省
                 currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
-                Log.i(TAG, "onItemSelected: Province Spinner  : " + currentRegionName);
-                //设置国内外标志位
-                WebConnect.setIsProvince(true);//是省份
+                //如果是"全国" 则改为"中国" 且isProvince设为false
+                if (currentRegionName.equals("全国")) {
+                    currentRegionName = "中国";
+                    WebConnect.setIsProvince(false);
+                    Log.i(TAG, "onItemSelected: Province Spinner  : 全国->中国" + currentRegionName);
+                } else {
+                    Log.i(TAG, "onItemSelected: Province Spinner  : " + currentRegionName);
+                    //设置国内外标志位
+                    WebConnect.setIsProvince(true);//是省份
+                }
                 break;
             }
 
@@ -704,9 +720,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //获取省份
             getDataTask = new GetDataTask();
             Log.i(TAG, "点击切换省份，Web去获取省份: " + currentRegionName);
-            getDataTask.execute("Province");
+            //如果是（全国）中国就从世界获取
+            if (currentRegionName.equals("中国")) {
+                getDataTask.execute("World");
+            }
+            //如果是
+            else {
+                getDataTask.execute("Province");
+            }
         }
-
 
     }
 
