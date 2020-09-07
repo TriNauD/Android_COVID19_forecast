@@ -1,5 +1,6 @@
 package com.bupt.covid19_forecast_frontend;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
@@ -7,9 +8,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -27,9 +28,11 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
+import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 import viewModel.WebConnect;
@@ -78,16 +81,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //折线视图
     private LineChartView myLineChartView;
+
     //折线的数据类
     private LineViewModel lineViewModel;
-    //当前显示的线是几号
-    private int curLineIndex = 0;
+
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
+
     //国家下拉框是不是第一次调用
     private boolean isFirstChooseNation = true;
+
+    //画图调参用
+    //当前显示的线是几号
+    private int curLineIndex = 0;
     //最大y轴
     private int MaxY = 2200000;
+    //右边距，留出一点白用来滑动
+    private int rightMargin = 4;
+    //同一个框框显示x轴的范围,100表示一共显示100个点
+    private int showXRange = 100;
+    //点击坐标
+    int clickX, clickY;
 
     /*————————————获取数据相关————————————*/
 
@@ -258,6 +272,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             showLines.add(allLines.get(0));
         }
 
+        //手指点击的竖直线
+        PointValue pointValue1 = new PointValue();
+        pointValue1.set(clickX, clickY);
+        PointValue pointValue2 = new PointValue();
+        pointValue2.set(clickX, 0);
+        List<PointValue> pointValueList = new ArrayList<>();
+        pointValueList.add(pointValue1);
+        pointValueList.add(pointValue2);
+
+        //手指点击的竖直线
+        Line handLine = new Line();
+        handLine.setValues(pointValueList);
+
+        //颜色 设置为所点的线的颜色
+        if (isForecast) {
+            //在预测
+            if (clickX > WebConnect.getNumOfRealPoints()) {
+                //后面的蓝色
+                handLine.setColor(showLines.get(0).getColor());
+            } else {
+                //前面的红色
+                handLine.setColor(showLines.get(1).getColor());
+            }
+        } else {
+            //没在预测,用前面的颜色
+            handLine.setColor(showLines.get(0).getColor());
+        }
+
+        handLine.setPointRadius(3);//点的大小
+        handLine.setHasLabels(true);//设置标签常显示
+
+        showLines.add(handLine);
+
+
         //------------------------- 轴 -----------------------
         //获取所有轴
         List<Axis[]> allAxes = lineViewModel.getAxesList();
@@ -274,44 +322,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //设置Y轴在左边
         curLineData.setAxisYLeft(showAxisXY[1]);
 
-
-        //----------------------- 视图 ------------------------------
         //把这个设置好的数据放到view里面
         myLineChartView.setLineChartData(curLineData);
 
-        Log.i(TAG, "drawChart 调参师");
-
-        //x轴-获取后端的节点数目
-        int numOfRP = WebConnect.getNumOfRealPoints();
-        int numOfFP = WebConnect.getNumOfForecastPoints();
-
-        //y轴-最大数目
+        //----------------------- 视图 ------------------------------
+        Log.i(TAG, "调参师");
 
         //总体的图表范围
         Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
+
+        //x轴
         maxViewPort.left = 0;
-        maxViewPort.bottom = 0;
+        //获取后端的节点数目
+        int numOfRP = WebConnect.getNumOfRealPoints();
+        int numOfFP = WebConnect.getNumOfForecastPoints();
         //x轴最大坐标值
-        int rightMargin = 4;//右边距，留出一点白用来滑动
-        if (isForecast) {
-            //如果在预测
-            Log.i(TAG, "setChartShow 函数：【预测】设置当前范围");
-            //真实120预测15
-            maxViewPort.right = numOfRP + numOfFP + rightMargin;
-        } else {
-            Log.i(TAG, "setChartShow 函数：【真实】设置当前范围");
-            maxViewPort.right = numOfRP + rightMargin;
-        }
-        //y轴最大坐标值
+        maxViewPort.right = numOfRP + rightMargin + (isForecast ? numOfFP : 0);
+
+        //y轴
+        maxViewPort.bottom = 0;
+        //y最大坐标值
         maxViewPort.top = MaxY;
+
         myLineChartView.setMaximumViewport(maxViewPort);
+
 
         //显示的小界面，可以滑动
         Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
+
+        //y轴
         halfViewport.top = MaxY;
         halfViewport.bottom = 0;
+        //x轴
         //先显示后100天
-        halfViewport.left = numOfRP - 100;
+        halfViewport.left = numOfRP - showXRange;
         halfViewport.right = numOfRP;
         myLineChartView.setCurrentViewport(halfViewport);
     }
@@ -387,6 +431,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @author xjy
      */
+    @SuppressLint("ClickableViewAccessibility")
     public void setListener() {
         //下拉布局listener
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -413,8 +458,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 Log.i(TAG, "Button: submit button clicked");
                 //设置控制或群体免疫
-                WebConnect.setHasControl(modelTypeSpinner.getSelectedItemPosition() == 0 ? true : false);
-                Log.i(TAG, "Button: hasControl:" + (modelTypeSpinner.getSelectedItemPosition() == 0 ? true : false));
+                WebConnect.setHasControl(modelTypeSpinner.getSelectedItemPosition() == 0);
+                Log.i(TAG, "Button: hasControl:" + (modelTypeSpinner.getSelectedItemPosition() == 0));
                 //设置控制等级
                 WebConnect.setControlGrade(controlLevelSpinner.getSelectedItemPosition() + 1);
                 Log.i(TAG, "Button: ControlLevel:" + (controlLevelSpinner.getSelectedItemPosition() + 1));
@@ -535,13 +580,79 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
         });
+        //lineChart设置listener
+        myLineChartView.setOnTouchListener(new View.OnTouchListener() {
+            /**
+             * Called when a touch event is dispatched to a view. This allows listeners to
+             * get a chance to respond before the target view.
+             *
+             * @param v     The view the touch event has been dispatched to.
+             * @param event The MotionEvent object containing full information about
+             *              the event.
+             * @return True if the listener has consumed the event, false otherwise.
+             */
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    LineChartOnValueSelectListener lineChartOnValueSelectListener = new LineChartOnValueSelectListener() {
+                        @Override
+                        public void onValueSelected(int i, int i1, PointValue pointValue) {
+                            int x = (int) pointValue.getX();
+                            int y = (int) pointValue.getY();
+                            Log.i(TAG, "touch线上坐标为" + x + "," + y);
+                            clickX = x;
+                            clickY = y;
 
+                            //画画
+                            draw();
+
+                            //调参师傅
+                            int numOfRP = WebConnect.getNumOfRealPoints();
+                            int numOfFP = WebConnect.getNumOfForecastPoints();
+                            //更新预测状态，这个值是表示显示的线是不是真的预测线
+                            int numOfRealLines = lineViewModel.getNumOfRealLines();
+                            boolean isForecast = (curLineIndex >= numOfRealLines);//如果索引大于“真实线”数目，就表示是在预测
+
+                            //显示的总点数,按照是否预测数字不同
+                            int numOfShowPoint = numOfRP + rightMargin + (isForecast ? numOfFP : 0);
+
+                            //显示的小界面，可以滑动
+                            Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
+                            halfViewport.top = MaxY;
+                            halfViewport.bottom = 0;
+                            //先显示后100天
+                            if (x < 50) {
+                                //如果x是10,左0右100
+                                halfViewport.left = 0;
+                                halfViewport.right = showXRange;
+                            } else if (x + 50 < numOfShowPoint) {
+                                //如果x是60,左10右110
+                                halfViewport.left = x - showXRange / 2;
+                                halfViewport.right = x + showXRange / 2;
+                            } else {
+                                //如果一共200个点,x是160,左100,右200
+                                halfViewport.left = numOfShowPoint - showXRange;
+                                halfViewport.right = numOfShowPoint;
+                            }
+                            myLineChartView.setCurrentViewport(halfViewport);
+                        }
+
+                        @Override
+                        public void onValueDeselected() {
+                        }
+                    };
+                    myLineChartView.setOnValueTouchListener(lineChartOnValueSelectListener);
+                    Log.i(TAG, "touch全局坐标为" + event.getAxisValue(0, 0) + "," + event.getAxisValue(1, 0));
+                }
+                return false;
+            }
+        });
     }
 
     /**
      * 清空可编辑状态的输入框组件内容
      *
-     * @author: xjy
+     * @author xjy
      */
     public void clearFocusableInputBoxes() {
         controlStartDateDayInput.setText("");
