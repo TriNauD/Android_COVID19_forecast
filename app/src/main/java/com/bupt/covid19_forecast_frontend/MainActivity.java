@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //成功之后，最后一次再刷新一下图表
             drawChart();
 
+            dialog.hide();
             // 执行完毕后，则更新UI
             progressBar.setVisibility(View.INVISIBLE);
             //根据isGetSuccess结果是否成功 选择提示数据获取失败/成功
