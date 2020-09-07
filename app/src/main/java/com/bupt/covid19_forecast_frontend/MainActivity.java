@@ -80,10 +80,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //折线视图
     private LineChartView myLineChartView;
-    //用来做手指竖线的数据
-    private List<PointValue> mPointValues2 = new ArrayList<PointValue>();
-    int lastX;
-    int lastY;
 
     //折线的数据类
     private LineViewModel lineViewModel;
@@ -509,37 +505,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
              */
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Chart chart = myLineChartView;
-                        LineChartOnValueSelectListener lineChartOnValueSelectListener = new LineChartOnValueSelectListener() {
-                            @Override
-                            public void onValueSelected(int i, int i1, PointValue pointValue) {
-                                Toast.makeText(MainActivity.this, "坐标为" + lastY + "," + lastX, Toast.LENGTH_SHORT).show();
-                                int x = (int) pointValue.getX();
-                                int y = (int) pointValue.getY();
-                                String s = pointValue.toString();
-                                mPointValues2.add(new PointValue(x, y));
-                                mPointValues2.add(new PointValue(x, 0));
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    LineChartOnValueSelectListener lineChartOnValueSelectListener = new LineChartOnValueSelectListener() {
+                        @Override
+                        public void onValueSelected(int i, int i1, PointValue pointValue) {
+                            int x = (int) pointValue.getX();
+                            int y = (int) pointValue.getY();
+                            Log.i(TAG, "touch线上坐标为" + x + "," + y);
+                        }
 
-                            }
-
-                            @Override
-                            public void onValueDeselected() {
-                            }
-                        };
-                        myLineChartView.setOnValueTouchListener(lineChartOnValueSelectListener);
-
-
-                        Toast.makeText(MainActivity.this, "坐标为" + lastY + "," + lastX, Toast.LENGTH_SHORT).show();
-
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        mPointValues2.clear();
-
-
+                        @Override
+                        public void onValueDeselected() {
+                        }
+                    };
+                    myLineChartView.setOnValueTouchListener(lineChartOnValueSelectListener);
+                    Log.i(TAG, "touch全局坐标为" + event.getAxisValue(0, 0) + "," + event.getAxisValue(1, 0));
                 }
                 return false;
             }
