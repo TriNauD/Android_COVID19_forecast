@@ -637,10 +637,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (currentRegionName.equals("中国")) {
                     //如果是中国 显示省份spinner
                     changeProvinceSpinner.setVisibility(View.VISIBLE);
+                    //点击中国的时候会把省份重置为全国
+                    changeProvinceSpinner.setSelection(0);
+                    //全国的按钮设置为第一次点,也就是不要重复获取数据
+                    isFirstChooseProvince = true;
                 } else {
                     //如果是别国 隐藏省份spinner
                     changeProvinceSpinner.setVisibility(View.INVISIBLE);
-                    changeProvinceSpinner.setSelection(0);
                 }
                 break;
             }
