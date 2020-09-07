@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Switch forecastSwitch;
     private Button submitButton;
     private Button resetButton;
+    private ToggleButton homeOrAbroadToggleButton;
     private EditText controlDurationInput;
     private EditText controlStartDateMonthInput;
     private EditText controlStartDateDayInput;
@@ -85,12 +87,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
-    //省份下拉框是不是第一次调用
-    private boolean isFirstChooseProvince = true;
 
-    //画图调参用
-    //当前显示的线是几号
-    private int curLineIndex = 0;
+    //国家下拉框是不是第一次调用
+    private boolean isFirstChooseNation = true;
+    
     //最大y轴
     private int MaxY = 2200000;
     //右边距，留出一点白用来滑动
@@ -115,10 +115,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         protected void onPreExecute() {
             Log.i(TAG, "Loading... 当前地区：" + currentRegionName);
 
-            //先设置为没有开始获取
-            WebConnect.isGetFinished = false;
+            //先设置为没有开始获取&没有获取成功
+            WebConnect.setIsGetFinished(false);
+            WebConnect.setIsGetSuccess(false);
             progressBar.setVisibility(View.VISIBLE);
-            Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished);
+            Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished());
         }
 
         // 方法2：doInBackground（）
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
 
                 //如果没有得到数据，就一直等待，并提示
-                while (!WebConnect.isGetFinished) {
+                while (!WebConnect.isGetFinished()) {
                     Thread.sleep(1);
                 }
 
@@ -166,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // 执行完毕后，则更新UI
             progressBar.setVisibility(View.INVISIBLE);
             //根据isGetSuccess结果是否成功 选择提示数据获取失败/成功
-            toast.setText(WebConnect.isGetSuccess ? (R.string.alert_msg_get_data_success) : (R.string.alert_msg_get_data_failure));
+            toast.setText(WebConnect.isGetSuccess() ? (R.string.alert_msg_get_data_success) : (R.string.alert_msg_get_data_failure));
             toast.setDuration(Toast.LENGTH_SHORT);
             toast.show();
             Log.i(TAG, "Loading " + currentRegionName + " 结束");
@@ -388,6 +389,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         submitButton = findViewById(R.id.submit_button);
         resetButton = findViewById(R.id.reset_button);
 
+        //toggle button
+        homeOrAbroadToggleButton = findViewById(R.id.home_or_abroad_toggle_btn);
+
         //edit text
         controlDurationInput = findViewById(R.id.control_duration_input);
         controlStartDateMonthInput = findViewById(R.id.control_start_date_month_input);
@@ -494,6 +498,49 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 clearFocusableInputBoxes();
                 Log.i(TAG, "Button: reset button clicked");
+            }
+        });
+        homeOrAbroadToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //选中 状态为海外
+                if (isChecked) {
+                    //UI
+                    changeNationSpinner.setVisibility(View.VISIBLE);
+                    changeProvinceSpinner.setVisibility(View.INVISIBLE);
+                    //isProvince设置为false 海外
+                    WebConnect.setIsProvince(false);
+                    //设置当前地区为国家spinner的选中项
+                    currentRegionName = changeNationSpinner.getSelectedItem().toString();
+                    //获取世界
+                    getDataTask = new GetDataTask();
+                    Log.i(TAG, "onItemSelected点击切换国家，Web去获取世界: " + currentRegionName);
+                    getDataTask.execute("World");
+                }
+                //非选中 为国内
+                else {
+                    //UI
+                    changeNationSpinner.setVisibility(View.INVISIBLE);
+                    changeProvinceSpinner.setVisibility(View.VISIBLE);
+                    //设置当前地区为省份spinner的选中项
+                    currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
+                    getDataTask = new GetDataTask();
+                    if (currentRegionName.equals("全国")) {
+                        //如果是"全国" 则改成"中国"去世界找
+                        currentRegionName = "中国";
+                        Log.i(TAG, "点击切换省份为全国，Web去获取中国: " + currentRegionName);
+                        WebConnect.setIsProvince(false);
+                        getDataTask.execute("World");
+
+                    } else {
+                        //如果不是"全国" 则正常获取省份
+                        Log.i(TAG, "点击切换省份，Web去获取省份: " + currentRegionName);
+                        WebConnect.setIsProvince(true);
+                        getDataTask.execute("Province");
+                    }
+
+                }
             }
         });
         //input设置listener
@@ -743,33 +790,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 //设置toolbar标题
                 toolbarTitle.setText(getResources().getString(R.string.national_title));
-                //判断省份显示隐藏
-                if (currentRegionName.equals("中国")) {
-                    //如果是中国 显示省份spinner
-                    changeProvinceSpinner.setVisibility(View.VISIBLE);
-                    //点击中国的时候会把省份重置为全国
-                    changeProvinceSpinner.setSelection(0);
-                    //全国的按钮设置为第一次点,也就是不要重复获取数据
-                    isFirstChooseProvince = true;
-                } else {
-                    //如果是别国 隐藏省份spinner
-                    changeProvinceSpinner.setVisibility(View.INVISIBLE);
-                }
+
                 break;
             }
             //选择省spinner
             case R.id.change_province_spinner: {
                 //从spinner选项得到当前选择的省
                 currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
-                Log.i(TAG, "onItemSelected: Province Spinner  : " + currentRegionName);
-
-                //设置国内外标志位
-                WebConnect.setIsProvince(true);//是省份
-
-                //“全国”->“中国”
+                //如果是"全国" isProvince设为false 之后按世界找
                 if (currentRegionName.equals("全国")) {
-                    //无论怎样、把“全国”改为中国
-                    currentRegionName = "中国";
+                    WebConnect.setIsProvince(false);
+                    Log.i(TAG, "onItemSelected: Province Spinner  : 选了全国 " + currentRegionName);
+
+                } else {
+                    WebConnect.setIsProvince(true);//是省份
+                    Log.i(TAG, "onItemSelected: Province Spinner  : " + currentRegionName);
                 }
                 break;
             }
@@ -778,36 +813,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //网络获取
         if (parentID == R.id.change_nation_spinner) {
+            //如果是初次选择国家 就不做什么 更改flag之后直接return离开
+            if (isFirstChooseNation) {
+                isFirstChooseNation = false;
+                return;
+            }
             //获取世界
             getDataTask = new GetDataTask();
             Log.i(TAG, "onItemSelected点击切换国家，Web去获取世界: " + currentRegionName);
             getDataTask.execute("World");
         } else if (parentID == R.id.change_province_spinner) {
-            if (currentRegionName.equals("中国")) {
-                Log.i(TAG, "onItemSelected：点击切换“全国”: " + currentRegionName);
-
-                //如果是第一次调用省份，就不用重复获取中国
-                //如果已经调用过，就可以再次获取数据了
-                if (isFirstChooseProvince) {
-                    Log.i(TAG, "onItemSelected：不用重复获取中国了: " + currentRegionName);
-                } else {
-                    Log.i(TAG, "onItemSelected：还没有正确数据，所以要获取中国: " + currentRegionName);
-                    //地区状态改为世界
-                    WebConnect.setIsProvince(false);
-                    //去获取中国啦
-                    getDataTask = new GetDataTask();
-                    getDataTask.execute("World");
-                }
-                //调用过之后，就设置为“不是第一次调用了”
-                isFirstChooseProvince = false;
+            //获取省份
+            getDataTask = new GetDataTask();
+            Log.i(TAG, "点击切换省份，Web去获取省份: " + currentRegionName);
+            //如果是"全国" 就改名"中国" 从世界获取 否则就正常获取省份
+            if (currentRegionName.equals("全国")) {
+                currentRegionName = "中国";
+                Log.i(TAG, "点击切换省份，全国->中国" + currentRegionName);
+                getDataTask.execute("World");
             } else {
-                //获取省份
-                getDataTask = new GetDataTask();
-                Log.i(TAG, "点击切换省份，Web去获取省份: " + currentRegionName);
                 getDataTask.execute("Province");
             }
         }
-
 
     }
 
