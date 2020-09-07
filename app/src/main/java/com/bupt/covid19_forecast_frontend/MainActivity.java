@@ -84,8 +84,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int curLineIndex = 0;
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
-    //省份下拉框是不是第一次调用
-    private boolean isFirstChooseProvince = true;
     //国家下拉框是不是第一次调用
     private boolean isFirstChooseNation = true;
     //最大y轴
