@@ -90,7 +90,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //国家下拉框是不是第一次调用
     private boolean isFirstChooseNation = true;
-    
+
+    //画图调参用
+    //当前显示的线是几号
+    private int curLineIndex = 0;
     //最大y轴
     private int MaxY = 2200000;
     //右边距，留出一点白用来滑动
