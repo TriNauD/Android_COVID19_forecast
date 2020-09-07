@@ -625,7 +625,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 //如果x是10,左0右100
                                 halfViewport.left = 0;
                                 halfViewport.right = showXRange;
-                            } else if (x + 50 + rightMargin < numOfShowPoint) {
+                            } else if (x + 50 < numOfShowPoint) {
                                 //如果x是60,左10右110
                                 halfViewport.left = x - showXRange / 2;
                                 halfViewport.right = x + showXRange / 2;
