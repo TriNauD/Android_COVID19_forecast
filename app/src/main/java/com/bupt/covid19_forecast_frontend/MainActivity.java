@@ -534,6 +534,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             clickX = x;
                             clickY = y;
                             draw();
+
+
+                            int numOfRealPoint = WebConnect.getNumOfRealPoints();
+                            //显示的小界面，可以滑动
+                            Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
+                            halfViewport.top = MaxY;
+                            halfViewport.bottom = 0;
+                            //先显示后100天
+                            if (x < 50) {
+                                //如果x是10,左0右100
+                                halfViewport.left = 0;
+                                halfViewport.right = 100;
+                            } else if (x + 50 < numOfRealPoint) {
+                                //如果x是60,左10右110
+                                halfViewport.left = x - 50;
+                                halfViewport.right = x + 50;
+                            } else {
+                                //如果一共200个点,x是160,左100,右200
+                                halfViewport.left = numOfRealPoint - 100;
+                                halfViewport.right = numOfRealPoint + 4;
+                            }
+                            myLineChartView.setCurrentViewport(halfViewport);
                         }
 
                         @Override
