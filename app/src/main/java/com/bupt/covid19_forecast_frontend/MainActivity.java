@@ -102,8 +102,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         protected void onPreExecute() {
             Log.i(TAG, "Loading... 当前地区：" + currentRegionName);
 
-            //先设置为没有开始获取
+            //先设置为没有开始获取&没有获取成功
             WebConnect.isGetFinished = false;
+            WebConnect.isGetSuccess = false;
             progressBar.setVisibility(View.VISIBLE);
             Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished);
         }
