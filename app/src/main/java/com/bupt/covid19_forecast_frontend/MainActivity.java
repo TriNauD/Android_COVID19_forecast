@@ -581,8 +581,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlLevelSpinner.setVisibility(View.INVISIBLE);
                     controlLevelLabel.setVisibility(View.INVISIBLE);
                 }
-                //画图
-//                drawChart();
                 break;
             }
             //第3个spinner 控制等级
@@ -622,7 +620,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlDurationInput.setTextColor(Color.BLACK);
 
                 }
-//                drawChart();
                 break;
             }
             //选择国家spinner
@@ -645,8 +642,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     changeProvinceSpinner.setVisibility(View.INVISIBLE);
                     changeProvinceSpinner.setSelection(0);
                 }
-
-//                drawChart();
                 break;
             }
             //选择省spinner
@@ -663,8 +658,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     //无论怎样、把“全国”改为中国
                     currentRegionName = "中国";
                 }
-
-//                drawChart();
                 break;
             }
 
@@ -743,7 +736,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             buttonLine.setVisibility(View.INVISIBLE);
         }
         //无论怎样，点击了预测开关就刷新一下线图
-        drawChart();
+        //只画画就可以,不用重新生成线了
+        draw();
     }
 
     /**
