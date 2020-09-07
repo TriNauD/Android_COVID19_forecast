@@ -78,6 +78,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //获取数据线程
     private GetDataTask getDataTask;
+    //获取数据的遮罩的样式设置
+    LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+            .setMessage("加载中...")
+            .setCancelable(true)
+            .setCancelOutside(true);
+    //遮罩
+    LoadingDailog dialog;
+
     //当前国家
     private String currentRegionName;
 
@@ -106,11 +114,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     int clickX, clickY;
 
     /*————————————获取数据相关————————————*/
-    LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
-            .setMessage("加载中...")
-            .setCancelable(true)
-            .setCancelOutside(true);
-    LoadingDailog dialog;
+
     /**
      * 获取数据线程类
      * 异步运行获取数据 获取结束后反映在ui组件上（加载中图标消失）
@@ -130,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             progressBar.setVisibility(View.VISIBLE);
             Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished());
 
-
+            //创建一个遮罩
             dialog = loadBuilder.create();
             dialog.show();
         }
@@ -176,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         protected void onPostExecute(String result) {
             //成功之后，最后一次再刷新一下图表
             drawChart();
-
+            //遮罩消失
             dialog.hide();
             // 执行完毕后，则更新UI
             progressBar.setVisibility(View.INVISIBLE);
