@@ -70,8 +70,8 @@ public class WebConnect {
     private static Integer[] oneDayFourNum = new Integer[4];
 
     //数据是否获取完毕 用于通知前端 已加载
-    public static boolean isGetFinished = false;
-    public static boolean isGetSuccess = false;
+    private static boolean isGetFinished = false;
+    private static boolean isGetSuccess = false;
 
     /**
      * 从后端获取省份疫情数据
@@ -188,13 +188,16 @@ public class WebConnect {
                         xRealLabel[i] = xDateString1;
                     }
 
+                    //真正的获取成功
+                    isGetSuccess = true;
+                    Log.i(TAG, "isGetSuccess省份成功" + isGetSuccess);
+
                 }
 
                 //已经获取完毕
                 isGetFinished = true;
-                isGetSuccess = true;
+
                 Log.i(TAG, "isGetFinished省份成功" + isGetFinished);
-                Log.i(TAG, "isGetSuccess省份成功" + isGetSuccess);
             }
 
             @Override
@@ -326,12 +329,15 @@ public class WebConnect {
                         xRealLabel[i] = xDateString1;
                     }
 
+                    //真正的获取成功
+                    isGetSuccess = true;
+                    Log.i(TAG, "isGetSuccess世界成功" + isGetSuccess);
+
                 }
                 //已经获取完毕
                 isGetFinished = true;
-                isGetSuccess = true;
+
                 Log.i(TAG, "isGetFinished世界成功" + isGetFinished);
-                Log.i(TAG, "isGetSuccess世界成功" + isGetSuccess);
             }
 
             @Override
@@ -382,12 +388,14 @@ public class WebConnect {
                     //预测线的节点数量要根据传入数量
                     numOfForecastPoints = predict.size();
 
+                    //真正的获取数据成功
+                    isGetSuccess = true;
+                    Log.i(TAG, "isGetSuccess预测成功" + isGetSuccess);
 
                 }
                 //已经获取完毕
                 isGetFinished = true;
                 Log.i(TAG, "isGetFinished预测成功" + isGetFinished);
-
             }
 
             @Override
@@ -396,7 +404,9 @@ public class WebConnect {
 
                 //已经获取完毕
                 isGetFinished = true;
+                isGetSuccess = false;
                 Log.i(TAG, "isGetFinished预测失败" + isGetFinished);
+                Log.i(TAG, "isGetSuccess预测失败" + isGetSuccess);
 
             }
         });
@@ -627,5 +637,21 @@ public class WebConnect {
             maxY = (int) (maxY + maxY * 0.1);
         }
         return maxY;
+    }
+
+    public static boolean isGetFinished() {
+        return isGetFinished;
+    }
+
+    public static void setIsGetFinished(boolean isGetFinished) {
+        WebConnect.isGetFinished = isGetFinished;
+    }
+
+    public static boolean isGetSuccess() {
+        return isGetSuccess;
+    }
+
+    public static void setIsGetSuccess(boolean isGetSuccess) {
+        WebConnect.isGetSuccess = isGetSuccess;
     }
 }
