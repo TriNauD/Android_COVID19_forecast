@@ -582,7 +582,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlLevelLabel.setVisibility(View.INVISIBLE);
                 }
                 //画图
-                drawChart();
+//                drawChart();
                 break;
             }
             //第3个spinner 控制等级
@@ -622,7 +622,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlDurationInput.setTextColor(Color.BLACK);
 
                 }
-                drawChart();
+//                drawChart();
                 break;
             }
             //选择国家spinner
@@ -646,7 +646,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     changeProvinceSpinner.setSelection(0);
                 }
 
-                drawChart();
+//                drawChart();
                 break;
             }
             //选择省spinner
@@ -664,7 +664,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     currentRegionName = "中国";
                 }
 
-                drawChart();
+//                drawChart();
                 break;
             }
 
