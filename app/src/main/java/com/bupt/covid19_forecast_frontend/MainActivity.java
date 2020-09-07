@@ -271,10 +271,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         pointValueList.add(pointValue1);
         pointValueList.add(pointValue2);
 
+        //手指点击的竖直线
         Line handLine = new Line();
         handLine.setValues(pointValueList);
 
-        handLine.setColor(Color.BLACK);
+        //颜色 设置为所点的线的颜色
+        if (isForecast) {
+            //在预测
+            if (clickX > WebConnect.getNumOfRealPoints()) {
+                //后面的蓝色
+                handLine.setColor(showLines.get(0).getColor());
+            } else {
+                //前面的红色
+                handLine.setColor(showLines.get(1).getColor());
+            }
+        } else {
+            //没在预测,用前面的颜色
+            handLine.setColor(showLines.get(0).getColor());
+        }
+
+        handLine.setPointRadius(3);//点的大小
+        handLine.setHasLabels(true);//设置标签常显示
 
         showLines.add(handLine);
 
@@ -314,15 +331,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         maxViewPort.bottom = 0;
         //x轴最大坐标值
         int rightMargin = 4;//右边距，留出一点白用来滑动
-        if (isForecast) {
-            //如果在预测
-            Log.i(TAG, "setChartShow 函数：【预测】设置当前范围");
-            //真实120预测15
-            maxViewPort.right = numOfRP + numOfFP + rightMargin;
-        } else {
-            Log.i(TAG, "setChartShow 函数：【真实】设置当前范围");
-            maxViewPort.right = numOfRP + rightMargin;
-        }
+
+        maxViewPort.right = numOfRP + rightMargin + (isForecast ? numOfFP : 0);
+
         //y轴最大坐标值
         maxViewPort.top = MaxY;
         myLineChartView.setMaximumViewport(maxViewPort);
@@ -536,7 +547,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             draw();
 
 
-                            int numOfRealPoint = WebConnect.getNumOfRealPoints();
+                            int numOfRP = WebConnect.getNumOfRealPoints();
+                            int numOfFP = WebConnect.getNumOfForecastPoints();
+                            //更新预测状态，这个值是表示显示的线是不是真的预测线
+                            int numOfRealLines = lineViewModel.getNumOfRealLines();
+                            boolean isForecast = (curLineIndex >= numOfRealLines);//如果索引大于“真实线”数目，就表示是在预测
+
+                            int numOfShowPoint = isForecast ? numOfRP + numOfFP : numOfRP;
+
                             //显示的小界面，可以滑动
                             Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
                             halfViewport.top = MaxY;
@@ -546,14 +564,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 //如果x是10,左0右100
                                 halfViewport.left = 0;
                                 halfViewport.right = 100;
-                            } else if (x + 50 < numOfRealPoint) {
+                            } else if (x + 50 < numOfShowPoint) {
                                 //如果x是60,左10右110
                                 halfViewport.left = x - 50;
                                 halfViewport.right = x + 50;
                             } else {
                                 //如果一共200个点,x是160,左100,右200
-                                halfViewport.left = numOfRealPoint - 100;
-                                halfViewport.right = numOfRealPoint + 4;
+                                halfViewport.left = numOfShowPoint - 100;
+                                halfViewport.right = numOfShowPoint + 4;
                             }
                             myLineChartView.setCurrentViewport(halfViewport);
                         }
