@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.android.tu.loadingdialog.LoadingDailog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +78,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //获取数据线程
     private GetDataTask getDataTask;
+    //获取数据的遮罩的样式设置
+    LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+            .setMessage("加载中...")
+            .setCancelable(true)
+            .setCancelOutside(true);
+    //遮罩
+    LoadingDailog dialog;
+
     //当前国家
     private String currentRegionName;
 
@@ -123,6 +133,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             WebConnect.setIsGetSuccess(false);
             progressBar.setVisibility(View.VISIBLE);
             Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished());
+
+            //创建一个遮罩
+            dialog = loadBuilder.create();
+            dialog.show();
         }
 
         // 方法2：doInBackground（）
@@ -166,7 +180,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         protected void onPostExecute(String result) {
             //成功之后，最后一次再刷新一下图表
             drawChart();
-
+            //遮罩消失
+            dialog.hide();
             // 执行完毕后，则更新UI
             progressBar.setVisibility(View.INVISIBLE);
             //根据isGetSuccess结果是否成功 选择提示数据获取失败/成功
