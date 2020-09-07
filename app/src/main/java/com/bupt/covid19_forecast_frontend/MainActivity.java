@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Switch forecastSwitch;
     private Button submitButton;
     private Button resetButton;
+    private ToggleButton homeOrAbroadToggleButton;
     private EditText controlDurationInput;
     private EditText controlStartDateMonthInput;
     private EditText controlStartDateDayInput;
@@ -345,6 +347,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //button
         submitButton = findViewById(R.id.submit_button);
         resetButton = findViewById(R.id.reset_button);
+
+        //toggle button
+        homeOrAbroadToggleButton = findViewById(R.id.home_or_abroad_toggle_btn);
 
         //edit text
         controlDurationInput = findViewById(R.id.control_duration_input);

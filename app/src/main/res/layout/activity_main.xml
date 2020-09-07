@@ -371,7 +371,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:visibility="visible"
+                android:visibility="invisible"
                 android:entries="@array/nation_name"></Spinner>
 
             <Spinner
