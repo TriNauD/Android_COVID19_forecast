@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">疫情预测</string>
     <string name="national_title">疫情趋势</string>
+    <string name="ui_text_home">国内</string>
+    <string name="ui_text_abroad">海外</string>
     <string name="line_type_label">曲线类型</string>
     <string name="forecast_switch_label">预测</string>
     <string name="model_type_label">模型</string>
@@ -32,10 +34,12 @@
         <item>累计治愈</item>
         <item>累计死亡</item>
     </string-array>
+
     <string-array name="model_type_choices">
         <item>控制</item>
         <item>群体免疫</item>
     </string-array>
+
     <string-array name="control_level_choices">
         <item>一级控制</item>
         <item>二级控制</item>
@@ -63,7 +67,6 @@
     </string-array>
 
     <string-array name="province_name">
-        <item>全国</item>
         <item>北京</item>
         <item>上海</item>
         <item>广东</item>

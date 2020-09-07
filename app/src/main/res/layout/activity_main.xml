@@ -367,9 +367,11 @@
 
             <Spinner
                 android:id="@+id/change_nation_spinner"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:visibility="visible"
                 android:entries="@array/nation_name"></Spinner>
 
             <Spinner
@@ -377,9 +379,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true"
                 android:visibility="visible"
                 android:entries="@array/province_name"></Spinner>
+
+            <ToggleButton
+                android:id="@+id/home_or_abroad_toggle_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:showText="true"
+                android:textOff="@string/ui_text_home"
+                android:textOn="@string/ui_text_abroad">
+            </ToggleButton>
 
             <TextView
                 android:id="@+id/toolbar_title"
