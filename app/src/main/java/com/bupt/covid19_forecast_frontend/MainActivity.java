@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.android.tu.loadingdialog.LoadingDailog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,7 +106,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     int clickX, clickY;
 
     /*————————————获取数据相关————————————*/
-
+    LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+            .setMessage("加载中...")
+            .setCancelable(true)
+            .setCancelOutside(true);
+    LoadingDailog dialog;
     /**
      * 获取数据线程类
      * 异步运行获取数据 获取结束后反映在ui组件上（加载中图标消失）
@@ -123,6 +129,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             WebConnect.setIsGetSuccess(false);
             progressBar.setVisibility(View.VISIBLE);
             Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished());
+
+
+            dialog = loadBuilder.create();
+            dialog.show();
         }
 
         // 方法2：doInBackground（）
