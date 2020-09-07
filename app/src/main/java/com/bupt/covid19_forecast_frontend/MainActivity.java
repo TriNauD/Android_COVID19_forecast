@@ -1,5 +1,6 @@
 package com.bupt.covid19_forecast_frontend;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
@@ -7,9 +8,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -26,10 +27,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
+import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.Viewport;
+import lecho.lib.hellocharts.view.Chart;
 import lecho.lib.hellocharts.view.LineChartView;
 import viewModel.WebConnect;
 import viewModel.LineViewModel;
@@ -76,6 +80,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //折线视图
     private LineChartView myLineChartView;
+    //用来做手指竖线的数据
+    private List<PointValue> mPointValues2 = new ArrayList<PointValue>();
+    int lastX;
+    int lastY;
+
     //折线的数据类
     private LineViewModel lineViewModel;
     //当前显示的线是几号
@@ -381,6 +390,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @author xjy
      */
+    @SuppressLint("ClickableViewAccessibility")
     public void setListener() {
         //下拉布局listener
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -407,8 +417,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 Log.i(TAG, "Button: submit button clicked");
                 //设置控制或群体免疫
-                WebConnect.setHasControl(modelTypeSpinner.getSelectedItemPosition() == 0 ? true : false);
-                Log.i(TAG, "Button: hasControl:" + (modelTypeSpinner.getSelectedItemPosition() == 0 ? true : false));
+                WebConnect.setHasControl(modelTypeSpinner.getSelectedItemPosition() == 0);
+                Log.i(TAG, "Button: hasControl:" + (modelTypeSpinner.getSelectedItemPosition() == 0));
                 //设置控制等级
                 WebConnect.setControlGrade(controlLevelSpinner.getSelectedItemPosition() + 1);
                 Log.i(TAG, "Button: ControlLevel:" + (controlLevelSpinner.getSelectedItemPosition() + 1));
@@ -486,13 +496,60 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
         });
+        //lineChart设置listener
+        myLineChartView.setOnTouchListener(new View.OnTouchListener() {
+            /**
+             * Called when a touch event is dispatched to a view. This allows listeners to
+             * get a chance to respond before the target view.
+             *
+             * @param v     The view the touch event has been dispatched to.
+             * @param event The MotionEvent object containing full information about
+             *              the event.
+             * @return True if the listener has consumed the event, false otherwise.
+             */
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        Chart chart = myLineChartView;
+                        LineChartOnValueSelectListener lineChartOnValueSelectListener = new LineChartOnValueSelectListener() {
+                            @Override
+                            public void onValueSelected(int i, int i1, PointValue pointValue) {
+                                Toast.makeText(MainActivity.this, "坐标为" + lastY + "," + lastX, Toast.LENGTH_SHORT).show();
+                                int x = (int) pointValue.getX();
+                                int y = (int) pointValue.getY();
+                                String s = pointValue.toString();
+                                mPointValues2.add(new PointValue(x, y));
+                                mPointValues2.add(new PointValue(x, 0));
 
+                            }
+
+                            @Override
+                            public void onValueDeselected() {
+                            }
+                        };
+                        myLineChartView.setOnValueTouchListener(lineChartOnValueSelectListener);
+
+
+                        Toast.makeText(MainActivity.this, "坐标为" + lastY + "," + lastX, Toast.LENGTH_SHORT).show();
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        mPointValues2.clear();
+
+
+                }
+                return false;
+            }
+        });
     }
 
     /**
      * 清空可编辑状态的输入框组件内容
      *
-     * @author: xjy
+     * @author xjy
      */
     public void clearFocusableInputBoxes() {
         controlStartDateDayInput.setText("");
