@@ -33,7 +33,6 @@ import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.Viewport;
-import lecho.lib.hellocharts.view.Chart;
 import lecho.lib.hellocharts.view.LineChartView;
 import viewModel.WebConnect;
 import viewModel.LineViewModel;
@@ -91,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private boolean isFirstChooseProvince = true;
     //最大y轴
     private int MaxY = 2200000;
+
+    //点击坐标
+    int clickX, clickY;
 
     /*————————————获取数据相关————————————*/
 
@@ -259,6 +261,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (isForecast) {
             showLines.add(allLines.get(0));
         }
+
+        //手指点击的竖直线
+        PointValue pointValue1 = new PointValue();
+        pointValue1.set(clickX, clickY);
+        PointValue pointValue2 = new PointValue();
+        pointValue2.set(clickX, 0);
+        List<PointValue> pointValueList = new ArrayList<>();
+        pointValueList.add(pointValue1);
+        pointValueList.add(pointValue2);
+
+        Line handLine = new Line();
+        handLine.setValues(pointValueList);
+
+        handLine.setColor(Color.BLACK);
+
+        showLines.add(handLine);
+
 
         //------------------------- 轴 -----------------------
         //获取所有轴
@@ -512,6 +531,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             int x = (int) pointValue.getX();
                             int y = (int) pointValue.getY();
                             Log.i(TAG, "touch线上坐标为" + x + "," + y);
+                            clickX = x;
+                            clickY = y;
+                            draw();
                         }
 
                         @Override
