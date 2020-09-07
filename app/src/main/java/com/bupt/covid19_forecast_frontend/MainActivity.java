@@ -103,10 +103,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Log.i(TAG, "Loading... 当前地区：" + currentRegionName);
 
             //先设置为没有开始获取&没有获取成功
-            WebConnect.isGetFinished = false;
-            WebConnect.isGetSuccess = false;
+            WebConnect.setIsGetFinished(false);
+            WebConnect.setIsGetSuccess(false);
             progressBar.setVisibility(View.VISIBLE);
-            Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished);
+            Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished());
         }
 
         // 方法2：doInBackground（）
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
 
                 //如果没有得到数据，就一直等待，并提示
-                while (!WebConnect.isGetFinished) {
+                while (!WebConnect.isGetFinished()) {
                     Thread.sleep(1);
                 }
 
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // 执行完毕后，则更新UI
             progressBar.setVisibility(View.INVISIBLE);
             //根据isGetSuccess结果是否成功 选择提示数据获取失败/成功
-            toast.setText(WebConnect.isGetSuccess ? (R.string.alert_msg_get_data_success) : (R.string.alert_msg_get_data_failure));
+            toast.setText(WebConnect.isGetSuccess() ? (R.string.alert_msg_get_data_success) : (R.string.alert_msg_get_data_failure));
             toast.setDuration(Toast.LENGTH_SHORT);
             toast.show();
             Log.i(TAG, "Loading " + currentRegionName + " 结束");
@@ -436,6 +436,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     //获取预测
                     getDataTask = new GetDataTask();
                     getDataTask.execute("Predict");
+                    Log.i(TAG, "submitButton: su");
 
                 } catch (Exception e) {
                     toast.setText(R.string.alert_msg_input_err);
