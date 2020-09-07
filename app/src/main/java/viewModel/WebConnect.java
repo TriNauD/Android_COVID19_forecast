@@ -188,13 +188,16 @@ public class WebConnect {
                         xRealLabel[i] = xDateString1;
                     }
 
+                    //真正的获取成功
+                    isGetSuccess = true;
+                    Log.i(TAG, "isGetSuccess省份成功" + isGetSuccess);
+
                 }
 
                 //已经获取完毕
                 isGetFinished = true;
-                isGetSuccess = true;
+
                 Log.i(TAG, "isGetFinished省份成功" + isGetFinished);
-                Log.i(TAG, "isGetSuccess省份成功" + isGetSuccess);
             }
 
             @Override
@@ -326,12 +329,15 @@ public class WebConnect {
                         xRealLabel[i] = xDateString1;
                     }
 
+                    //真正的获取成功
+                    isGetSuccess = true;
+                    Log.i(TAG, "isGetSuccess世界成功" + isGetSuccess);
+
                 }
                 //已经获取完毕
                 isGetFinished = true;
-                isGetSuccess = true;
+
                 Log.i(TAG, "isGetFinished世界成功" + isGetFinished);
-                Log.i(TAG, "isGetSuccess世界成功" + isGetSuccess);
             }
 
             @Override
@@ -382,13 +388,14 @@ public class WebConnect {
                     //预测线的节点数量要根据传入数量
                     numOfForecastPoints = predict.size();
 
+                    //真正的获取数据成功
+                    isGetSuccess = true;
+                    Log.i(TAG, "isGetSuccess预测成功" + isGetSuccess);
 
                 }
                 //已经获取完毕
                 isGetFinished = true;
-                isGetSuccess = true;
                 Log.i(TAG, "isGetFinished预测成功" + isGetFinished);
-                Log.i(TAG, "isGetSuccess预测成功" + isGetSuccess);
             }
 
             @Override
