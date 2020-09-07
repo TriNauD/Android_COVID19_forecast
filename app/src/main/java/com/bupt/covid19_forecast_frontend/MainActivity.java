@@ -436,7 +436,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     //获取预测
                     getDataTask = new GetDataTask();
                     getDataTask.execute("Predict");
-                    Log.i(TAG, "submitButton: su");
 
                 } catch (Exception e) {
                     toast.setText(R.string.alert_msg_input_err);
