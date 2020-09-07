@@ -33,8 +33,9 @@ public class ExampleInstrumentedTest {
     public ActivityTestRule<MainActivity> activityRule
             = new ActivityTestRule<>(MainActivity.class);
 
+    //Simulate user's inputting and pressing submit button, then check if the toast msg is showed as intended.
     @Test
-    public void testChangeText_sameActivity() {
+    public void checkToastShowAfterSubmitInput() {
 
         MainActivity activity = activityRule.getActivity();
 
