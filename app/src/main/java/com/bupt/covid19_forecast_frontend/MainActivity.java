@@ -82,15 +82,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //折线的数据类
     private LineViewModel lineViewModel;
-    //当前显示的线是几号
-    private int curLineIndex = 0;
+
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
     //省份下拉框是不是第一次调用
     private boolean isFirstChooseProvince = true;
+
+    //画图调参用
+    //当前显示的线是几号
+    private int curLineIndex = 0;
     //最大y轴
     private int MaxY = 2200000;
-
+    //右边距，留出一点白用来滑动
+    private int rightMargin = 4;
+    //同一个框框显示x轴的范围,100表示一共显示100个点
+    private int showXRange = 100;
     //点击坐标
     int clickX, clickY;
 
@@ -312,38 +318,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //设置Y轴在左边
         curLineData.setAxisYLeft(showAxisXY[1]);
 
-
-        //----------------------- 视图 ------------------------------
         //把这个设置好的数据放到view里面
         myLineChartView.setLineChartData(curLineData);
 
-        Log.i(TAG, "drawChart 调参师");
-
-        //x轴-获取后端的节点数目
-        int numOfRP = WebConnect.getNumOfRealPoints();
-        int numOfFP = WebConnect.getNumOfForecastPoints();
-
-        //y轴-最大数目
+        //----------------------- 视图 ------------------------------
+        Log.i(TAG, "调参师");
 
         //总体的图表范围
         Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
-        maxViewPort.left = 0;
-        maxViewPort.bottom = 0;
-        //x轴最大坐标值
-        int rightMargin = 4;//右边距，留出一点白用来滑动
 
+        //x轴
+        maxViewPort.left = 0;
+        //获取后端的节点数目
+        int numOfRP = WebConnect.getNumOfRealPoints();
+        int numOfFP = WebConnect.getNumOfForecastPoints();
+        //x轴最大坐标值
         maxViewPort.right = numOfRP + rightMargin + (isForecast ? numOfFP : 0);
 
-        //y轴最大坐标值
+        //y轴
+        maxViewPort.bottom = 0;
+        //y最大坐标值
         maxViewPort.top = MaxY;
+
         myLineChartView.setMaximumViewport(maxViewPort);
+
 
         //显示的小界面，可以滑动
         Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
+
+        //y轴
         halfViewport.top = MaxY;
         halfViewport.bottom = 0;
+        //x轴
         //先显示后100天
-        halfViewport.left = numOfRP - 100;
+        halfViewport.left = numOfRP - showXRange;
         halfViewport.right = numOfRP;
         myLineChartView.setCurrentViewport(halfViewport);
     }
@@ -544,16 +552,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             Log.i(TAG, "touch线上坐标为" + x + "," + y);
                             clickX = x;
                             clickY = y;
+
+                            //画画
                             draw();
 
-
+                            //调参师傅
                             int numOfRP = WebConnect.getNumOfRealPoints();
                             int numOfFP = WebConnect.getNumOfForecastPoints();
                             //更新预测状态，这个值是表示显示的线是不是真的预测线
                             int numOfRealLines = lineViewModel.getNumOfRealLines();
                             boolean isForecast = (curLineIndex >= numOfRealLines);//如果索引大于“真实线”数目，就表示是在预测
 
-                            int numOfShowPoint = isForecast ? numOfRP + numOfFP : numOfRP;
+                            //显示的总点数,按照是否预测数字不同
+                            int numOfShowPoint = numOfRP + rightMargin + (isForecast ? numOfFP : 0);
 
                             //显示的小界面，可以滑动
                             Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
@@ -563,15 +574,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             if (x < 50) {
                                 //如果x是10,左0右100
                                 halfViewport.left = 0;
-                                halfViewport.right = 100;
-                            } else if (x + 50 < numOfShowPoint) {
+                                halfViewport.right = showXRange;
+                            } else if (x + 50 + rightMargin < numOfShowPoint) {
                                 //如果x是60,左10右110
-                                halfViewport.left = x - 50;
-                                halfViewport.right = x + 50;
+                                halfViewport.left = x - showXRange / 2;
+                                halfViewport.right = x + showXRange / 2;
                             } else {
                                 //如果一共200个点,x是160,左100,右200
-                                halfViewport.left = numOfShowPoint - 100;
-                                halfViewport.right = numOfShowPoint + 4;
+                                halfViewport.left = numOfShowPoint - showXRange;
+                                halfViewport.right = numOfShowPoint;
                             }
                             myLineChartView.setCurrentViewport(halfViewport);
                         }
