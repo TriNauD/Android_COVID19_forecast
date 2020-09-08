@@ -614,7 +614,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
 
-                            //todo 动画移动？？？
+                            //动画移动 跟随点击动画到指定位置
                             myLineChartView.moveToWithAnimation(clickX, clickY);
 
 
