@@ -54,7 +54,7 @@ public class ButtonTest {
         //测试切换国家
         onView(withId(R.id.change_nation_spinner)).perform(click());
         onData(anything()).atPosition(2).perform(click());
-        onView(withId(R.id.change_nation_spinner)).check(matches(withSpinnerText(containsString("英国"))));
+        onView(withId(R.id.change_nation_spinner)).check(matches(withSpinnerText(containsString("塞尔维亚"))));
     }
 
     @Test
