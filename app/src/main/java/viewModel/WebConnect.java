@@ -44,7 +44,7 @@ public class WebConnect {
     //控制开始时间
     private static String startControlDate = "2020-01-01";
     //控制增长阶段的时间
-    private static int raiseLastTime = 7;
+    private static int controlDuration = 7;
     //控制强度
     private static int controlGrade = 1;
 
@@ -370,7 +370,7 @@ public class WebConnect {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         API api = retrofit.create(API.class);
-        Call<List<Integer>> task = api.getPredict(name, isProvince, hasControl, startControlDate, raiseLastTime, controlGrade);
+        Call<List<Integer>> task = api.getPredict(name, isProvince, hasControl, startControlDate, controlDuration, controlGrade);
         task.enqueue(new Callback<List<Integer>>() {
             @Override
             public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
@@ -592,12 +592,12 @@ public class WebConnect {
         WebConnect.startControlDate = startControlDate;
     }
 
-    public static int getRaiseLastTime() {
-        return raiseLastTime;
+    public static int getControlDuration() {
+        return controlDuration;
     }
 
-    public static void setRaiseLastTime(int raiseLastTime) {
-        WebConnect.raiseLastTime = raiseLastTime;
+    public static void setControlDuration(int controlDuration) {
+        WebConnect.controlDuration = controlDuration;
     }
 
     public static int getControlGrade() {
