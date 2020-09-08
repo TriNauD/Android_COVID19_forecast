@@ -17,7 +17,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -25,7 +25,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.android.tu.loadingdialog.LoadingDailog;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
@@ -68,14 +71,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView peopleNumBarCol4;
     private RelativeLayout paramLine1;
     private RelativeLayout paramLine2;
-    private RelativeLayout paramLine3;
+    private LinearLayout userParamLines;
+    private RelativeLayout userParamLine1;
     private RelativeLayout buttonLine;
-    private ProgressBar progressBar;
     //提示消息
     Toast toast;
 
     //获取数据线程
     private GetDataTask getDataTask;
+    //获取数据的遮罩的样式设置
+    LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+            .setMessage("加载中...")
+            .setCancelable(true)
+            .setCancelOutside(true);
+    //遮罩
+    LoadingDailog dialog;
+
     //当前国家
     private String currentRegionName;
 
@@ -102,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int showXRange = 100;
     //点击坐标
     int clickX, clickY;
+    //点击的日期标签
+    String clickDateString = "";
 
     /*————————————获取数据相关————————————*/
 
@@ -121,8 +134,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //先设置为没有开始获取&没有获取成功
             WebConnect.setIsGetFinished(false);
             WebConnect.setIsGetSuccess(false);
-            progressBar.setVisibility(View.VISIBLE);
             Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished());
+
+            //创建一个遮罩
+            dialog = loadBuilder.create();
+            dialog.show();
         }
 
         // 方法2：doInBackground（）
@@ -140,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         break;
                     case "Province":
                         WebConnect.getProvince(currentRegionName);
+                        break;
                 }
 
                 //如果没有得到数据，就一直等待，并提示
@@ -166,9 +183,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         protected void onPostExecute(String result) {
             //成功之后，最后一次再刷新一下图表
             drawChart();
-
-            // 执行完毕后，则更新UI
-            progressBar.setVisibility(View.INVISIBLE);
+            //遮罩消失
+            dialog.hide();
             //根据isGetSuccess结果是否成功 选择提示数据获取失败/成功
             toast.setText(WebConnect.isGetSuccess() ? (R.string.alert_msg_get_data_success) : (R.string.alert_msg_get_data_failure));
             toast.setDuration(Toast.LENGTH_SHORT);
@@ -273,38 +289,57 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         //手指点击的竖直线
+        //点
         PointValue pointValue1 = new PointValue();
         pointValue1.set(clickX, clickY);
         PointValue pointValue2 = new PointValue();
         pointValue2.set(clickX, 0);
+        PointValue pointValue3 = new PointValue();
+        pointValue3.set(clickX, MaxY);
         List<PointValue> pointValueList = new ArrayList<>();
         pointValueList.add(pointValue1);
         pointValueList.add(pointValue2);
-
-        //手指点击的竖直线
+        pointValueList.add(pointValue3);
+        //线
         Line handLine = new Line();
         handLine.setValues(pointValueList);
+        //样式
+        handLine.setHasPoints(false);//不要点
 
-        //颜色 设置为所点的线的颜色
+        //用来显示标签的线
+        //点
+        PointValue pointValue4 = new PointValue();
+        pointValue4.set(clickX, clickY);//只取点到的点
+        pointValue4.setLabel(clickDateString);
+        List<PointValue> pointValueList1 = new ArrayList<>();
+        pointValueList1.add(pointValue4);
+        //线
+        Line labelLine = new Line();
+        labelLine.setValues(pointValueList1);
+        //样式
+        labelLine.setHasLabels(true);//常驻标签
+        labelLine.setPointRadius(3);//点的大小
+
+        //颜色
+        handLine.setColor(Color.WHITE);
+        //设置为所点的线的颜色
         if (isForecast) {
             //在预测
             if (clickX > WebConnect.getNumOfRealPoints()) {
                 //后面的蓝色
-                handLine.setColor(showLines.get(0).getColor());
+                labelLine.setColor(showLines.get(0).getColor());
             } else {
                 //前面的红色
-                handLine.setColor(showLines.get(1).getColor());
+                labelLine.setColor(showLines.get(1).getColor());
             }
         } else {
             //没在预测,用前面的颜色
-            handLine.setColor(showLines.get(0).getColor());
+            labelLine.setColor(showLines.get(0).getColor());
         }
 
-        handLine.setPointRadius(3);//点的大小
-        handLine.setHasLabels(true);//设置标签常显示
-
+        //加入总的线列表
         showLines.add(handLine);
-
+        showLines.add(labelLine);
 
         //------------------------- 轴 -----------------------
         //获取所有轴
@@ -380,11 +415,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         changeNationSpinner = findViewById(R.id.change_nation_spinner);
         changeProvinceSpinner = findViewById(R.id.change_province_spinner);
 
-        //3行参数 + 按钮行
+        //2行参数 + 用户参数行 + 按钮行
         paramLine1 = findViewById(R.id.param_line_1);
         paramLine2 = findViewById(R.id.param_line_2);
-        paramLine3 = findViewById(R.id.param_line_3);
+        userParamLines = findViewById(R.id.user_param_lines);
+        userParamLine1 = findViewById(R.id.user_param_line_1);
         buttonLine = findViewById(R.id.buttonLine);
+
         //switch
         forecastSwitch = findViewById(R.id.forecast_switch);
 
@@ -406,9 +443,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol2 = findViewById(R.id.people_num_bar_col_2_num);
         peopleNumBarCol3 = findViewById(R.id.people_num_bar_col_3_num);
         peopleNumBarCol4 = findViewById(R.id.people_num_bar_col_4_num);
-
-        //progress bar
-        progressBar = findViewById(R.id.progress_bar);
 
         peopleNumBarCol1.setText("现存确诊");
         peopleNumBarCol2.setText("累计确诊");
@@ -463,6 +497,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //设置控制等级
                 WebConnect.setControlGrade(controlLevelSpinner.getSelectedItemPosition() + 1);
                 Log.i(TAG, "Button: ControlLevel:" + (controlLevelSpinner.getSelectedItemPosition() + 1));
+                //设置控制持续时间
+                WebConnect.setControlDuration(Integer.valueOf(controlDurationInput.getText().toString()));
+                Log.i(TAG, "Button: ControlDuration:" + (Integer.valueOf(controlDurationInput.getText().toString())));
                 //设置控制开始日期
                 try {
                     int monthInt = Integer.parseInt(controlStartDateMonthInput.getText().toString());
@@ -473,12 +510,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         String day = (dayInt >= 10) ? (controlStartDateDayInput.getText().toString()) : ("0" + controlStartDateDayInput.getText());
                         String date = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
                         WebConnect.setStartControlDate(date);
-                        toast.setText(R.string.alert_msg_forecasting);
                         Log.i(TAG, "Button: ControlStartDate:" + date);
                     } else {
                         //提示输入错误 并清空输入框
                         toast.setText(R.string.alert_msg_input_err);
                         toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.show();
                         clearFocusableInputBoxes();
                         Log.i(TAG, "Button: Too big number");
                     }
@@ -490,10 +527,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 } catch (Exception e) {
                     toast.setText(R.string.alert_msg_input_err);
                     toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.show();
                     clearFocusableInputBoxes();
                     Log.i(TAG, "Button: Bad input type");
                 }
-                toast.show();
             }
         });
         resetButton.setOnClickListener(new View.OnClickListener() {
@@ -503,49 +540,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.i(TAG, "Button: reset button clicked");
             }
         });
-        homeOrAbroadToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                //选中 状态为海外
-                if (isChecked) {
-                    //UI
-                    changeNationSpinner.setVisibility(View.VISIBLE);
-                    changeProvinceSpinner.setVisibility(View.INVISIBLE);
-                    //isProvince设置为false 海外
-                    WebConnect.setIsProvince(false);
-                    //设置当前地区为国家spinner的选中项
-                    currentRegionName = changeNationSpinner.getSelectedItem().toString();
-                    //获取世界
-                    getDataTask = new GetDataTask();
-                    Log.i(TAG, "onItemSelected点击切换国家，Web去获取世界: " + currentRegionName);
-                    getDataTask.execute("World");
-                }
-                //非选中 为国内
-                else {
-                    //UI
-                    changeNationSpinner.setVisibility(View.INVISIBLE);
-                    changeProvinceSpinner.setVisibility(View.VISIBLE);
-                    //设置当前地区为省份spinner的选中项
-                    currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
-                    getDataTask = new GetDataTask();
-                    if (currentRegionName.equals("全国")) {
-                        //如果是"全国" 则改成"中国"去世界找
-                        currentRegionName = "中国";
-                        Log.i(TAG, "点击切换省份为全国，Web去获取中国: " + currentRegionName);
-                        WebConnect.setIsProvince(false);
-                        getDataTask.execute("World");
-
-                    } else {
-                        //如果不是"全国" 则正常获取省份
-                        Log.i(TAG, "点击切换省份，Web去获取省份: " + currentRegionName);
-                        WebConnect.setIsProvince(true);
-                        getDataTask.execute("Province");
-                    }
-
-                }
-            }
-        });
+        //toggle button设置listener
+        homeOrAbroadToggleButton.setOnCheckedChangeListener(this);
         //input设置listener
         controlDurationInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -597,11 +593,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     LineChartOnValueSelectListener lineChartOnValueSelectListener = new LineChartOnValueSelectListener() {
                         @Override
                         public void onValueSelected(int i, int i1, PointValue pointValue) {
+                            //获取点击坐标
                             int x = (int) pointValue.getX();
                             int y = (int) pointValue.getY();
                             Log.i(TAG, "touch线上坐标为" + x + "," + y);
                             clickX = x;
                             clickY = y;
+
+                            //获取点击的x轴的日期标签
+                            Axis xAxix = lineViewModel.getAxesList().get(curLineIndex)[0];
+                            char[] labelChars = xAxix.getValues().get(clickX).getLabel();
+                            clickDateString = String.valueOf(labelChars);
+                            clickDateString += "\n";
+                            clickDateString += clickY;
+                            Log.i(TAG, "touch x轴坐标标签: " + clickDateString);
 
                             //画画
                             draw();
@@ -660,6 +665,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationInput.setText(controlDurationInput.isFocusable() ? "" : controlDurationInput.getText());
     }
 
+
+    /**
+     * 清空点击显示
+     *
+     * @author lym
+     */
+    public void clearClick() {
+        //清空点击显示
+        clickX = 0;
+        clickY = 0;
+        clickDateString = "";
+        //简单画一下
+        draw();
+    }
+
     /**
      * 下拉菜单，选项控制事件。
      * 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
@@ -674,6 +694,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i(TAG, "onItemSelected 进入函数");
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
 
+        //清空点击显示
+        clearClick();
+
         int parentID = parent.getId();
 
         //判断是哪个spinner
@@ -687,8 +710,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     forecastSwitch.setVisibility(View.INVISIBLE);
                     //同时隐藏参数们
                     paramLine2.setVisibility(View.INVISIBLE);
-                    paramLine3.setVisibility(View.INVISIBLE);
                     buttonLine.setVisibility(View.INVISIBLE);
+                    userParamLines.setVisibility(View.INVISIBLE);
                     //线是选择的pos那条
                     curLineIndex = pos;
                 } else {
@@ -703,15 +726,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         curLineIndex = lineViewModel.getNumOfRealLines();
                         //同时显示参数们
                         paramLine2.setVisibility(View.VISIBLE);
-                        paramLine3.setVisibility(View.VISIBLE);
                         buttonLine.setVisibility(View.VISIBLE);
+                        //用户参数要看modelType是否为控制
+                        userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 0 ? View.VISIBLE : View.INVISIBLE);
                     } else {
                         //如果没在预测就正常0
                         curLineIndex = 0;
                         //同时隐藏参数们
                         paramLine2.setVisibility(View.INVISIBLE);
-                        paramLine3.setVisibility(View.INVISIBLE);
                         buttonLine.setVisibility(View.INVISIBLE);
+                        userParamLines.setVisibility(View.INVISIBLE);
+
                     }
                 }
                 //只需要重新绘制即可
@@ -723,21 +748,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //选了第1个选项：控制
                 if (pos == 0) {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
-                    LineViewModel.setHasControl(true);//控制：是
                     //控制等级spinner应该保持出现
                     controlLevelSpinner.setVisibility(View.VISIBLE);
                     controlLevelLabel.setVisibility(View.VISIBLE);
                     //第三行要看第二行是否出现
                     if (paramLine2.getVisibility() == View.VISIBLE) {
-                        paramLine3.setVisibility(View.VISIBLE);
+                        userParamLines.setVisibility(View.VISIBLE);
                     }
                 }
                 //选了第2个选项：群体免疫
                 else {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
-                    LineViewModel.setHasControl(false);//控制：否
                     //第三行和控制等级spinner应该隐藏
-                    paramLine3.setVisibility(View.INVISIBLE);
+                    userParamLines.setVisibility(View.INVISIBLE);
                     controlLevelSpinner.setVisibility(View.INVISIBLE);
                     controlLevelLabel.setVisibility(View.INVISIBLE);
                 }
@@ -862,25 +885,74 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         Log.i(TAG, "onCheckedChanged 进入函数");
-        isForecastSwitchedOn = isChecked;
-        if (isChecked) {
-            Log.i(TAG, "onCheckedChanged 开关状态：开启，在预测");
-            //因为在我们的线系统中，跟在真实后面的就是预测线了
-            curLineIndex = lineViewModel.getNumOfRealLines();
-            paramLine2.setVisibility(View.VISIBLE);
-            paramLine3.setVisibility(View.VISIBLE);
-            buttonLine.setVisibility(View.VISIBLE);
-        } else {
-            Log.i(TAG, "onCheckedChanged 开关状态：关闭");
-            //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
-            curLineIndex = 0;
-            paramLine2.setVisibility(View.INVISIBLE);
-            paramLine3.setVisibility(View.INVISIBLE);
-            buttonLine.setVisibility(View.INVISIBLE);
+        //清空点击显示
+        clearClick();
+        //判断监听到的是哪个组件被选中
+        switch (buttonView.getId()) {
+            //如果是预测开关按钮switch
+            case R.id.forecast_switch:
+                isForecastSwitchedOn = isChecked;
+                if (isChecked) {
+                    Log.i(TAG, "onCheckedChanged 开关状态：开启，在预测");
+                    //因为在我们的线系统中，跟在真实后面的就是预测线了
+                    curLineIndex = lineViewModel.getNumOfRealLines();
+                    paramLine2.setVisibility(View.VISIBLE);
+                    buttonLine.setVisibility(View.VISIBLE);
+                    //用户参数要看modelType是否为控制
+                    userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 0 ? View.VISIBLE : View.INVISIBLE);
+                } else {
+                    Log.i(TAG, "onCheckedChanged 开关状态：关闭");
+                    //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
+                    curLineIndex = 0;
+                    paramLine2.setVisibility(View.INVISIBLE);
+                    buttonLine.setVisibility(View.INVISIBLE);
+                    userParamLines.setVisibility(View.INVISIBLE);
+                }
+                //无论怎样，点击了预测开关就刷新一下线图
+                //只画画就可以,不用重新生成线了
+                draw();
+                break;
+            //如果是海外/国内切换按钮toggle button
+            case R.id.home_or_abroad_toggle_btn:
+                //选中 状态为海外
+                if (isChecked) {
+                    //UI
+                    changeNationSpinner.setVisibility(View.VISIBLE);
+                    changeProvinceSpinner.setVisibility(View.INVISIBLE);
+                    //isProvince设置为false 海外
+                    WebConnect.setIsProvince(false);
+                    //设置当前地区为国家spinner的选中项
+                    currentRegionName = changeNationSpinner.getSelectedItem().toString();
+                    //获取世界
+                    getDataTask = new GetDataTask();
+                    Log.i(TAG, "onItemSelected点击切换国家，Web去获取世界: " + currentRegionName);
+                    getDataTask.execute("World");
+                }
+                //非选中 为国内
+                else {
+                    //UI
+                    changeNationSpinner.setVisibility(View.INVISIBLE);
+                    changeProvinceSpinner.setVisibility(View.VISIBLE);
+                    //设置当前地区为省份spinner的选中项
+                    currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
+                    getDataTask = new GetDataTask();
+                    if (currentRegionName.equals("全国")) {
+                        //如果是"全国" 则改成"中国"去世界找
+                        currentRegionName = "中国";
+                        Log.i(TAG, "点击切换省份为全国，Web去获取中国: " + currentRegionName);
+                        WebConnect.setIsProvince(false);
+                        getDataTask.execute("World");
+
+                    } else {
+                        //如果不是"全国" 则正常获取省份
+                        Log.i(TAG, "点击切换省份，Web去获取省份: " + currentRegionName);
+                        WebConnect.setIsProvince(true);
+                        getDataTask.execute("Province");
+                    }
+
+                }
+                break;
         }
-        //无论怎样，点击了预测开关就刷新一下线图
-        //只画画就可以,不用重新生成线了
-        draw();
     }
 
     /**

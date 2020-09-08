@@ -210,90 +210,116 @@
                             android:text="@string/model_type_label" />
                     </RelativeLayout>
 
-                    <!--param line 3-->
-                    <RelativeLayout
-                        android:id="@+id/param_line_3"
+                    <!--user param lines-->
+                    <LinearLayout
+                        android:id="@+id/user_param_lines"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:visibility="visible">
-                        <!--control start date-->
-                        <!--month input-->
-                        <EditText
-                            android:id="@+id/control_start_date_month_input"
-                            android:layout_width="30dp"
-                            android:layout_height="40dp"
-                            android:layout_alignBaseline="@+id/control_start_date_label"
-                            android:layout_toRightOf="@+id/control_start_date_label"
-                            android:imeOptions="actionSearch"
-                            android:inputType="number"
-                            android:maxLength="2"
-                            android:maxLines="1"
-                            android:textSize="15sp" />
-
-                        <EditText
-                            android:id="@+id/control_start_date_day_input"
-                            android:layout_width="30dp"
-                            android:layout_height="40dp"
-                            android:layout_alignBaseline="@+id/control_start_date_label"
-                            android:layout_toRightOf="@+id/control_start_date_month_label"
-                            android:inputType="number"
-                            android:maxLength="2"
-                            android:maxLines="1"
-                            android:textSize="15sp" />
-                        <!--day input-->
-                        <EditText
-                            android:id="@+id/control_duration_input"
-                            android:layout_width="30dp"
-                            android:layout_height="40dp"
-                            android:layout_alignBaseline="@+id/control_start_date_label"
-                            android:layout_toLeftOf="@+id/day_label"
-                            android:inputType="number"
-                            android:maxLength="2"
-                            android:maxLines="1"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:id="@+id/control_start_date_day_label"
-                            android:layout_width="wrap_content"
+                        android:orientation="vertical">
+                        <!--user param line 1-->
+                        <RelativeLayout
+                            android:id="@+id/user_param_line_1"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@+id/control_start_date_label"
-                            android:layout_toRightOf="@+id/control_start_date_day_input"
-                            android:text="@string/control_start_date_day_label"></TextView>
+                            android:layout_weight="1"
+                            android:visibility="visible">
+                            <!--control start date-->
+                            <!--month input-->
+                            <EditText
+                                android:id="@+id/control_start_date_month_input"
+                                android:layout_width="30dp"
+                                android:layout_height="40dp"
+                                android:layout_alignBaseline="@+id/control_start_date_label"
+                                android:layout_toRightOf="@+id/control_start_date_label"
+                                android:imeOptions="actionSearch"
+                                android:inputType="number"
+                                android:maxLength="2"
+                                android:maxLines="1"
+                                android:textSize="15sp"
+                                android:textAlignment="center"
+                                android:gravity="center_horizontal" />
 
-                        <TextView
-                            android:id="@+id/control_start_date_month_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@+id/control_start_date_label"
-                            android:layout_toRightOf="@+id/control_start_date_month_input"
-                            android:text="@string/control_start_date_month_label"></TextView>
-                        <!--control duration input-->
-                        <TextView
-                            android:id="@+id/control_duration_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@+id/control_start_date_label"
-                            android:layout_toLeftOf="@+id/control_duration_input"
-                            android:text="@string/control_duration_label" />
+                            <EditText
+                                android:id="@+id/control_start_date_day_input"
+                                android:layout_width="30dp"
+                                android:layout_height="40dp"
+                                android:layout_alignBaseline="@+id/control_start_date_label"
+                                android:layout_toRightOf="@+id/control_start_date_month_label"
+                                android:inputType="number"
+                                android:maxLength="2"
+                                android:maxLines="1"
+                                android:textSize="15sp"
+                                android:textAlignment="center"
+                                android:gravity="center_horizontal"/>
+                            <!--day input-->
+                            <EditText
+                                android:id="@+id/control_duration_input"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_alignBaseline="@+id/control_start_date_label"
+                                android:layout_toLeftOf="@+id/day_label"
+                                android:inputType="number"
+                                android:maxLength="3"
+                                android:maxLines="1"
+                                android:textAlignment="center"
+                                android:textSize="15sp"
+                                android:gravity="center_horizontal" />
 
-                        <TextView
-                            android:id="@+id/control_start_date_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginTop="10dp"
-                            android:text="@string/control_start_date_label" />
+                            <TextView
+                                android:id="@+id/control_start_date_day_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBaseline="@+id/control_start_date_label"
+                                android:layout_toRightOf="@+id/control_start_date_day_input"
+                                android:text="@string/control_start_date_day_label"></TextView>
 
-                        <TextView
-                            android:id="@+id/day_label"
-                            android:layout_width="wrap_content"
+                            <TextView
+                                android:id="@+id/control_start_date_month_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBaseline="@+id/control_start_date_label"
+                                android:layout_toRightOf="@+id/control_start_date_month_input"
+                                android:text="@string/control_start_date_month_label"></TextView>
+                            <!--control duration input-->
+                            <TextView
+                                android:id="@+id/control_duration_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBaseline="@+id/control_start_date_label"
+                                android:layout_toLeftOf="@+id/control_duration_input"
+                                android:text="@string/control_duration_label" />
+
+                            <TextView
+                                android:id="@+id/control_start_date_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="10dp"
+                                android:text="@string/control_start_date_label" />
+
+                            <TextView
+                                android:id="@+id/day_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBaseline="@+id/control_start_date_label"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="20dp"
+                                android:text="@string/day_label" />
+                        </RelativeLayout>
+                        <!--user param line 2-->
+                        <RelativeLayout
+                            android:id="@+id/user_param_line_2"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@+id/control_start_date_label"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="20dp"
-                            android:text="@string/day_label" />
-                    </RelativeLayout>
+                            android:layout_weight="1">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+                            </TextView>
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
                     <!--buttons-->
                     <RelativeLayout
                         android:id="@+id/buttonLine"
@@ -352,18 +378,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/toolbar_title"
-                android:max="100"
-                android:progress="0"
-                android:scaleX="0.5"
-                android:scaleY="0.5"
-                android:visibility="invisible"
-                android:indeterminateTint="@color/colorPrimary"></ProgressBar>
 
             <Spinner
                 android:id="@+id/change_nation_spinner"
