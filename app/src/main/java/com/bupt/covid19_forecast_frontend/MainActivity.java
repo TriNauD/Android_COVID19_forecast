@@ -28,6 +28,7 @@ import android.widget.ToggleButton;
 import com.android.tu.loadingdialog.LoadingDailog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
@@ -621,11 +622,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     LineChartOnValueSelectListener lineChartOnValueSelectListener = new LineChartOnValueSelectListener() {
                         @Override
                         public void onValueSelected(int i, int i1, PointValue pointValue) {
+                            //获取点击坐标
                             int x = (int) pointValue.getX();
                             int y = (int) pointValue.getY();
                             Log.i(TAG, "touch线上坐标为" + x + "," + y);
                             clickX = x;
                             clickY = y;
+
+                            //获取点击的x轴的日期标签
+                            Axis xAxix = lineViewModel.getAxesList().get(curLineIndex)[0];
+                            char[] labelChars = xAxix.getValues().get(clickX).getLabel();
+                            StringBuilder dateString = new StringBuilder();
+                            dateString.append(labelChars);
+                            Log.i(TAG, "touch x轴坐标标签: " + dateString);
 
                             //画画
                             draw();
