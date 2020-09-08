@@ -17,7 +17,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -70,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView peopleNumBarCol4;
     private RelativeLayout paramLine1;
     private RelativeLayout paramLine2;
-    private RelativeLayout paramLine3;
+    private LinearLayout userParamLines;
+    private RelativeLayout userParamLine1;
     private RelativeLayout buttonLine;
     //提示消息
     Toast toast;
@@ -392,11 +393,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         changeNationSpinner = findViewById(R.id.change_nation_spinner);
         changeProvinceSpinner = findViewById(R.id.change_province_spinner);
 
-        //3行参数 + 按钮行
+        //2行参数 + 用户参数行 + 按钮行
         paramLine1 = findViewById(R.id.param_line_1);
         paramLine2 = findViewById(R.id.param_line_2);
-        paramLine3 = findViewById(R.id.param_line_3);
+        userParamLines = findViewById(R.id.user_param_lines);
+        userParamLine1 = findViewById(R.id.user_param_line_1);
         buttonLine = findViewById(R.id.buttonLine);
+
         //switch
         forecastSwitch = findViewById(R.id.forecast_switch);
 
@@ -699,7 +702,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     forecastSwitch.setVisibility(View.INVISIBLE);
                     //同时隐藏参数们
                     paramLine2.setVisibility(View.INVISIBLE);
-                    paramLine3.setVisibility(View.INVISIBLE);
+                    userParamLine1.setVisibility(View.INVISIBLE);
                     buttonLine.setVisibility(View.INVISIBLE);
                     //线是选择的pos那条
                     curLineIndex = pos;
@@ -715,14 +718,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         curLineIndex = lineViewModel.getNumOfRealLines();
                         //同时显示参数们
                         paramLine2.setVisibility(View.VISIBLE);
-                        paramLine3.setVisibility(View.VISIBLE);
+                        userParamLine1.setVisibility(View.VISIBLE);
                         buttonLine.setVisibility(View.VISIBLE);
                     } else {
                         //如果没在预测就正常0
                         curLineIndex = 0;
                         //同时隐藏参数们
                         paramLine2.setVisibility(View.INVISIBLE);
-                        paramLine3.setVisibility(View.INVISIBLE);
+                        userParamLine1.setVisibility(View.INVISIBLE);
                         buttonLine.setVisibility(View.INVISIBLE);
                     }
                 }
@@ -741,7 +744,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlLevelLabel.setVisibility(View.VISIBLE);
                     //第三行要看第二行是否出现
                     if (paramLine2.getVisibility() == View.VISIBLE) {
-                        paramLine3.setVisibility(View.VISIBLE);
+                        userParamLine1.setVisibility(View.VISIBLE);
                     }
                 }
                 //选了第2个选项：群体免疫
@@ -749,7 +752,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
                     LineViewModel.setHasControl(false);//控制：否
                     //第三行和控制等级spinner应该隐藏
-                    paramLine3.setVisibility(View.INVISIBLE);
+                    userParamLine1.setVisibility(View.INVISIBLE);
                     controlLevelSpinner.setVisibility(View.INVISIBLE);
                     controlLevelLabel.setVisibility(View.INVISIBLE);
                 }
@@ -880,14 +883,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //因为在我们的线系统中，跟在真实后面的就是预测线了
             curLineIndex = lineViewModel.getNumOfRealLines();
             paramLine2.setVisibility(View.VISIBLE);
-            paramLine3.setVisibility(View.VISIBLE);
+            userParamLine1.setVisibility(View.VISIBLE);
             buttonLine.setVisibility(View.VISIBLE);
         } else {
             Log.i(TAG, "onCheckedChanged 开关状态：关闭");
             //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
             curLineIndex = 0;
             paramLine2.setVisibility(View.INVISIBLE);
-            paramLine3.setVisibility(View.INVISIBLE);
+            userParamLine1.setVisibility(View.INVISIBLE);
             buttonLine.setVisibility(View.INVISIBLE);
         }
         //无论怎样，点击了预测开关就刷新一下线图
