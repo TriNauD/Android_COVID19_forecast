@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private LineViewModel lineViewModel;
 
     //预测开关状态（默认开启）
-    private boolean isForecastSwitchedOn = true;
+    private boolean isForecastSwitchedOn = false;
 
     //国家下拉框是不是第一次调用
     private boolean isFirstChooseNation = true;
