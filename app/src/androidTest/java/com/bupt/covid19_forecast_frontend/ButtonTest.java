@@ -57,7 +57,10 @@ public class ButtonTest {
         onView(withId(R.id.change_nation_spinner)).check(matches(withSpinnerText(containsString("塞尔维亚"))));
 
         onView(withId(R.id.change_nation_spinner)).perform(click());
-        onView(withText("圣文森特和格林纳丁斯")).perform(click());
+
+        onView(withText("圣文森特和格林纳丁斯")).perform((click()));
+        //onData(anything()).atPosition(2).perform(click());
+        //onView(withId(R.id.change_nation_spinner)).check(matches(withSpinnerText(containsString("圣文森特和格林纳丁斯"))));
     }
 
     @Test
@@ -107,7 +110,6 @@ public class ButtonTest {
 
         //重置
         onView(withId(R.id.reset_button)).perform(click());
-
 
     }
 }
