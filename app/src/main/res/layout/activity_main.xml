@@ -384,6 +384,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/toolbar_title"
                 android:layout_centerVertical="true"
                 android:visibility="invisible"
                 android:entries="@array/nation_name"></Spinner>
