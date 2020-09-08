@@ -39,10 +39,7 @@ import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
-import room.Alltime_provinceDao;
-import room.Alltime_world;
-import room.Alltime_worldDao;
-import room.AppDatabase;
+import room.Repository;
 import viewModel.LineViewModel;
 import viewModel.WebConnect;
 
@@ -104,10 +101,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //预测开关状态（默认开启）
     private boolean isForecastSwitchedOn = true;
-    
-    //初始化数据库
-    AppDatabase appDatabase;
-    Alltime_worldDao worldDao;    
 
     //国家下拉框是不是第一次调用
     private boolean isFirstChooseNation = true;
@@ -125,20 +118,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     int clickX, clickY;
 
     /*————————————获取数据相关————————————*/
-    
-
     /**
      * 更新本地数据库
      *
      * @author yk
      */
-    public void updateDB(){
-        appDatabase = Room.databaseBuilder(this,AppDatabase.class,"appdb")
-                .build();
-        worldDao = appDatabase.getAlltime_worldDao();
-        //Alltime_world world1 = new Alltime_world(WebConnect.getWorld(currentNation));
-        //Alltime_world world2 = new Alltime_world(WebConnect.getWorld(currentNation));
-        //worldDao.insertWorlds(WebConnect.getWorld(world1,world2));
+    public void updateDB() {
+        Repository.updateDB(this);
     }
 
     /**
