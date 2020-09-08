@@ -113,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int showXRange = 100;
     //点击坐标
     int clickX, clickY;
+    //点击的日期标签
+    String clickDateString = "";
 
     /*————————————获取数据相关————————————*/
 
@@ -289,6 +291,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         //手指点击的竖直线
+        //点
         PointValue pointValue1 = new PointValue();
         pointValue1.set(clickX, clickY);
         PointValue pointValue2 = new PointValue();
@@ -299,14 +302,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         pointValueList.add(pointValue1);
         pointValueList.add(pointValue2);
         pointValueList.add(pointValue3);
-
-        //手指点击的竖直线
+        //线
         Line handLine = new Line();
         handLine.setValues(pointValueList);
+        //样式
         handLine.setHasPoints(false);//不要点
+
         //用来显示标签的线
+        //点
+        PointValue pointValue4 = new PointValue();
+        pointValue4.set(clickX, clickY);//只取点到的点
+        pointValue4.setLabel(clickDateString);
+        List<PointValue> pointValueList1 = new ArrayList<>();
+        pointValueList1.add(pointValue4);
+        //线
         Line labelLine = new Line();
-        labelLine.setValues(pointValueList.subList(0, 1));//只取点到的点
+        labelLine.setValues(pointValueList1);
+        //样式
         labelLine.setHasLabels(true);//常驻标签
         labelLine.setPointRadius(3);//点的大小
 
@@ -632,7 +644,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             //获取点击的x轴的日期标签
                             Axis xAxix = lineViewModel.getAxesList().get(curLineIndex)[0];
                             char[] labelChars = xAxix.getValues().get(clickX).getLabel();
-                            Log.i(TAG, "touch x轴坐标标签: " + String.valueOf(labelChars));
+                            clickDateString = String.valueOf(labelChars);
+                            clickDateString += "\n";
+                            clickDateString += clickY;
+                            Log.i(TAG, "touch x轴坐标标签: " + clickDateString);
 
                             //画画
                             draw();
