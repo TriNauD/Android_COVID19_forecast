@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private RelativeLayout paramLine2;
     private RelativeLayout paramLine3;
     private RelativeLayout buttonLine;
-    private ProgressBar progressBar;
     //提示消息
     Toast toast;
 
@@ -131,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //先设置为没有开始获取&没有获取成功
             WebConnect.setIsGetFinished(false);
             WebConnect.setIsGetSuccess(false);
-            progressBar.setVisibility(View.VISIBLE);
             Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished());
 
             //创建一个遮罩
@@ -184,8 +182,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             drawChart();
             //遮罩消失
             dialog.hide();
-            // 执行完毕后，则更新UI
-            progressBar.setVisibility(View.INVISIBLE);
             //根据isGetSuccess结果是否成功 选择提示数据获取失败/成功
             toast.setText(WebConnect.isGetSuccess() ? (R.string.alert_msg_get_data_success) : (R.string.alert_msg_get_data_failure));
             toast.setDuration(Toast.LENGTH_SHORT);
@@ -423,9 +419,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol2 = findViewById(R.id.people_num_bar_col_2_num);
         peopleNumBarCol3 = findViewById(R.id.people_num_bar_col_3_num);
         peopleNumBarCol4 = findViewById(R.id.people_num_bar_col_4_num);
-
-        //progress bar
-        progressBar = findViewById(R.id.progress_bar);
 
         peopleNumBarCol1.setText("现存确诊");
         peopleNumBarCol2.setText("累计确诊");
