@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import lecho.lib.hellocharts.gesture.ContainerScrollType;
 import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.Line;
@@ -362,37 +363,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //----------------------- 视图 ------------------------------
         Log.i(TAG, "调参师");
+        myLineChartView.setInteractive(true);
+        myLineChartView.setZoomEnabled(true);
+        myLineChartView.setContainerScrollEnabled(true, ContainerScrollType.VERTICAL);
 
-        //总体的图表范围
-        Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
-
-        //x轴
-        maxViewPort.left = 0;
-        //获取后端的节点数目
-        int numOfRP = WebConnect.getNumOfRealPoints();
-        int numOfFP = WebConnect.getNumOfForecastPoints();
-        //x轴最大坐标值
-        maxViewPort.right = numOfRP + rightMargin + (isForecast ? numOfFP : 0);
-
-        //y轴
-        maxViewPort.bottom = 0;
-        //y最大坐标值
-        maxViewPort.top = MaxY;
-
-        myLineChartView.setMaximumViewport(maxViewPort);
-
-
-        //显示的小界面，可以滑动
-        Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
-
-        //y轴
-        halfViewport.top = MaxY;
-        halfViewport.bottom = 0;
-        //x轴
-        //先显示后100天
-        halfViewport.left = numOfRP - showXRange;
-        halfViewport.right = numOfRP;
-        myLineChartView.setCurrentViewport(halfViewport);
+//        //总体的图表范围
+//        Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
+//
+//        //x轴
+//        maxViewPort.left = 0;
+//        //获取后端的节点数目
+//        int numOfRP = WebConnect.getNumOfRealPoints();
+//        int numOfFP = WebConnect.getNumOfForecastPoints();
+//        //x轴最大坐标值
+//        maxViewPort.right = numOfRP + rightMargin + (isForecast ? numOfFP : 0);
+//
+//        //y轴
+//        maxViewPort.bottom = 0;
+//        //y最大坐标值
+//        maxViewPort.top = MaxY;
+//
+//        myLineChartView.setMaximumViewport(maxViewPort);
+//
+//
+//        //显示的小界面，可以滑动
+//        Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
+//
+//        //y轴
+//        halfViewport.top = MaxY;
+//        halfViewport.bottom = 0;
+//        //x轴
+//        //先显示后100天
+//        halfViewport.left = numOfRP - showXRange;
+//        halfViewport.right = numOfRP;
+//        myLineChartView.setCurrentViewport(halfViewport);
     }
 
     /*————————————控件相关————————————*/
@@ -608,38 +612,45 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             clickDateString += clickY;
                             Log.i(TAG, "touch x轴坐标标签: " + clickDateString);
 
+
+
+                            //todo 动画移动？？？
+                            myLineChartView.moveToWithAnimation(clickX, clickY);
+
+
                             //画画
                             draw();
 
-                            //调参师傅
-                            int numOfRP = WebConnect.getNumOfRealPoints();
-                            int numOfFP = WebConnect.getNumOfForecastPoints();
-                            //更新预测状态，这个值是表示显示的线是不是真的预测线
-                            int numOfRealLines = lineViewModel.getNumOfRealLines();
-                            boolean isForecast = (curLineIndex >= numOfRealLines);//如果索引大于“真实线”数目，就表示是在预测
 
-                            //显示的总点数,按照是否预测数字不同
-                            int numOfShowPoint = numOfRP + rightMargin + (isForecast ? numOfFP : 0);
-
-                            //显示的小界面，可以滑动
-                            Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
-                            halfViewport.top = MaxY;
-                            halfViewport.bottom = 0;
-                            //先显示后100天
-                            if (x < 50) {
-                                //如果x是10,左0右100
-                                halfViewport.left = 0;
-                                halfViewport.right = showXRange;
-                            } else if (x + 50 < numOfShowPoint) {
-                                //如果x是60,左10右110
-                                halfViewport.left = x - showXRange / 2;
-                                halfViewport.right = x + showXRange / 2;
-                            } else {
-                                //如果一共200个点,x是160,左100,右200
-                                halfViewport.left = numOfShowPoint - showXRange;
-                                halfViewport.right = numOfShowPoint;
-                            }
-                            myLineChartView.setCurrentViewport(halfViewport);
+//                            //调参师傅
+//                            int numOfRP = WebConnect.getNumOfRealPoints();
+//                            int numOfFP = WebConnect.getNumOfForecastPoints();
+//                            //更新预测状态，这个值是表示显示的线是不是真的预测线
+//                            int numOfRealLines = lineViewModel.getNumOfRealLines();
+//                            boolean isForecast = (curLineIndex >= numOfRealLines);//如果索引大于“真实线”数目，就表示是在预测
+//
+//                            //显示的总点数,按照是否预测数字不同
+//                            int numOfShowPoint = numOfRP + rightMargin + (isForecast ? numOfFP : 0);
+//
+//                            //显示的小界面，可以滑动
+//                            Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
+//                            halfViewport.top = MaxY;
+//                            halfViewport.bottom = 0;
+//                            //先显示后100天
+//                            if (x < 50) {
+//                                //如果x是10,左0右100
+//                                halfViewport.left = 0;
+//                                halfViewport.right = showXRange;
+//                            } else if (x + 50 < numOfShowPoint) {
+//                                //如果x是60,左10右110
+//                                halfViewport.left = x - showXRange / 2;
+//                                halfViewport.right = x + showXRange / 2;
+//                            } else {
+//                                //如果一共200个点,x是160,左100,右200
+//                                halfViewport.left = numOfShowPoint - showXRange;
+//                                halfViewport.right = numOfShowPoint;
+//                            }
+//                            myLineChartView.setCurrentViewport(halfViewport);
                         }
 
                         @Override
