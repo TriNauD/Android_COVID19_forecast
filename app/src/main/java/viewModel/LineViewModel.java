@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.util.Log;
 
 
+import com.bupt.covid19_forecast_frontend.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,7 +160,7 @@ public class LineViewModel extends ViewModel {
             } else if (i == 2) {
                 line.setColor(Color.rgb(50, 205, 50));//第三条线绿色
             } else {
-                line.setColor(Color.rgb(126, 185, 236));//第四条线蓝色
+                line.setColor(Color.rgb(102, 102, 102));//第四条线蓝色
             }
             //line.setPointColor(Color.rgb(255,255,255));//点的颜色 这个是白色
             line.setPointRadius(1);//点的大小
