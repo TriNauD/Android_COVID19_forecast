@@ -702,8 +702,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     forecastSwitch.setVisibility(View.INVISIBLE);
                     //同时隐藏参数们
                     paramLine2.setVisibility(View.INVISIBLE);
-                    userParamLines.setVisibility(View.INVISIBLE);
                     buttonLine.setVisibility(View.INVISIBLE);
+                    userParamLines.setVisibility(View.INVISIBLE);
                     //线是选择的pos那条
                     curLineIndex = pos;
                 } else {
@@ -718,15 +718,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         curLineIndex = lineViewModel.getNumOfRealLines();
                         //同时显示参数们
                         paramLine2.setVisibility(View.VISIBLE);
-                        userParamLines.setVisibility(View.VISIBLE);
                         buttonLine.setVisibility(View.VISIBLE);
+                        //用户参数要看modelType是否为控制
+                        userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 0 ? View.VISIBLE : View.INVISIBLE);
                     } else {
                         //如果没在预测就正常0
                         curLineIndex = 0;
                         //同时隐藏参数们
                         paramLine2.setVisibility(View.INVISIBLE);
-                        userParamLines.setVisibility(View.INVISIBLE);
                         buttonLine.setVisibility(View.INVISIBLE);
+                        userParamLines.setVisibility(View.INVISIBLE);
+
                     }
                 }
                 //只需要重新绘制即可
@@ -891,8 +893,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
             curLineIndex = 0;
             paramLine2.setVisibility(View.INVISIBLE);
-            userParamLines.setVisibility(View.INVISIBLE);
             buttonLine.setVisibility(View.INVISIBLE);
+            userParamLines.setVisibility(View.INVISIBLE);
         }
         //无论怎样，点击了预测开关就刷新一下线图
         //只画画就可以,不用重新生成线了
