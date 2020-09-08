@@ -789,7 +789,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //选了第1个选项：控制
                 if (pos == 0) {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
-                    LineViewModel.setHasControl(true);//控制：是
                     //控制等级spinner应该保持出现
                     controlLevelSpinner.setVisibility(View.VISIBLE);
                     controlLevelLabel.setVisibility(View.VISIBLE);
@@ -801,7 +800,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //选了第2个选项：群体免疫
                 else {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
-                    LineViewModel.setHasControl(false);//控制：否
                     //第三行和控制等级spinner应该隐藏
                     userParamLines.setVisibility(View.INVISIBLE);
                     controlLevelSpinner.setVisibility(View.INVISIBLE);
