@@ -292,13 +292,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         pointValue1.set(clickX, clickY);
         PointValue pointValue2 = new PointValue();
         pointValue2.set(clickX, 0);
+        PointValue pointValue3 = new PointValue();
+        pointValue3.set(clickX, MaxY);
         List<PointValue> pointValueList = new ArrayList<>();
         pointValueList.add(pointValue1);
         pointValueList.add(pointValue2);
+        pointValueList.add(pointValue3);
 
         //手指点击的竖直线
         Line handLine = new Line();
         handLine.setValues(pointValueList);
+        handLine.setHasPoints(false);//不要点
+        //用来显示标签的线
+        Line labelLine = new Line();
+        labelLine.setValues(pointValueList.subList(0, 1));//只取点到的点
+        labelLine.setHasLabels(true);//常驻标签
+        labelLine.setPointRadius(3);//点的大小
 
         //颜色 设置为所点的线的颜色
         if (isForecast) {
@@ -314,12 +323,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //没在预测,用前面的颜色
             handLine.setColor(showLines.get(0).getColor());
         }
+        labelLine.setPointColor(handLine.getColor());//点的颜色
 
-        handLine.setPointRadius(3);//点的大小
-        handLine.setHasLabels(true);//设置标签常显示
-
+        //加入总的线列表
         showLines.add(handLine);
-
+        showLines.add(labelLine);
 
         //------------------------- 轴 -----------------------
         //获取所有轴
