@@ -235,7 +235,9 @@
                                 android:inputType="number"
                                 android:maxLength="2"
                                 android:maxLines="1"
-                                android:textSize="15sp" />
+                                android:textSize="15sp"
+                                android:textAlignment="center"
+                                android:gravity="center_horizontal" />
 
                             <EditText
                                 android:id="@+id/control_start_date_day_input"
@@ -246,7 +248,9 @@
                                 android:inputType="number"
                                 android:maxLength="2"
                                 android:maxLines="1"
-                                android:textSize="15sp" />
+                                android:textSize="15sp"
+                                android:textAlignment="center"
+                                android:gravity="center_horizontal"/>
                             <!--day input-->
                             <EditText
                                 android:id="@+id/control_duration_input"

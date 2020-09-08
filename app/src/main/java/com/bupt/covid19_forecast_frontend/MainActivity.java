@@ -540,49 +540,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.i(TAG, "Button: reset button clicked");
             }
         });
-        homeOrAbroadToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                //选中 状态为海外
-                if (isChecked) {
-                    //UI
-                    changeNationSpinner.setVisibility(View.VISIBLE);
-                    changeProvinceSpinner.setVisibility(View.INVISIBLE);
-                    //isProvince设置为false 海外
-                    WebConnect.setIsProvince(false);
-                    //设置当前地区为国家spinner的选中项
-                    currentRegionName = changeNationSpinner.getSelectedItem().toString();
-                    //获取世界
-                    getDataTask = new GetDataTask();
-                    Log.i(TAG, "onItemSelected点击切换国家，Web去获取世界: " + currentRegionName);
-                    getDataTask.execute("World");
-                }
-                //非选中 为国内
-                else {
-                    //UI
-                    changeNationSpinner.setVisibility(View.INVISIBLE);
-                    changeProvinceSpinner.setVisibility(View.VISIBLE);
-                    //设置当前地区为省份spinner的选中项
-                    currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
-                    getDataTask = new GetDataTask();
-                    if (currentRegionName.equals("全国")) {
-                        //如果是"全国" 则改成"中国"去世界找
-                        currentRegionName = "中国";
-                        Log.i(TAG, "点击切换省份为全国，Web去获取中国: " + currentRegionName);
-                        WebConnect.setIsProvince(false);
-                        getDataTask.execute("World");
-
-                    } else {
-                        //如果不是"全国" 则正常获取省份
-                        Log.i(TAG, "点击切换省份，Web去获取省份: " + currentRegionName);
-                        WebConnect.setIsProvince(true);
-                        getDataTask.execute("Province");
-                    }
-
-                }
-            }
-        });
+        //toggle button设置listener
+        homeOrAbroadToggleButton.setOnCheckedChangeListener(this);
         //input设置listener
         controlDurationInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -928,30 +887,74 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         Log.i(TAG, "onCheckedChanged 进入函数");
-
         //清空点击显示
         clearClick();
+        //判断监听到的是哪个组件被选中
+        switch (buttonView.getId()) {
+            //如果是预测开关按钮switch
+            case R.id.forecast_switch:
+                isForecastSwitchedOn = isChecked;
+                if (isChecked) {
+                    Log.i(TAG, "onCheckedChanged 开关状态：开启，在预测");
+                    //因为在我们的线系统中，跟在真实后面的就是预测线了
+                    curLineIndex = lineViewModel.getNumOfRealLines();
+                    paramLine2.setVisibility(View.VISIBLE);
+                    buttonLine.setVisibility(View.VISIBLE);
+                    //用户参数要看modelType是否为控制
+                    userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 0 ? View.VISIBLE : View.INVISIBLE);
+                } else {
+                    Log.i(TAG, "onCheckedChanged 开关状态：关闭");
+                    //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
+                    curLineIndex = 0;
+                    paramLine2.setVisibility(View.INVISIBLE);
+                    buttonLine.setVisibility(View.INVISIBLE);
+                    userParamLines.setVisibility(View.INVISIBLE);
+                }
+                //无论怎样，点击了预测开关就刷新一下线图
+                //只画画就可以,不用重新生成线了
+                draw();
+                break;
+            //如果是海外/国内切换按钮toggle button
+            case R.id.home_or_abroad_toggle_btn:
+                //选中 状态为海外
+                if (isChecked) {
+                    //UI
+                    changeNationSpinner.setVisibility(View.VISIBLE);
+                    changeProvinceSpinner.setVisibility(View.INVISIBLE);
+                    //isProvince设置为false 海外
+                    WebConnect.setIsProvince(false);
+                    //设置当前地区为国家spinner的选中项
+                    currentRegionName = changeNationSpinner.getSelectedItem().toString();
+                    //获取世界
+                    getDataTask = new GetDataTask();
+                    Log.i(TAG, "onItemSelected点击切换国家，Web去获取世界: " + currentRegionName);
+                    getDataTask.execute("World");
+                }
+                //非选中 为国内
+                else {
+                    //UI
+                    changeNationSpinner.setVisibility(View.INVISIBLE);
+                    changeProvinceSpinner.setVisibility(View.VISIBLE);
+                    //设置当前地区为省份spinner的选中项
+                    currentRegionName = changeProvinceSpinner.getSelectedItem().toString();
+                    getDataTask = new GetDataTask();
+                    if (currentRegionName.equals("全国")) {
+                        //如果是"全国" 则改成"中国"去世界找
+                        currentRegionName = "中国";
+                        Log.i(TAG, "点击切换省份为全国，Web去获取中国: " + currentRegionName);
+                        WebConnect.setIsProvince(false);
+                        getDataTask.execute("World");
 
-        isForecastSwitchedOn = isChecked;
-        if (isChecked) {
-            Log.i(TAG, "onCheckedChanged 开关状态：开启，在预测");
-            //因为在我们的线系统中，跟在真实后面的就是预测线了
-            curLineIndex = lineViewModel.getNumOfRealLines();
-            paramLine2.setVisibility(View.VISIBLE);
-            buttonLine.setVisibility(View.VISIBLE);
-            //用户参数要看modelType是否为控制
-            userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 0 ? View.VISIBLE : View.INVISIBLE);
-        } else {
-            Log.i(TAG, "onCheckedChanged 开关状态：关闭");
-            //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
-            curLineIndex = 0;
-            paramLine2.setVisibility(View.INVISIBLE);
-            buttonLine.setVisibility(View.INVISIBLE);
-            userParamLines.setVisibility(View.INVISIBLE);
+                    } else {
+                        //如果不是"全国" 则正常获取省份
+                        Log.i(TAG, "点击切换省份，Web去获取省份: " + currentRegionName);
+                        WebConnect.setIsProvince(true);
+                        getDataTask.execute("Province");
+                    }
+
+                }
+                break;
         }
-        //无论怎样，点击了预测开关就刷新一下线图
-        //只画画就可以,不用重新生成线了
-        draw();
     }
 
     /**
