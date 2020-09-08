@@ -632,9 +632,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             //获取点击的x轴的日期标签
                             Axis xAxix = lineViewModel.getAxesList().get(curLineIndex)[0];
                             char[] labelChars = xAxix.getValues().get(clickX).getLabel();
-                            StringBuilder dateString = new StringBuilder();
-                            dateString.append(labelChars);
-                            Log.i(TAG, "touch x轴坐标标签: " + dateString);
+                            Log.i(TAG, "touch x轴坐标标签: " + String.valueOf(labelChars));
 
                             //画画
                             draw();
