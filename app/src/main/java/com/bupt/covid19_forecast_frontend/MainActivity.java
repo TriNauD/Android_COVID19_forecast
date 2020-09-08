@@ -706,6 +706,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationInput.setText(controlDurationInput.isFocusable() ? "" : controlDurationInput.getText());
     }
 
+
+    /**
+     * 清空点击显示
+     *
+     * @author lym
+     */
+    public void clearClick() {
+        //清空点击显示
+        clickX = 0;
+        clickY = 0;
+        clickDateString = "";
+        //简单画一下
+        draw();
+    }
+
     /**
      * 下拉菜单，选项控制事件。
      * 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
@@ -719,6 +734,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //日志调试
         Log.i(TAG, "onItemSelected 进入函数");
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
+
+        //清空点击显示
+        clearClick();
 
         int parentID = parent.getId();
 
@@ -908,6 +926,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         Log.i(TAG, "onCheckedChanged 进入函数");
+
+        //清空点击显示
+        clearClick();
+
         isForecastSwitchedOn = isChecked;
         if (isChecked) {
             Log.i(TAG, "onCheckedChanged 开关状态：开启，在预测");
