@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //获取数据的遮罩的样式设置
     LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
             .setMessage("加载中...")
-            .setCancelable(true)
-            .setCancelOutside(true);
+            .setCancelable(false)
+            .setCancelOutside(false);
     //遮罩
     LoadingDailog dialog;
 
