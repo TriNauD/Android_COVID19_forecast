@@ -238,13 +238,4 @@ public class LineViewModel extends ViewModel {
     public List<Axis[]> getAxesList() {
         return axesList;
     }
-
-    public static boolean isHasControl() {
-        return WebConnect.isHasControl();
-    }
-
-    public static void setHasControl(boolean hasControl) {
-        WebConnect.setHasControl(hasControl);
-    }
-
 }
