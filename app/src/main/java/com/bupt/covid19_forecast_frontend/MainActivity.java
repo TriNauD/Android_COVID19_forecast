@@ -309,21 +309,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         labelLine.setHasLabels(true);//常驻标签
         labelLine.setPointRadius(3);//点的大小
 
-        //颜色 设置为所点的线的颜色
+        //颜色
+        handLine.setColor(Color.WHITE);
+        //设置为所点的线的颜色
         if (isForecast) {
             //在预测
             if (clickX > WebConnect.getNumOfRealPoints()) {
                 //后面的蓝色
-                handLine.setColor(showLines.get(0).getColor());
+                labelLine.setColor(showLines.get(0).getColor());
             } else {
                 //前面的红色
-                handLine.setColor(showLines.get(1).getColor());
+                labelLine.setColor(showLines.get(1).getColor());
             }
         } else {
             //没在预测,用前面的颜色
-            handLine.setColor(showLines.get(0).getColor());
+            labelLine.setColor(showLines.get(0).getColor());
         }
-        labelLine.setPointColor(handLine.getColor());//点的颜色
 
         //加入总的线列表
         showLines.add(handLine);
