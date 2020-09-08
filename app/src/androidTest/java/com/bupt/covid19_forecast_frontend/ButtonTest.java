@@ -54,19 +54,16 @@ public class ButtonTest {
         //测试切换国家
         onView(withId(R.id.change_nation_spinner)).perform(click());
         onData(anything()).atPosition(2).perform(click());
-        onView(withId(R.id.change_nation_spinner)).check(matches(withSpinnerText(containsString("英国"))));
+        onView(withId(R.id.change_nation_spinner)).check(matches(withSpinnerText(containsString("塞尔维亚"))));
+
+        onView(withId(R.id.change_nation_spinner)).perform(click());
+        onView(withText("圣文森特和格林纳丁斯")).perform((click()));
+        //onData(anything()).atPosition(2).perform(click());
+        //onView(withId(R.id.change_nation_spinner)).check(matches(withSpinnerText(containsString("圣文森特和格林纳丁斯"))));
     }
 
     @Test
     public void testButtonClick(){
-        //测试切换曲线类型
-        onView(withId(R.id.line_type_spinner)).perform(click());
-        onData(anything()).atPosition(1).perform(click());
-        onView(withId(R.id.line_type_spinner)).check(matches(withSpinnerText(containsString("累计确诊"))));
-
-        onView(withId(R.id.line_type_spinner)).perform(click());
-        onData(anything()).atPosition(0).perform(click());
-        onView(withId(R.id.line_type_spinner)).check(matches(withSpinnerText(containsString("现存确诊"))));
 
         //测试切换控制等级
         onView(withId(R.id.control_level_spinner)).perform(click());
@@ -94,6 +91,23 @@ public class ButtonTest {
         onView(withId(R.id.model_type_spinner)).perform(click());
         onData(anything()).atPosition(0).perform(click());
         onView(withId(R.id.model_type_spinner)).check(matches(withSpinnerText(containsString("控制"))));
+
+        //测试切换曲线类型
+        onView(withId(R.id.line_type_spinner)).perform(click());
+        onData(anything()).atPosition(1).perform(click());
+        onView(withId(R.id.line_type_spinner)).check(matches(withSpinnerText(containsString("累计确诊"))));
+
+        onView(withId(R.id.line_type_spinner)).perform(click());
+        onData(anything()).atPosition(2).perform(click());
+        onView(withId(R.id.line_type_spinner)).check(matches(withSpinnerText(containsString("累计治愈"))));
+
+        onView(withId(R.id.line_type_spinner)).perform(click());
+        onData(anything()).atPosition(3).perform(click());
+        onView(withId(R.id.line_type_spinner)).check(matches(withSpinnerText(containsString("累计死亡"))));
+
+        onView(withId(R.id.line_type_spinner)).perform(click());
+        onData(anything()).atPosition(0).perform(click());
+        onView(withId(R.id.line_type_spinner)).check(matches(withSpinnerText(containsString("现存确诊"))));
 
         //重置
         onView(withId(R.id.reset_button)).perform(click());
