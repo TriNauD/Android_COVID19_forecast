@@ -4,9 +4,6 @@ import android.arch.lifecycle.ViewModel;
 import android.graphics.Color;
 import android.util.Log;
 
-
-import com.bupt.covid19_forecast_frontend.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
