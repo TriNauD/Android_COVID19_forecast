@@ -150,10 +150,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         WebConnect.getWorld(currentRegionName);
                         break;
                     case "Predict":
+                        loadBuilder.setMessage("预测中");
                         WebConnect.getPredict(currentRegionName);
                         break;
                     case "Province":
                         WebConnect.getProvince(currentRegionName);
+                        break;
                 }
 
                 //如果没有得到数据，就一直等待，并提示
@@ -488,7 +490,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         String day = (dayInt >= 10) ? (controlStartDateDayInput.getText().toString()) : ("0" + controlStartDateDayInput.getText());
                         String date = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
                         WebConnect.setStartControlDate(date);
-                        toast.setText(R.string.alert_msg_forecasting);
                         Log.i(TAG, "Button: ControlStartDate:" + date);
                     } else {
                         //提示输入错误 并清空输入框
@@ -508,7 +509,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     clearFocusableInputBoxes();
                     Log.i(TAG, "Button: Bad input type");
                 }
-                toast.show();
             }
         });
         resetButton.setOnClickListener(new View.OnClickListener() {
