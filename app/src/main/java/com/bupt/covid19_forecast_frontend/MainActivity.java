@@ -28,6 +28,7 @@ import android.widget.ToggleButton;
 import com.android.tu.loadingdialog.LoadingDailog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
@@ -112,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int showXRange = 100;
     //点击坐标
     int clickX, clickY;
+    //点击的日期标签
+    String clickDateString = "";
 
     /*————————————获取数据相关————————————*/
 
@@ -290,38 +293,57 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         //手指点击的竖直线
+        //点
         PointValue pointValue1 = new PointValue();
         pointValue1.set(clickX, clickY);
         PointValue pointValue2 = new PointValue();
         pointValue2.set(clickX, 0);
+        PointValue pointValue3 = new PointValue();
+        pointValue3.set(clickX, MaxY);
         List<PointValue> pointValueList = new ArrayList<>();
         pointValueList.add(pointValue1);
         pointValueList.add(pointValue2);
-
-        //手指点击的竖直线
+        pointValueList.add(pointValue3);
+        //线
         Line handLine = new Line();
         handLine.setValues(pointValueList);
+        //样式
+        handLine.setHasPoints(false);//不要点
 
-        //颜色 设置为所点的线的颜色
+        //用来显示标签的线
+        //点
+        PointValue pointValue4 = new PointValue();
+        pointValue4.set(clickX, clickY);//只取点到的点
+        pointValue4.setLabel(clickDateString);
+        List<PointValue> pointValueList1 = new ArrayList<>();
+        pointValueList1.add(pointValue4);
+        //线
+        Line labelLine = new Line();
+        labelLine.setValues(pointValueList1);
+        //样式
+        labelLine.setHasLabels(true);//常驻标签
+        labelLine.setPointRadius(3);//点的大小
+
+        //颜色
+        handLine.setColor(Color.WHITE);
+        //设置为所点的线的颜色
         if (isForecast) {
             //在预测
             if (clickX > WebConnect.getNumOfRealPoints()) {
                 //后面的蓝色
-                handLine.setColor(showLines.get(0).getColor());
+                labelLine.setColor(showLines.get(0).getColor());
             } else {
                 //前面的红色
-                handLine.setColor(showLines.get(1).getColor());
+                labelLine.setColor(showLines.get(1).getColor());
             }
         } else {
             //没在预测,用前面的颜色
-            handLine.setColor(showLines.get(0).getColor());
+            labelLine.setColor(showLines.get(0).getColor());
         }
 
-        handLine.setPointRadius(3);//点的大小
-        handLine.setHasLabels(true);//设置标签常显示
-
+        //加入总的线列表
         showLines.add(handLine);
-
+        showLines.add(labelLine);
 
         //------------------------- 轴 -----------------------
         //获取所有轴
@@ -612,11 +634,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     LineChartOnValueSelectListener lineChartOnValueSelectListener = new LineChartOnValueSelectListener() {
                         @Override
                         public void onValueSelected(int i, int i1, PointValue pointValue) {
+                            //获取点击坐标
                             int x = (int) pointValue.getX();
                             int y = (int) pointValue.getY();
                             Log.i(TAG, "touch线上坐标为" + x + "," + y);
                             clickX = x;
                             clickY = y;
+
+                            //获取点击的x轴的日期标签
+                            Axis xAxix = lineViewModel.getAxesList().get(curLineIndex)[0];
+                            char[] labelChars = xAxix.getValues().get(clickX).getLabel();
+                            clickDateString = String.valueOf(labelChars);
+                            clickDateString += "\n";
+                            clickDateString += clickY;
+                            Log.i(TAG, "touch x轴坐标标签: " + clickDateString);
 
                             //画画
                             draw();
@@ -675,6 +706,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationInput.setText(controlDurationInput.isFocusable() ? "" : controlDurationInput.getText());
     }
 
+
+    /**
+     * 清空点击显示
+     *
+     * @author lym
+     */
+    public void clearClick() {
+        //清空点击显示
+        clickX = 0;
+        clickY = 0;
+        clickDateString = "";
+        //简单画一下
+        draw();
+    }
+
     /**
      * 下拉菜单，选项控制事件。
      * 重载AdapterView.OnItemSelectedListener的函数，在下拉菜单被选择时调用
@@ -688,6 +734,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //日志调试
         Log.i(TAG, "onItemSelected 进入函数");
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
+
+        //清空点击显示
+        clearClick();
 
         int parentID = parent.getId();
 
@@ -877,6 +926,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         Log.i(TAG, "onCheckedChanged 进入函数");
+
+        //清空点击显示
+        clearClick();
+
         isForecastSwitchedOn = isChecked;
         if (isChecked) {
             Log.i(TAG, "onCheckedChanged 开关状态：开启，在预测");

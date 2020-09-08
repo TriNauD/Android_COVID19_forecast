@@ -162,7 +162,6 @@ public class LineViewModel extends ViewModel {
             }
             //line.setPointColor(Color.rgb(255,255,255));//点的颜色 这个是白色
             line.setPointRadius(1);//点的大小
-            line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
             line.setFilled(true);//下方填充
             line.setCubic(false);//不要曲线
 
