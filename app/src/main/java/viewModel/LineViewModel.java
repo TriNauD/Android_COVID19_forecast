@@ -23,6 +23,16 @@ public class LineViewModel extends ViewModel {
     //所有坐标轴
     private List<Axis[]> axesList = new ArrayList<>();
 
+    //画图参数
+    //x轴字体大小
+    private int xFontSize = 12;
+    //y轴字体大小
+    private int yFontSize = 12;
+    //x轴标签最多字符数
+    int xMaxLabelChars = 6;
+    //y轴标签最多字符数
+    int yMaxLabelChars = 6;
+
 
     /**
      * 初始化预测的图表
@@ -72,9 +82,12 @@ public class LineViewModel extends ViewModel {
                 //将坐标的数值和对应的文字标签绑定起来
                 //分为前（真实）后（预测）
                 if (p < WebConnect.getNumOfRealPoints())
-                    //前，是真实线0的标签
-                    valueX.setLabel(WebConnect.getAxisLableList().get(0).get(p));
-                else
+                //前，是真实线0的标签
+                {
+                    List<String> stringList = WebConnect.getAxisLableList().get(0);
+                    String tempS = stringList.get(p);
+                    valueX.setLabel(tempS);
+                } else
                 //后，是预测线i的标签，此时的点值应该剪掉前面的真实点总数
                 {
                     int thisLineIndex = i + WebConnect.getNumOfRealLines();
@@ -83,10 +96,26 @@ public class LineViewModel extends ViewModel {
                 }
                 valueListX.add(valueX);//添加一个值
             }
+            axisX.setName(" ");//名称显示
+            axisX.setTextSize(xFontSize);//字体大小
+            axisX.setMaxLabelChars(xMaxLabelChars); //显示数据的位数
             axisX.setValues(valueListX);//将列表设置到x轴上面
+
             Axis axisY = new Axis();//Y轴没有任何设定，就初始化
+            axisY.setName(" ");//y轴的名称显示，设置为空格可以把数字显示全
+            axisY.setTextSize(yFontSize);//y轴字体大小
+            axisY.setHasLines(true);//y轴有图中间的横线
+            axisY.setMaxLabelChars(yMaxLabelChars); //固定y轴的数据位数
+
             Axis[] axisXY = {axisX, axisY};//把XY放到一起
-            axesList.add(axisXY);//加入总的坐标轴列表
+
+            //加入总的坐标轴列表
+            if (axesList.size() >= WebConnect.getNumOfRealLines() + WebConnect.getNumOfForecastLines()) {
+                //如果已经有了
+                axesList.set(i + WebConnect.getNumOfRealLines(), axisXY);
+            } else {
+                axesList.add(axisXY);
+            }
         }
     }
 
@@ -171,18 +200,31 @@ public class LineViewModel extends ViewModel {
             //做轴
             //x轴
             Axis axisX = new Axis();
+            axisX.setName(" ");//名称显示
+            axisX.setTextSize(xFontSize);//字体大小
+            axisX.setMaxLabelChars(xMaxLabelChars); //显示数据的位数
             //将标签列表设置到x轴上面
             axisX.setValues(valueListX);
 
-            //TODO step of y ? 是时候考虑y轴的步长问题了
             //y轴
             Axis axisY = new Axis();//Y轴没有任何设定，就初始化
-
+            axisY.setName(" ");//y轴的名称显示，设置为空格可以把数字显示全
+            axisY.setTextSize(yFontSize);//y轴字体大小
+            axisY.setHasLines(true);//y轴有图中间的横线
+            axisY.setMaxLabelChars(yMaxLabelChars); //固定y轴的数据位数
 
             //把XY放到一起
             Axis[] axisXY = {axisX, axisY};
+
             //加入总的坐标轴列表
-            axesList.add(axisXY);
+            //刷新和初始化
+            if (axesList.size() < numOflines) {
+                //如果是空的就初始化
+                axesList.add(axisXY);
+            } else {
+                //如果不是空的就应该更新
+                axesList.set(i, axisXY);
+            }
         }
     }
 
@@ -206,6 +248,5 @@ public class LineViewModel extends ViewModel {
     public static void setHasControl(boolean hasControl) {
         WebConnect.setHasControl(hasControl);
     }
-
 
 }

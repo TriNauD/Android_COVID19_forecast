@@ -5,311 +5,340 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <!--scroll-->
-    <ScrollView
-        android:id="@+id/scroll"
+
+    <!--swipe-->
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:layout_marginTop="0dp"
         android:fillViewport="true">
-
-        <RelativeLayout
+        <!--scroll-->
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <!--people num bar-->
-            <LinearLayout
-                android:id="@+id/people_num_bar"
+            android:layout_height="wrap_content">
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp">
-                <!--bar col1-->
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+                <!--people num bar-->
                 <LinearLayout
-                    android:id="@+id/people_num_bar_col_1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-                    <!--table head  -->
-                    <TextView
-                        android:id="@+id/people_num_bar_col_1_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="@string/people_num_bar_head_col1" />
-                    <!--table num-->
-                    <TextView
-                        android:id="@+id/people_num_bar_col_1_num"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="19024"
-                        android:textColor="@color/red"
-                        android:textSize="20dp" />
-                </LinearLayout>
-                <!--bar col2-->
-                <LinearLayout
-                    android:id="@+id/people_num_bar_col_2"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-                    <!--table head-->
-                    <TextView
-                        android:id="@+id/people_num_bar_col_2_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="@string/people_num_bar_head_col2" />
-                    <!--table num-->
-                    <TextView
-                        android:id="@+id/people_num_bar_col_2_num"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="156"
-                        android:textColor="@color/orange"
-                        android:textSize="20dp" />
-                </LinearLayout>
-                <!--bar col3-->
-                <LinearLayout
-                    android:id="@+id/people_num_bar_col_3"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-                    <!--table head-->
-                    <TextView
-                        android:id="@+id/people_num_bar_col_3_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="@string/people_num_bar_head_col3" />
-                    <!--table num-->
-                    <TextView
-                        android:id="@+id/people_num_bar_col_3_num"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="13783"
-                        android:textColor="@color/green"
-                        android:textSize="20dp" />
-                </LinearLayout>
-                <!--bar col4-->
-                <LinearLayout
-                    android:id="@+id/people_num_bar_col_4"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-                    <!--table head-->
-                    <TextView
-                        android:id="@+id/people_num_bar_col_4_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="@string/people_num_bar_head_col4" />
-                    <!--table num-->
-                    <TextView
-                        android:id="@+id/people_num_bar_col_4_num"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1753"
-                        android:textSize="20dp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!--chart-->
-            <LinearLayout
-                android:id="@+id/param_lines"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_below="@+id/chart"
-                android:orientation="vertical">
-                <!--param line 1-->
-                <RelativeLayout
-                    android:id="@+id/param_line_1"
+                    android:id="@+id/people_num_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
-                    <!--line type spinner-->
-                    <Spinner
-                        android:id="@+id/line_type_spinner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/line_type_label"
-                        android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@+id/line_type_label"
-                        android:entries="@array/item_choices"></Spinner>
+                    android:layout_height="100dp">
+                    <!--bar col1-->
+                    <LinearLayout
+                        android:id="@+id/people_num_bar_col_1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+                        <!--table head  -->
+                        <TextView
+                            android:id="@+id/people_num_bar_col_1_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/people_num_bar_head_col1" />
+                        <!--table num-->
+                        <TextView
+                            android:id="@+id/people_num_bar_col_1_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/red"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+                    <!--bar col2-->
+                    <LinearLayout
+                        android:id="@+id/people_num_bar_col_2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+                        <!--table head-->
+                        <TextView
+                            android:id="@+id/people_num_bar_col_2_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/people_num_bar_head_col2" />
+                        <!--table num-->
+                        <TextView
+                            android:id="@+id/people_num_bar_col_2_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/orange"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+                    <!--bar col3-->
+                    <LinearLayout
+                        android:id="@+id/people_num_bar_col_3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+                        <!--table head-->
+                        <TextView
+                            android:id="@+id/people_num_bar_col_3_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/people_num_bar_head_col3" />
+                        <!--table num-->
+                        <TextView
+                            android:id="@+id/people_num_bar_col_3_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/green"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+                    <!--bar col4-->
+                    <LinearLayout
+                        android:id="@+id/people_num_bar_col_4"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+                        <!--table head-->
+                        <TextView
+                            android:id="@+id/people_num_bar_col_4_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/people_num_bar_head_col4" />
+                        <!--table num-->
+                        <TextView
+                            android:id="@+id/people_num_bar_col_4_num"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="20sp" />
 
-                    <Switch
-                        android:id="@+id/forecast_switch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/line_type_label"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="20dp"
-                        android:checked="true"
-                        android:text="@string/forecast_switch_label" />
-                    <!--forecast switch-->
-                    <TextView
-                        android:id="@+id/line_type_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/line_type_label" />
-                </RelativeLayout>
+                    </LinearLayout>
 
-                <!--param line 2-->
-                <RelativeLayout
-                    android:id="@+id/param_line_2"
+                </LinearLayout>
+
+                <!--param lines-->
+                <LinearLayout
+                    android:id="@+id/param_lines"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:visibility="visible">
-                    <!--model type spinner-->
-                    <Spinner
-                        android:id="@+id/model_type_spinner"
-                        android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/chart"
+                    android:orientation="vertical">
+                    <!--param line 1-->
+                    <RelativeLayout
+                        android:id="@+id/param_line_1"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_toRightOf="@+id/model_type_label"
-                        android:entries="@array/model_type_choices"></Spinner>
+                        android:layout_weight="1">
+                        <!--line type spinner-->
+                        <Spinner
+                            android:id="@+id/line_type_spinner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/line_type_label"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@+id/line_type_label"
+                            android:entries="@array/item_choices"></Spinner>
 
-                    <Spinner
-                        android:id="@+id/control_level_spinner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/model_type_spinner"
-                        android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@+id/control_level_label"
-                        android:entries="@array/control_level_choices"></Spinner>
-                    <!--control level spinner-->
-                    <TextView
-                        android:id="@+id/control_level_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/model_type_label"
-                        android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@+id/model_type_spinner"
-                        android:text="@string/control_level_label" />
+                        <Switch
+                            android:id="@+id/forecast_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/line_type_label"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="20dp"
+                            android:checked="true"
+                            android:text="@string/forecast_switch_label" />
+                        <!--forecast switch-->
+                        <TextView
+                            android:id="@+id/line_type_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/line_type_label" />
+                    </RelativeLayout>
 
-                    <TextView
-                        android:id="@+id/model_type_label"
-                        android:layout_width="wrap_content"
+                    <!--param line 2-->
+                    <RelativeLayout
+                        android:id="@+id/param_line_2"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/model_type_label" />
-                </RelativeLayout>
+                        android:layout_weight="1"
+                        android:visibility="visible">
+                        <!--model type spinner-->
+                        <Spinner
+                            android:id="@+id/model_type_spinner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_toRightOf="@+id/model_type_label"
+                            android:entries="@array/model_type_choices"></Spinner>
 
-                <!--param line 3-->
-                <RelativeLayout
-                    android:id="@+id/param_line_3"
+                        <Spinner
+                            android:id="@+id/control_level_spinner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/model_type_spinner"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:entries="@array/control_level_choices"></Spinner>
+                        <!--control level spinner-->
+                        <TextView
+                            android:id="@+id/control_level_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/model_type_label"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toLeftOf="@+id/control_level_spinner"
+                            android:text="@string/control_level_label" />
+
+                        <TextView
+                            android:id="@+id/model_type_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/model_type_label" />
+                    </RelativeLayout>
+
+                    <!--param line 3-->
+                    <RelativeLayout
+                        android:id="@+id/param_line_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="visible">
+                        <!--control start date-->
+                        <!--month input-->
+                        <EditText
+                            android:id="@+id/control_start_date_month_input"
+                            android:layout_width="30dp"
+                            android:layout_height="40dp"
+                            android:layout_alignBaseline="@+id/control_start_date_label"
+                            android:layout_toRightOf="@+id/control_start_date_label"
+                            android:imeOptions="actionSearch"
+                            android:inputType="number"
+                            android:maxLength="2"
+                            android:maxLines="1"
+                            android:textSize="15sp" />
+
+                        <EditText
+                            android:id="@+id/control_start_date_day_input"
+                            android:layout_width="30dp"
+                            android:layout_height="40dp"
+                            android:layout_alignBaseline="@+id/control_start_date_label"
+                            android:layout_toRightOf="@+id/control_start_date_month_label"
+                            android:inputType="number"
+                            android:maxLength="2"
+                            android:maxLines="1"
+                            android:textSize="15sp" />
+                        <!--day input-->
+                        <EditText
+                            android:id="@+id/control_duration_input"
+                            android:layout_width="30dp"
+                            android:layout_height="40dp"
+                            android:layout_alignBaseline="@+id/control_start_date_label"
+                            android:layout_toLeftOf="@+id/day_label"
+                            android:inputType="number"
+                            android:maxLength="2"
+                            android:maxLines="1"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/control_start_date_day_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/control_start_date_label"
+                            android:layout_toRightOf="@+id/control_start_date_day_input"
+                            android:text="@string/control_start_date_day_label"></TextView>
+
+                        <TextView
+                            android:id="@+id/control_start_date_month_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/control_start_date_label"
+                            android:layout_toRightOf="@+id/control_start_date_month_input"
+                            android:text="@string/control_start_date_month_label"></TextView>
+                        <!--control duration input-->
+                        <TextView
+                            android:id="@+id/control_duration_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/control_start_date_label"
+                            android:layout_toLeftOf="@+id/control_duration_input"
+                            android:text="@string/control_duration_label" />
+
+                        <TextView
+                            android:id="@+id/control_start_date_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/control_start_date_label" />
+
+                        <TextView
+                            android:id="@+id/day_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/control_start_date_label"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="20dp"
+                            android:text="@string/day_label" />
+                    </RelativeLayout>
+                    <!--buttons-->
+                    <RelativeLayout
+                        android:id="@+id/buttonLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/param_lines"
+                        android:layout_marginTop="40dp"
+                        android:gravity="center">
+                        <!--submit button-->
+                        <Button
+                            android:id="@+id/reset_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/reset_button_text">
+                        </Button>
+                        <!--submit button-->
+                        <Button
+                            android:id="@+id/submit_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/reset_button"
+                            android:layout_marginLeft="50dp"
+                            android:text="@string/submit_button_text">
+                        </Button>
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+                <!--chart-->
+                <lecho.lib.hellocharts.view.LineChartView
+                    android:id="@+id/chart"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:visibility="visible">
-                    <!--control start date-->
-                    <!--month input-->
-                    <EditText
-                        android:id="@+id/control_start_date_month_input"
-                        android:layout_width="30dp"
-                        android:layout_height="40dp"
-                        android:layout_alignBaseline="@+id/control_start_date_label"
-                        android:layout_toRightOf="@+id/control_start_date_label"
-                        android:inputType="text"
-                        android:imeOptions="actionSearch"
-                        android:maxLength="2"
-                        android:maxLines="1"
-                        android:textSize="15dp" />
+                    android:layout_height="280dp"
+                    android:layout_below="@+id/people_num_bar"
+                    android:layout_marginRight="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
-                    <EditText
-                        android:id="@+id/control_start_date_day_input"
-                        android:layout_width="30dp"
-                        android:layout_height="40dp"
-                        android:layout_alignBaseline="@+id/control_start_date_label"
-                        android:layout_toRightOf="@+id/control_start_date_month_label"
-                        android:maxLength="2"
-                        android:maxLines="1"
-                        android:textSize="15dp" />
-                    <!--day input-->
-                    <EditText
-                        android:id="@+id/control_duration_input"
-                        android:layout_width="30dp"
-                        android:layout_height="40dp"
-                        android:layout_alignBaseline="@+id/control_start_date_label"
-                        android:layout_toLeftOf="@+id/day_label"
-                        android:maxLength="2"
-                        android:maxLines="1"
-                        android:textSize="15dp" />
 
-                    <TextView
-                        android:id="@+id/control_start_date_day_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/control_start_date_label"
-                        android:layout_toRightOf="@+id/control_start_date_day_input"
-                        android:text="@string/control_start_date_day_label"></TextView>
+            </RelativeLayout>
 
-                    <TextView
-                        android:id="@+id/control_start_date_month_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/control_start_date_label"
-                        android:layout_toRightOf="@+id/control_start_date_month_input"
-                        android:text="@string/control_start_date_month_label"></TextView>
-                    <!--control duration input-->
-                    <TextView
-                        android:id="@+id/control_duration_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/control_start_date_label"
-                        android:layout_toLeftOf="@+id/control_duration_input"
-                        android:text="@string/control_duration_label" />
+        </ScrollView>
 
-                    <TextView
-                        android:id="@+id/control_start_date_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/control_start_date_label" />
-
-                    <TextView
-                        android:id="@+id/day_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/control_start_date_label"
-                        android:layout_alignParentRight="true"
-                        android:text="@string/day_label" />
-                </RelativeLayout>
-            </LinearLayout>
-
-            <!--param lines-->
-            <lecho.lib.hellocharts.view.LineChartView
-                android:id="@+id/chart"
-                android:layout_width="match_parent"
-                android:layout_height="280dp"
-                android:layout_below="@+id/people_num_bar"
-                android:layout_centerHorizontal="true" />
-
-            <!--calendar-->
-            <!--            <CalendarView-->
-            <!--                android:id="@+id/control_start_date_calendar"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_alignParentBottom="true"-->
-            <!--                android:layout_centerHorizontal="true"-->
-            <!--                android:background="@color/white"-->
-            <!--                android:visibility="invisible">-->
-            <!--            </CalendarView>-->
-
-        </RelativeLayout>
-
-    </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <!--tool bar-->
     <android.support.v7.widget.Toolbar
@@ -320,19 +349,62 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme">
 
-        <Spinner
-            android:id="@+id/change_nation_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/nation_name"></Spinner>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/national_title"
-            android:textSize="18dp" />
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/toolbar_title"
+                android:max="100"
+                android:progress="0"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                android:visibility="invisible"
+                android:indeterminateTint="@color/colorPrimary"></ProgressBar>
+
+            <Spinner
+                android:id="@+id/change_nation_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:visibility="invisible"
+                android:entries="@array/nation_name"></Spinner>
+
+            <Spinner
+                android:id="@+id/change_province_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:visibility="visible"
+                android:entries="@array/province_name"></Spinner>
+
+            <ToggleButton
+                android:id="@+id/home_or_abroad_toggle_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:showText="true"
+                android:textOff="@string/ui_text_home"
+                android:textOn="@string/ui_text_abroad">
+            </ToggleButton>
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/national_title"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
     </android.support.v7.widget.Toolbar>
 
 </RelativeLayout>

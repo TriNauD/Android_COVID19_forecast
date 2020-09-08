@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">COVID19_forecast_frontend</string>
+    <string name="app_name">疫情预测</string>
     <string name="national_title">疫情趋势</string>
+    <string name="ui_text_home">国内</string>
+    <string name="ui_text_abroad">海外</string>
     <string name="line_type_label">曲线类型</string>
     <string name="forecast_switch_label">预测</string>
     <string name="model_type_label">模型</string>
@@ -19,8 +21,12 @@
     <string name="control_start_date_year_label">年</string>
     <string name="control_start_date_month_label">月</string>
     <string name="control_start_date_day_label">日</string>
-
-
+    <string name="submit_button_text">提交</string>
+    <string name="reset_button_text">重置</string>
+    <string name="alert_msg_forecasting">正在预测……</string>
+    <string name="alert_msg_input_err">输入错误</string>
+    <string name="alert_msg_get_data_failure">获取数据失败</string>
+    <string name="alert_msg_get_data_success">获取数据成功</string>
 
     <string-array name="item_choices">
         <item>现存确诊</item>
@@ -28,10 +34,12 @@
         <item>累计治愈</item>
         <item>累计死亡</item>
     </string-array>
+
     <string-array name="model_type_choices">
         <item>控制</item>
         <item>群体免疫</item>
     </string-array>
+
     <string-array name="control_level_choices">
         <item>一级控制</item>
         <item>二级控制</item>
@@ -45,9 +53,8 @@
     </string-array>
 
     <string-array name="nation_name">
-        <item>中国</item>
-        <item>秘鲁</item>
         <item>美国</item>
+        <item>秘鲁</item>
         <item>英国</item>
         <item>巴西</item>
         <item>俄罗斯</item>
@@ -55,6 +62,46 @@
         <item>巴基斯坦</item>
         <item>新加坡</item>
         <item>瑞典</item>
+
+    </string-array>
+
+    <string-array name="province_name">
+        <item>全国</item>
+        <item>北京</item>
+        <item>上海</item>
+        <item>广东</item>
+        <item>山东</item>
+        <item>江苏</item>
+        <item>河南</item>
+        <item>河北</item>
+        <item>浙江</item>
+        <item>陕西</item>
+        <item>湖南</item>
+        <item>重庆</item>
+        <item>福建</item>
+        <item>天津</item>
+        <item>云南</item>
+        <item>四川</item>
+        <item>广西</item>
+        <item>安徽</item>
+        <item>海南</item>
+        <item>江西</item>
+        <item>湖北</item>
+        <item>山西</item>
+        <item>辽宁</item>
+        <item>台湾</item>
+        <item>黑龙江</item>
+        <item>内蒙古</item>
+        <item>香港</item>
+        <item>澳门</item>
+        <item>贵州</item>
+        <item>甘肃</item>
+        <item>青海</item>
+        <item>新疆</item>
+        <item>西藏</item>
+        <item>吉林</item>
+        <item>宁夏</item>
+
 
     </string-array>
 </resources>
