@@ -57,6 +57,7 @@ public class ButtonTest {
         onView(withId(R.id.change_nation_spinner)).check(matches(withSpinnerText(containsString("塞尔维亚"))));
 
         onView(withId(R.id.change_nation_spinner)).perform(click());
+
         onView(withText("圣文森特和格林纳丁斯")).perform((click()));
         //onData(anything()).atPosition(2).perform(click());
         //onView(withId(R.id.change_nation_spinner)).check(matches(withSpinnerText(containsString("圣文森特和格林纳丁斯"))));
@@ -69,8 +70,6 @@ public class ButtonTest {
         onView(withId(R.id.control_level_spinner)).perform(click());
         onData(anything()).atPosition(1).perform(click());
         onView(withId(R.id.control_level_spinner)).check(matches(withSpinnerText(containsString("二级控制"))));
-
-        MainActivity activity = activityRule.getActivity();
 
         // Type text and then press the button.
         onView(withId(R.id.control_start_date_day_input))

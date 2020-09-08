@@ -20,7 +20,7 @@
             android:layout_height="wrap_content">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true">
@@ -28,7 +28,8 @@
                 <LinearLayout
                     android:id="@+id/people_num_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp">
+                    android:layout_height="100dp"
+                    android:baselineAligned="false">
                     <!--bar col1-->
                     <LinearLayout
                         android:id="@+id/people_num_bar_col_1"
@@ -145,7 +146,9 @@
                             android:layout_alignBaseline="@+id/line_type_label"
                             android:layout_marginLeft="10dp"
                             android:layout_toRightOf="@+id/line_type_label"
-                            android:entries="@array/item_choices"></Spinner>
+                            android:entries="@array/item_choices"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@+id/line_type_label"></Spinner>
 
                         <Switch
                             android:id="@+id/forecast_switch"
@@ -155,7 +158,9 @@
                             android:layout_alignParentRight="true"
                             android:layout_marginRight="20dp"
                             android:checked="true"
-                            android:text="@string/forecast_switch_label" />
+                            android:text="@string/forecast_switch_label"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="20dp" />
                         <!--forecast switch-->
                         <TextView
                             android:id="@+id/line_type_label"
@@ -163,7 +168,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15dp"
                             android:layout_marginTop="10dp"
-                            android:text="@string/line_type_label" />
+                            android:text="@string/line_type_label"
+                            android:layout_marginStart="15dp" />
                     </RelativeLayout>
 
                     <!--param line 2-->
@@ -181,7 +187,9 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginTop="5dp"
                             android:layout_toRightOf="@+id/model_type_label"
-                            android:entries="@array/model_type_choices"></Spinner>
+                            android:entries="@array/model_type_choices"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@+id/model_type_label"></Spinner>
 
                         <Spinner
                             android:id="@+id/control_level_spinner"
@@ -199,7 +207,9 @@
                             android:layout_alignBaseline="@+id/model_type_label"
                             android:layout_marginLeft="10dp"
                             android:layout_toLeftOf="@+id/control_level_spinner"
-                            android:text="@string/control_level_label" />
+                            android:text="@string/control_level_label"
+                            android:layout_marginStart="10dp"
+                            android:layout_toStartOf="@+id/control_level_spinner" />
 
                         <TextView
                             android:id="@+id/model_type_label"
@@ -207,7 +217,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15dp"
                             android:layout_marginTop="10dp"
-                            android:text="@string/model_type_label" />
+                            android:text="@string/model_type_label"
+                            android:layout_marginStart="15dp" />
                     </RelativeLayout>
 
                     <!--user param lines-->
@@ -232,12 +243,14 @@
                                 android:layout_alignBaseline="@+id/control_start_date_label"
                                 android:layout_toRightOf="@+id/control_start_date_label"
                                 android:imeOptions="actionSearch"
-                                android:inputType="number"
+                                android:inputType="date"
                                 android:maxLength="2"
                                 android:maxLines="1"
                                 android:textSize="15sp"
                                 android:textAlignment="center"
-                                android:gravity="center_horizontal" />
+                                android:gravity="center_horizontal"
+                                android:autofillHints=""
+                                android:layout_toEndOf="@+id/control_start_date_label" />
 
                             <EditText
                                 android:id="@+id/control_start_date_day_input"
@@ -245,12 +258,14 @@
                                 android:layout_height="40dp"
                                 android:layout_alignBaseline="@+id/control_start_date_label"
                                 android:layout_toRightOf="@+id/control_start_date_month_label"
-                                android:inputType="number"
+                                android:inputType="date"
                                 android:maxLength="2"
                                 android:maxLines="1"
                                 android:textSize="15sp"
                                 android:textAlignment="center"
-                                android:gravity="center_horizontal"/>
+                                android:gravity="center_horizontal"
+                                android:importantForAutofill="no"
+                                android:layout_toEndOf="@+id/control_start_date_month_label" />
                             <!--day input-->
                             <EditText
                                 android:id="@+id/control_duration_input"
@@ -263,7 +278,9 @@
                                 android:maxLines="1"
                                 android:textAlignment="center"
                                 android:textSize="15sp"
-                                android:gravity="center_horizontal" />
+                                android:gravity="center_horizontal"
+                                android:autofillHints=""
+                                android:layout_toStartOf="@+id/day_label" />
 
                             <TextView
                                 android:id="@+id/control_start_date_day_label"
@@ -271,7 +288,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignBaseline="@+id/control_start_date_label"
                                 android:layout_toRightOf="@+id/control_start_date_day_input"
-                                android:text="@string/control_start_date_day_label"></TextView>
+                                android:text="@string/control_start_date_day_label"
+                                android:layout_toEndOf="@+id/control_start_date_day_input"></TextView>
 
                             <TextView
                                 android:id="@+id/control_start_date_month_label"
@@ -279,7 +297,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignBaseline="@+id/control_start_date_label"
                                 android:layout_toRightOf="@+id/control_start_date_month_input"
-                                android:text="@string/control_start_date_month_label"></TextView>
+                                android:text="@string/control_start_date_month_label"
+                                android:layout_toEndOf="@+id/control_start_date_month_input"></TextView>
                             <!--control duration input-->
                             <TextView
                                 android:id="@+id/control_duration_label"
@@ -287,7 +306,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignBaseline="@+id/control_start_date_label"
                                 android:layout_toLeftOf="@+id/control_duration_input"
-                                android:text="@string/control_duration_label" />
+                                android:text="@string/control_duration_label"
+                                android:layout_toStartOf="@+id/control_duration_input" />
 
                             <TextView
                                 android:id="@+id/control_start_date_label"
@@ -295,7 +315,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
                                 android:layout_marginTop="10dp"
-                                android:text="@string/control_start_date_label" />
+                                android:text="@string/control_start_date_label"
+                                android:layout_marginStart="15dp" />
 
                             <TextView
                                 android:id="@+id/day_label"
@@ -304,7 +325,9 @@
                                 android:layout_alignBaseline="@+id/control_start_date_label"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="20dp"
-                                android:text="@string/day_label" />
+                                android:text="@string/day_label"
+                                android:layout_marginEnd="20dp"
+                                android:layout_alignParentEnd="true" />
                         </RelativeLayout>
                         <!--user param line 2-->
                         <RelativeLayout
@@ -325,7 +348,6 @@
                         android:id="@+id/buttonLine"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/param_lines"
                         android:layout_marginTop="40dp"
                         android:gravity="center">
                         <!--submit button-->
@@ -342,7 +364,9 @@
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@+id/reset_button"
                             android:layout_marginLeft="50dp"
-                            android:text="@string/submit_button_text">
+                            android:text="@string/submit_button_text"
+                            android:layout_marginStart="50dp"
+                            android:layout_toEndOf="@+id/reset_button">
                         </Button>
                     </RelativeLayout>
                 </LinearLayout>
@@ -357,7 +381,8 @@
                     android:layout_marginRight="20dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:focusableInTouchMode="true"/>
+                    android:focusableInTouchMode="true"
+                    android:layout_marginEnd="20dp" />
 
 
             </RelativeLayout>
@@ -384,9 +409,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/toolbar_title"
                 android:layout_centerVertical="true"
                 android:visibility="invisible"
-                android:entries="@array/nation_name"></Spinner>
+                android:entries="@array/nation_name"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/toolbar_title"></Spinner>
 
             <Spinner
                 android:id="@+id/change_province_spinner"
@@ -395,7 +423,8 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
                 android:visibility="visible"
-                android:entries="@array/province_name"></Spinner>
+                android:entries="@array/province_name"
+                android:layout_alignParentStart="true"></Spinner>
 
             <ToggleButton
                 android:id="@+id/home_or_abroad_toggle_btn"
@@ -406,7 +435,9 @@
                 android:layout_alignParentRight="true"
                 android:showText="true"
                 android:textOff="@string/ui_text_home"
-                android:textOn="@string/ui_text_abroad">
+                android:textOn="@string/ui_text_abroad"
+                android:layout_marginEnd="20dp"
+                android:layout_alignParentEnd="true" tools:targetApi="lollipop">
             </ToggleButton>
 
             <TextView
