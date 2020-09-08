@@ -480,6 +480,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //设置控制等级
                 WebConnect.setControlGrade(controlLevelSpinner.getSelectedItemPosition() + 1);
                 Log.i(TAG, "Button: ControlLevel:" + (controlLevelSpinner.getSelectedItemPosition() + 1));
+                //设置控制持续时间
+                WebConnect.setControlDuration(Integer.valueOf(controlDurationInput.getText().toString()));
+                Log.i(TAG, "Button: ControlDuration:" + (Integer.valueOf(controlDurationInput.getText().toString())));
                 //设置控制开始日期
                 try {
                     int monthInt = Integer.parseInt(controlStartDateMonthInput.getText().toString());
