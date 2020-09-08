@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         WebConnect.getWorld(currentRegionName);
                         break;
                     case "Predict":
-                        loadBuilder.setMessage("预测中");
                         WebConnect.getPredict(currentRegionName);
                         break;
                     case "Province":
@@ -491,6 +490,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         //提示输入错误 并清空输入框
                         toast.setText(R.string.alert_msg_input_err);
                         toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.show();
                         clearFocusableInputBoxes();
                         Log.i(TAG, "Button: Too big number");
                     }
@@ -502,6 +502,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 } catch (Exception e) {
                     toast.setText(R.string.alert_msg_input_err);
                     toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.show();
                     clearFocusableInputBoxes();
                     Log.i(TAG, "Button: Bad input type");
                 }
