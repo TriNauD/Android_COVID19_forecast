@@ -887,6 +887,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         Log.i(TAG, "onCheckedChanged 进入函数");
+        //清空点击显示
+        clearClick();
         //判断监听到的是哪个组件被选中
         switch (buttonView.getId()) {
             //如果是预测开关按钮switch
@@ -953,10 +955,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 break;
         }
-        //清空点击显示
-        clearClick();
-
-
     }
 
     /**
