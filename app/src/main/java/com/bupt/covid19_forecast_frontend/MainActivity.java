@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         break;
                     case "Province":
                         WebConnect.getProvince(currentRegionName);
+                        break;
                 }
 
                 //如果没有得到数据，就一直等待，并提示
