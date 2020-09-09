@@ -522,6 +522,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clearFocusableInputBoxes(controlDurationInput);
+                clearFocusableInputBoxes(controlStartDateMonthInput);
+                clearFocusableInputBoxes(controlStartDateDayInput);
                 Log.i(TAG, "Button: reset button clicked");
             }
         });
