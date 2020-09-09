@@ -37,7 +37,7 @@ public class ButtonTest {
             = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void testProvinceChange(){
+    public void testProvinceChange() {
         //测试切换省份
         onView(withId(R.id.change_province_spinner)).perform(click());
         onData(anything()).atPosition(1).perform(click());
@@ -48,7 +48,7 @@ public class ButtonTest {
     }
 
     @Test
-    public void testNationChange(){
+    public void testNationChange() {
         //测试切换国内/海外
         onView(withId(R.id.home_or_abroad_toggle_btn)).perform(click());
         //测试切换国家
@@ -64,7 +64,9 @@ public class ButtonTest {
     }
 
     @Test
-    public void testButtonClick(){
+    public void testButtonClick() {
+        //开启预测
+        onView(withId(R.id.forecast_switch)).perform(click());
 
         //测试切换控制等级
         onView(withId(R.id.control_level_spinner)).perform(click());
@@ -82,6 +84,7 @@ public class ButtonTest {
         onView(withId(R.id.model_type_spinner)).perform(click());
         onData(anything()).atPosition(1).perform(click());
         onView(withId(R.id.model_type_spinner)).check(matches(withSpinnerText(containsString("群体免疫"))));
+        onView(withId(R.id.submit_button)).perform(click());
 
         //测试切换预测状态
         onView(withId(R.id.forecast_switch)).perform(click());
@@ -111,5 +114,19 @@ public class ButtonTest {
         //重置
         onView(withId(R.id.reset_button)).perform(click());
 
+    }
+
+    //用户输入参数测试
+    @Test
+    public void testUserParamInput() {
+        //开启预测
+        onView(withId(R.id.forecast_switch)).perform(click());
+
+        // input 09 0
+        onView(withId(R.id.control_start_date_day_input))
+                .perform(typeText("09"), closeSoftKeyboard());
+        onView(withId(R.id.control_start_date_month_input))
+                .perform(typeText("0"), closeSoftKeyboard());
+        onView(withId(R.id.submit_button)).perform(click());
     }
 }
