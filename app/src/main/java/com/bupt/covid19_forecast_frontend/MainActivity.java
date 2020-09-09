@@ -27,8 +27,11 @@ import android.widget.ToggleButton;
 
 import com.android.tu.loadingdialog.LoadingDailog;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import lecho.lib.hellocharts.gesture.ContainerScrollType;
@@ -40,6 +43,8 @@ import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.view.LineChartView;
 import viewModel.WebConnect;
 import viewModel.LineViewModel;
+
+import static android.icu.text.DateTimePatternGenerator.DAY;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
@@ -545,11 +550,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         tillTodyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (isDateValid(Integer.parseInt(controlStartDateMonthInput.toString()),controlStartDateDayInput.toString())){
-//
-//                }
-                Calendar calendar = Calendar.getInstance();
-//                controlDurationInput.setText();
+                if (isDateInputValid()) {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        //控制开始时间转换为date
+                        Date controlStartDate = simpleDateFormat.parse(formatDateInput());
+                        //当前日期
+                        Date dateNow = new Date();
+                        //得到差距多少天
+                        int distance = getTimeDistance(controlStartDate, dateNow);
+                        //如果持续时间输入框可更改则设为该差距 否则不变
+                        controlDurationInput.setText(controlDurationInput.isFocusable() ? String.valueOf(distance) : controlDurationInput.getText());
+                        Log.i(TAG, "tillTodayButton: 距离" + distance);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    toast.show();
+                }
             }
         });
         //toggle button设置listener
@@ -773,6 +791,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String day = (dayInt >= 10) ? (dayStr) : ("0" + dayStr);
         dateFormatted = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
         return dateFormatted;
+    }
+
+
+    /**
+     * 获得两个日期间距多少天
+     *
+     * @param smdate
+     * @param bdate
+     * @return
+     */
+    public static int getTimeDistance(Date smdate, Date bdate) {
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(smdate);
+
+        long time1 = cal.getTimeInMillis();
+
+        cal.setTime(bdate);
+
+        long time2 = cal.getTimeInMillis();
+
+        long between_days = (time2 - time1) / (1000 * 3600 * 24);
+
+        return Integer.parseInt(String.valueOf(between_days));
     }
 
     /**
