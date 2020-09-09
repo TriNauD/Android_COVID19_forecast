@@ -27,7 +27,11 @@ import android.widget.ToggleButton;
 
 import com.android.tu.loadingdialog.LoadingDailog;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import lecho.lib.hellocharts.gesture.ContainerScrollType;
@@ -39,6 +43,8 @@ import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.view.LineChartView;
 import viewModel.WebConnect;
 import viewModel.LineViewModel;
+
+import static android.icu.text.DateTimePatternGenerator.DAY;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Switch forecastSwitch;
     private Button submitButton;
     private Button resetButton;
+    private Button tillTodyButton;
     private ToggleButton homeOrAbroadToggleButton;
     private EditText controlDurationInput;
     private EditText controlStartDateMonthInput;
@@ -163,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 while (!WebConnect.isGetFinished()) {
                     Thread.sleep(1);
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -400,6 +406,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //button
         submitButton = findViewById(R.id.submit_button);
         resetButton = findViewById(R.id.reset_button);
+        tillTodyButton = findViewById(R.id.till_today_button);
 
         //toggle button
         homeOrAbroadToggleButton = findViewById(R.id.home_or_abroad_toggle_btn);
@@ -478,12 +485,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 WebConnect.setHasControl(modelTypeSpinner.getSelectedItemPosition() == 0);
                 Log.i(TAG, "Button: hasControl:" + (modelTypeSpinner.getSelectedItemPosition() == 0));
                 //设置控制等级
-                WebConnect.setControlGrade(controlLevelSpinner.getSelectedItemPosition() + 1);
-                Log.i(TAG, "Button: ControlLevel:" + (controlLevelSpinner.getSelectedItemPosition() + 1));
-                //设置控制持续时间
-                WebConnect.setControlDuration(Integer.valueOf(controlDurationInput.getText().toString()));
-                Log.i(TAG, "Button: ControlDuration:" + (Integer.valueOf(controlDurationInput.getText().toString())));
-                //设置控制开始日期
+                WebConnect.setControlGrade((controlLevelSpinner.getSelectedItemPosition() + 1) % 4);
+                Log.i(TAG, "Button: ControlLevel:" + ((controlLevelSpinner.getSelectedItemPosition() + 1) % 4));
+                //设置控制开始日期&持续时间
                 //控制
                 if (modelTypeSpinner.getSelectedItemPosition() == 0) {
                     //用户输入合法（不为空且日期合法）
@@ -493,13 +497,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         //WebConnect设置开始时间
                         WebConnect.setStartControlDate(date);
                         Log.i(TAG, "Button: ControlStartDate:" + date);
+                        //WebConnect设置控制持续时间
+                        WebConnect.setControlDuration(Integer.valueOf(controlDurationInput.getText().toString()));
+                        Log.i(TAG, "Button: ControlDuration:" + (Integer.valueOf(controlDurationInput.getText().toString())));
                         //发送 获取预测
                         getDataTask = new GetDataTask();
                         getDataTask.execute("Predict");
                     }
                     //用户输入非法 显示提示
                     else {
-                        clearFocusableInputBoxes();
                         toast.setDuration(Toast.LENGTH_LONG);
                         toast.show();
                     }
@@ -516,8 +522,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clearFocusableInputBoxes();
                 Log.i(TAG, "Button: reset button clicked");
+            }
+        });
+        tillTodyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isDateInputValid()) {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        //控制开始时间转换为date
+                        Date controlStartDate = simpleDateFormat.parse(formatDateInput());
+                        //当前日期
+                        Date dateNow = new Date();
+                        //得到差距多少天
+                        int distance = getTimeDistance(controlStartDate, dateNow);
+                        //判断是否
+                        if (distance > 0) {
+                            //如果持续时间输入框可更改则设为该差距 否则不变
+                            controlDurationInput.setText(controlDurationInput.isFocusable() ? String.valueOf(distance) : controlDurationInput.getText());
+                            Log.i(TAG, "tillTodayButton: 距离" + distance);
+                        } else {
+                            //超出今天范围
+                            clearFocusableInputBoxes(controlStartDateMonthInput);
+                            clearFocusableInputBoxes(controlStartDateDayInput);
+                            clearFocusableInputBoxes(controlDurationInput);
+                            toast.setText(R.string.alert_msg_input_err_after_today);
+                            toast.show();
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    toast.show();
+                }
             }
         });
         //toggle button设置listener
@@ -614,10 +652,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @author xjy
      */
-    public void clearFocusableInputBoxes() {
-        controlStartDateDayInput.setText("");
-        controlStartDateMonthInput.setText("");
-        controlDurationInput.setText(controlDurationInput.isFocusable() ? "" : controlDurationInput.getText());
+    public void clearFocusableInputBoxes(EditText editText) {
+        editText.setText(editText.isFocusable() ? "" : editText.getText());
     }
 
     /**
@@ -627,42 +663,74 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @author xjy
      */
     public boolean isUserInputParamValid() {
-        boolean isUserInputParamValid = true;
-        String monthStr = controlStartDateMonthInput.getText().toString().trim();
-        String dayStr = controlStartDateDayInput.getText().toString().trim();
-        //首先判断是不是空 如果空设置提示消息为空
-        if (monthStr.equals("") || dayStr.equals("")) {
-            isUserInputParamValid = false;
-            toast.setText(R.string.alert_msg_input_err_empty);
+        return (isDateInputValid() && isDurationInputValid());
+    }
+
+    /**
+     * 判断输入持续时间是否正确
+     *
+     * @author xjy
+     */
+    public boolean isDurationInputValid() {
+        boolean isDurationInputValid = true;
+        String durationStr = controlDurationInput.getText().toString().trim();
+        //判断是不是空 如果空设置提示消息为空
+        if (durationStr.equals("")) {
+            isDurationInputValid = false;
+            toast.setText(R.string.alert_msg_input_err_duration_empty);
         }
-        //再判断日期是否合法
-        else {
-            int monthInt = Integer.parseInt(monthStr);
-            int dayInt = Integer.parseInt(dayStr);
-            isUserInputParamValid = isDateValid(monthInt, dayInt);
-        }
-        return isUserInputParamValid;
+        return isDurationInputValid;
     }
 
     /**
      * 判断输入日期是否正确
      *
-     * @param month,day
+     * @author xjy
+     */
+    public boolean isDateInputValid() {
+        boolean isDateInputValid = true;
+        String monthStr = controlStartDateMonthInput.getText().toString().trim();
+        String dayStr = controlStartDateDayInput.getText().toString().trim();
+        //首先判断是不是空 如果空设置提示消息为空
+        if (monthStr.equals("") || dayStr.equals("")) {
+            isDateInputValid = false;
+            toast.setText(R.string.alert_msg_input_err_date_empty);
+        }
+        //再判断日期是否合法
+        else {
+            int monthInt = Integer.parseInt(monthStr);
+            int dayInt = Integer.parseInt(dayStr);
+            isDateInputValid = isDateValid(monthInt, dayInt);
+        }
+        return isDateInputValid;
+    }
+
+    /**
+     * 判断日期是否正确
+     *
+     * @param month
+     * @param day
      * @author xjy
      */
     public boolean isDateValid(int month, int day) {
         boolean isDateValid = true;
         //月份天数对照
         int monthDays[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        //月份<=0或者月份>12 日<=或者>31 明显离谱日期
+        //月份<=0或者月份>12 日<=或者>31 粗略排除明显离谱日期
         if ((month <= 0 || month > 12) || ((day <= 0) || (day > 31))) {
             toast.setText(R.string.alert_msg_input_err_invalid);
+            //清除日期输入框
+            clearFocusableInputBoxes(controlStartDateDayInput);
+            clearFocusableInputBoxes(controlStartDateMonthInput);
             isDateValid = false;
         }
-        //按大小月分
+        //按大小月精确分
         else {
             if (day > monthDays[month - 1]) {
                 toast.setText(R.string.alert_msg_input_err_invalid);
+                //清除日期输入框
+                clearFocusableInputBoxes(controlStartDateDayInput);
+                clearFocusableInputBoxes(controlStartDateMonthInput);
                 isDateValid = false;
             }
         }
@@ -684,6 +752,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String day = (dayInt >= 10) ? (dayStr) : ("0" + dayStr);
         dateFormatted = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
         return dateFormatted;
+    }
+
+
+    /**
+     * 获得两个日期间距多少天
+     *
+     * @param smdate
+     * @param bdate
+     * @return
+     */
+    public static int getTimeDistance(Date smdate, Date bdate) {
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(smdate);
+
+        long time1 = cal.getTimeInMillis();
+
+        cal.setTime(bdate);
+
+        long time2 = cal.getTimeInMillis();
+
+        long between_days = (time2 - time1) / (1000 * 3600 * 24);
+
+        return Integer.parseInt(String.valueOf(between_days));
     }
 
     /**
@@ -744,10 +836,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         //如果预测按钮开着
                         //因为在我们的线系统中，跟在真实后面的就是预测线了
                         curLineIndex = lineViewModel.getNumOfRealLines();
-                        //同时显示参数们
+                        //显示第2行和按钮行
                         paramLine2.setVisibility(View.VISIBLE);
                         buttonLine.setVisibility(View.VISIBLE);
-                        //用户参数要看modelType是否为控制
+                        //用户参数行要看modelType是否为控制
                         userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 0 ? View.VISIBLE : View.INVISIBLE);
                     } else {
                         //如果没在预测就正常0
@@ -768,10 +860,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //选了第1个选项：控制
                 if (pos == 0) {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
-                    //控制等级spinner应该保持出现
-                    controlLevelSpinner.setVisibility(View.VISIBLE);
-                    controlLevelLabel.setVisibility(View.VISIBLE);
-                    //第三行要看第二行是否出现
+                    //用户参数行要看第二行是否出现
                     if (paramLine2.getVisibility() == View.VISIBLE) {
                         userParamLines.setVisibility(View.VISIBLE);
                     }
@@ -779,10 +868,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //选了第2个选项：群体免疫
                 else {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
-                    //第三行和控制等级spinner应该隐藏
+                    //用户参数行应该隐藏
                     userParamLines.setVisibility(View.INVISIBLE);
-                    controlLevelSpinner.setVisibility(View.INVISIBLE);
-                    controlLevelLabel.setVisibility(View.INVISIBLE);
                 }
                 break;
             }
