@@ -1,9 +1,11 @@
 package com.bupt.covid19_forecast_frontend;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.test.ActivityInstrumentationTestCase2;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,7 +33,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class ButtonTest {
+public class ButtonTest{
+
     @Rule
     public ActivityTestRule<MainActivity> activityRule
             = new ActivityTestRule<>(MainActivity.class);
@@ -56,11 +59,8 @@ public class ButtonTest {
         onData(anything()).atPosition(2).perform(click());
         onView(withId(R.id.change_nation_spinner)).check(matches(withSpinnerText(containsString("塞尔维亚"))));
 
-        onView(withId(R.id.change_nation_spinner)).perform(click());
-
-        onView(withText("圣文森特和格林纳丁斯")).perform((click()));
-        //onData(anything()).atPosition(2).perform(click());
-        //onView(withId(R.id.change_nation_spinner)).check(matches(withSpinnerText(containsString("圣文森特和格林纳丁斯"))));
+        //onView(withId(R.id.change_nation_spinner)).perform(click());
+        //onView(withText("圣文森特和格林纳丁斯")).perform(click());
     }
 
     @Test
@@ -116,6 +116,18 @@ public class ButtonTest {
 
     }
 
+
+    /**
+    @Test
+    public void testScreenRotation(){
+        //onView(withId(R.id.home_or_abroad_toggle_btn)).perform(click());
+        onView(withId(R.id.forecast_switch)).perform(click());
+        //测试屏幕旋转
+        activityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        activityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+    */
+
     //用户输入参数测试
     @Test
     public void testUserParamInput() {
@@ -129,4 +141,5 @@ public class ButtonTest {
                 .perform(typeText("0"), closeSoftKeyboard());
         onView(withId(R.id.submit_button)).perform(click());
     }
+
 }
