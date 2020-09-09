@@ -1,9 +1,11 @@
 package com.bupt.covid19_forecast_frontend;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.test.ActivityInstrumentationTestCase2;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,7 +33,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class ButtonTest {
+public class ButtonTest{
+
     @Rule
     public ActivityTestRule<MainActivity> activityRule
             = new ActivityTestRule<>(MainActivity.class);
@@ -109,4 +112,15 @@ public class ButtonTest {
         onView(withId(R.id.reset_button)).perform(click());
 
     }
+
+    /**
+    @Test
+    public void testScreenRotation(){
+        //onView(withId(R.id.home_or_abroad_toggle_btn)).perform(click());
+        onView(withId(R.id.forecast_switch)).perform(click());
+        //测试屏幕旋转
+        activityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        activityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+    */
 }
