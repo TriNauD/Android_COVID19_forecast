@@ -108,6 +108,5 @@ public class ButtonTest {
         //重置
         onView(withId(R.id.reset_button)).perform(click());
 
-
     }
 }
