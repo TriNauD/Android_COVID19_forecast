@@ -506,49 +506,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 WebConnect.setControlDuration(Integer.valueOf(controlDurationInput.getText().toString()));
                 Log.i(TAG, "Button: ControlDuration:" + (Integer.valueOf(controlDurationInput.getText().toString())));
                 //设置控制开始日期
-                //如果是控制
+                //控制
                 if (modelTypeSpinner.getSelectedItemPosition() == 0) {
-                    String monthStr = controlStartDateMonthInput.getText().toString().trim();
-                    String dayStr = controlStartDateDayInput.getText().toString().trim();
-                    if (!monthStr.equals("") && !dayStr.equals("")) {
+                    if (isUserInputParamValid()) {
+                        String monthStr = controlStartDateMonthInput.getText().toString().trim();
+                        String dayStr = controlStartDateDayInput.getText().toString().trim();
                         int monthInt = Integer.parseInt(monthStr);
                         int dayInt = Integer.parseInt(dayStr);
-                        //检测日期合法
-                        if (isDateValid(monthInt, dayInt)) {
-                            //输入正确 则调整日期格式
-                            String month = (monthInt >= 10) ? (monthStr) : ("0" + monthStr);
-                            String day = (dayInt >= 10) ? (dayStr) : ("0" + dayStr);
-                            String date = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
-                            //WebConnect设置开始时间
-                            WebConnect.setStartControlDate(date);
-                            Log.i(TAG, "Button: ControlStartDate:" + date);
-                        } else {
-                            //提示输入非法 并清空输入框
-                            toast.setText(R.string.alert_msg_input_err_invalid);
-                            toast.setDuration(Toast.LENGTH_SHORT);
-                            toast.show();
-                            clearFocusableInputBoxes();
-                            Log.i(TAG, "Button: Date not valid. ");
-                            return;
-                        }
+                        String month = (monthInt >= 10) ? (monthStr) : ("0" + monthStr);
+                        String day = (dayInt >= 10) ? (dayStr) : ("0" + dayStr);
+                        String date = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
+                        //WebConnect设置开始时间
+                        WebConnect.setStartControlDate(date);
+                        Log.i(TAG, "Button: ControlStartDate:" + date);
+                        //发送
+                        //获取预测
+                        getDataTask = new GetDataTask();
+                        getDataTask.execute("Predict");
                     } else {
-                        //提示输入空 并清空输入框
-                        toast.setText(R.string.alert_msg_input_err_empty);
-                        toast.setDuration(Toast.LENGTH_SHORT);
-                        toast.show();
                         clearFocusableInputBoxes();
-                        Log.i(TAG, "Button: Date empty. ");
-                        return;
-
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.show();
                     }
-                    //群体免疫
-                } else {
-                    WebConnect.setStartControlDate("yyyy-mm-dd");
                 }
-                //发送
-                //获取预测
-                getDataTask = new GetDataTask();
-                getDataTask.execute("Predict");
+                //群体免疫
+                else {
+                    WebConnect.setStartControlDate("yyyy-mm-dd");
+                    //发送
+                    //获取预测
+                    getDataTask = new GetDataTask();
+                    getDataTask.execute("Predict");
+                }
             }
         });
         resetButton.setOnClickListener(new View.OnClickListener() {
@@ -690,6 +678,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
+     * 判断用户输入日期是否正确
+     *
+     * @param
+     * @author xjy
+     */
+    public boolean isUserInputParamValid() {
+        boolean isUserInputParamValid = true;
+        String monthStr = controlStartDateMonthInput.getText().toString().trim();
+        String dayStr = controlStartDateDayInput.getText().toString().trim();
+        //首先判断是不是空
+        if (monthStr.equals("") || dayStr.equals("")) {
+            isUserInputParamValid = false;
+            toast.setText(R.string.alert_msg_input_err_empty);
+        }
+        //判断日期是否合法
+        else {
+            int monthInt = Integer.parseInt(monthStr);
+            int dayInt = Integer.parseInt(dayStr);
+            isUserInputParamValid = isDateValid(monthInt, dayInt);
+        }
+        return isUserInputParamValid;
+    }
+
+    /**
      * 判断输入日期是否正确
      *
      * @param month,day
@@ -697,22 +709,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     public boolean isDateValid(int month, int day) {
         boolean isDateValid = true;
-        //如果空
-        if ("0".equals(String.valueOf(month)) || "0".equals(String.valueOf(day))) {
-            toast.setText("输入不可为空");
-            return false;
-        }
         //月份天数对照
         int monthDays[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         //月份<=0或者月份>12 日<=或者>31 明显离谱日期
         if ((month <= 0 || month > 12) || (day <= 0) || (day > 31)) {
-            toast.setText("输入日期非法");
+            toast.setText(R.string.alert_msg_input_err_invalid);
             isDateValid = false;
         }
         //按大小月分
         else {
             if (day > monthDays[month - 1]) {
-                toast.setText("输入日期非法");
+                toast.setText(R.string.alert_msg_input_err_invalid);
                 isDateValid = false;
             }
         }
