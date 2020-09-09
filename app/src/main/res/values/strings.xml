@@ -24,7 +24,8 @@
     <string name="submit_button_text">提交</string>
     <string name="reset_button_text">重置</string>
     <string name="alert_msg_forecasting">正在预测……</string>
-    <string name="alert_msg_input_err">输入错误</string>
+    <string name="alert_msg_input_err_invalid">输入日期非法</string>
+    <string name="alert_msg_input_err_empty">输入日期不可为空</string>
     <string name="alert_msg_get_data_failure">获取数据失败</string>
     <string name="alert_msg_get_data_success">获取数据成功</string>
 
