@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -33,7 +34,7 @@ public class WebConnect {
     //“真实线”的节点数
     private static int numOfRealPoints = 9999;
     //“预测线”的节点数
-    private static int numOfForecastPoints = 333;
+    private static int numOfForecastPoints = 30;
 
 
     //预测参数
@@ -543,8 +544,27 @@ public class WebConnect {
         }
     }
 
-    //----------------------getter & setter---------------------------------------------------------
+    /**
+     * 清空预测线的数据
+     *
+     * @author lym
+     */
+    public static void resetPredictData() {
+        Arrays.fill(xyPredict, 0);
+    }
 
+    /**
+     * 清空真实线的数据
+     *
+     * @author lym
+     */
+    public static void resetRealData() {
+        for (int i = 0; i < xyReal.length; i++) {
+            Arrays.fill(xyReal[i], 0);
+        }
+    }
+
+    //----------------------getter & setter---------------------------------------------------------
     public static List<List<String>> getAxisLableList() {
         return axisLableList;
     }
