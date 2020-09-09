@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import domain.Alltime_province;
@@ -436,6 +437,7 @@ public class WebConnect {
                 //debug TAG
 //                Log.d(TAG, "initReal：xyReal[i][j]: " + xyReal[i][j]);
                 linePoints[j] = xyReal[i][j];
+//                linePoints[j] = new Random().nextInt(10) + j * 1000;//假数据专用调试
             }
             if (lineDataList.size() < numOfRealLines) {
                 //如果是空的就初始化
@@ -456,6 +458,10 @@ public class WebConnect {
         for (int i = 0; i < numOfForecastLines; ++i) {
             float[] linePoints = new float[numOfForecastPoints];//一条线上面的点
             System.arraycopy(xyPredict, 0, linePoints, 0, numOfForecastPoints);
+//            //假数据专用调试
+//            for (int j = 0; j < numOfForecastPoints; j++) {
+//                linePoints[j] = new Random().nextInt(100) + j * 10000;
+//            }
             if (lineDataList.size() < numOfRealLines + numOfForecastLines) {
                 //如果线组里面还没有预测线，就新添加
                 lineDataList.add(linePoints);
