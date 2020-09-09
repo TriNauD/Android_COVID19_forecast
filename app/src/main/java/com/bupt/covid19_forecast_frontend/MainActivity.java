@@ -147,23 +147,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected String doInBackground(String... params) {
             try {
-                //去获取数据，如果成功会将isGetFinished设置为true
-                switch (params[0]) {
-                    case "World":
-                        WebConnect.getWorld(currentRegionName);
-                        break;
-                    case "Predict":
-                        WebConnect.getPredict(currentRegionName);
-                        break;
-                    case "Province":
-                        WebConnect.getProvince(currentRegionName);
-                        break;
-                }
-
-                //如果没有得到数据，就一直等待，并提示
-                while (!WebConnect.isGetFinished()) {
-                    Thread.sleep(1);
-                }
+//                //去获取数据，如果成功会将isGetFinished设置为true
+//                switch (params[0]) {
+//                    case "World":
+//                        WebConnect.getWorld(currentRegionName);
+//                        break;
+//                    case "Predict":
+//                        WebConnect.getPredict(currentRegionName);
+//                        break;
+//                    case "Province":
+//                        WebConnect.getProvince(currentRegionName);
+//                        break;
+//                }
+//
+//                //如果没有得到数据，就一直等待，并提示
+//                while (!WebConnect.isGetFinished()) {
+//                    Thread.sleep(1);
+//                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -499,12 +499,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 WebConnect.setHasControl(modelTypeSpinner.getSelectedItemPosition() == 0);
                 Log.i(TAG, "Button: hasControl:" + (modelTypeSpinner.getSelectedItemPosition() == 0));
                 //设置控制等级
-                WebConnect.setControlGrade(controlLevelSpinner.getSelectedItemPosition() + 1);
-                Log.i(TAG, "Button: ControlLevel:" + (controlLevelSpinner.getSelectedItemPosition() + 1));
-                //设置控制持续时间
-                WebConnect.setControlDuration(Integer.valueOf(controlDurationInput.getText().toString()));
-                Log.i(TAG, "Button: ControlDuration:" + (Integer.valueOf(controlDurationInput.getText().toString())));
-                //设置控制开始日期
+                WebConnect.setControlGrade((controlLevelSpinner.getSelectedItemPosition() + 1) % 4);
+                Log.i(TAG, "Button: ControlLevel:" + ((controlLevelSpinner.getSelectedItemPosition() + 1) % 4));
+                //设置控制开始日期&持续时间
                 //控制
                 if (modelTypeSpinner.getSelectedItemPosition() == 0) {
                     //用户输入合法（不为空且日期合法）
@@ -514,6 +511,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         //WebConnect设置开始时间
                         WebConnect.setStartControlDate(date);
                         Log.i(TAG, "Button: ControlStartDate:" + date);
+                        //WebConnect设置控制持续时间
+                        WebConnect.setControlDuration(Integer.valueOf(controlDurationInput.getText().toString()));
+                        Log.i(TAG, "Button: ControlDuration:" + (Integer.valueOf(controlDurationInput.getText().toString())));
                         //发送 获取预测
                         getDataTask = new GetDataTask();
                         getDataTask.execute("Predict");
@@ -682,8 +682,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         boolean isUserInputParamValid = true;
         String monthStr = controlStartDateMonthInput.getText().toString().trim();
         String dayStr = controlStartDateDayInput.getText().toString().trim();
+        String durationStr = controlDurationInput.getText().toString().trim();
         //首先判断是不是空 如果空设置提示消息为空
-        if (monthStr.equals("") || dayStr.equals("")) {
+        if (monthStr.equals("") || dayStr.equals("") || durationStr.equals("")) {
             isUserInputParamValid = false;
             toast.setText(R.string.alert_msg_input_err_empty);
         }

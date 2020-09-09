@@ -209,6 +209,7 @@
                         android:id="@+id/user_param_lines"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
                         android:orientation="vertical">
                         <!--user param line 1-->
                         <RelativeLayout
@@ -347,6 +348,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_alignBaseline="@+id/control_duration_label"
                                 android:layout_toRightOf="@+id/day_label"
+                                android:layout_marginLeft="20dp"
                                 android:textAlignment="center"
                                 android:text="到今天"
                                 android:gravity="center_horizontal">
