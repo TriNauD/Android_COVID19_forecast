@@ -141,15 +141,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected String doInBackground(String... params) {
             try {
-                //去获取数据，如果成功会将isGetFinished设置为true
+                //先重置数据
+                //然后去获取数据
+                // 如果成功会将isGetFinished设置为true
                 switch (params[0]) {
                     case "World":
+                        WebConnect.resetRealData();
                         WebConnect.getWorld(currentRegionName);
                         break;
                     case "Predict":
+                        WebConnect.resetPredictData();
                         WebConnect.getPredict(currentRegionName);
                         break;
                     case "Province":
+                        WebConnect.resetRealData();
                         WebConnect.getProvince(currentRegionName);
                         break;
                 }
@@ -574,7 +579,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             clickDateString += "\n";
                             clickDateString += clickY;
                             Log.i(TAG, "touch x轴坐标标签: " + clickDateString);
-
 
 
                             //动画移动 跟随点击动画到指定位置
