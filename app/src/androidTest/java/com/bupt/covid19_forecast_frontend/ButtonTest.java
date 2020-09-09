@@ -115,4 +115,13 @@ public class ButtonTest {
         onView(withId(R.id.reset_button)).perform(click());
 
     }
+
+    //用户输入参数测试
+    @Test
+    public void testUserParamInput(){
+        //开启预测
+        onView(withId(R.id.forecast_switch)).perform(click());
+
+        //
+    }
 }

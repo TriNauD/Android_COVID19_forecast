@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -505,32 +506,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 WebConnect.setControlDuration(Integer.valueOf(controlDurationInput.getText().toString()));
                 Log.i(TAG, "Button: ControlDuration:" + (Integer.valueOf(controlDurationInput.getText().toString())));
                 //设置控制开始日期
+                //如果是控制
                 if (modelTypeSpinner.getSelectedItemPosition() == 0) {
-                    //检测日期合法
-                    try {
-                        int monthInt = Integer.parseInt(controlStartDateMonthInput.getText().toString());
-                        int dayInt = Integer.parseInt(controlStartDateDayInput.getText().toString());
-                        if (monthInt <= 12 && dayInt <= 31) {
-                            //如果日期格式正确 则格式化表示日期
-                            String month = (monthInt >= 10) ? (controlStartDateMonthInput.getText().toString()) : ("0" + controlStartDateMonthInput.getText());
-                            String day = (dayInt >= 10) ? (controlStartDateDayInput.getText().toString()) : ("0" + controlStartDateDayInput.getText());
+                    String monthStr = controlStartDateMonthInput.getText().toString().trim();
+                    String dayStr = controlStartDateDayInput.getText().toString().trim();
+                    if (!monthStr.equals("") && !dayStr.equals("")) {
+                        int monthInt = Integer.parseInt(monthStr);
+                        int dayInt = Integer.parseInt(dayStr);
+                        //检测日期合法
+                        if (isDateValid(monthInt, dayInt)) {
+                            //输入正确 则调整日期格式
+                            String month = (monthInt >= 10) ? (monthStr) : ("0" + monthStr);
+                            String day = (dayInt >= 10) ? (dayStr) : ("0" + dayStr);
                             String date = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
+                            //WebConnect设置开始时间
                             WebConnect.setStartControlDate(date);
                             Log.i(TAG, "Button: ControlStartDate:" + date);
                         } else {
-                            //提示输入错误 并清空输入框
-                            toast.setText(R.string.alert_msg_input_err);
+                            //提示输入非法 并清空输入框
+                            toast.setText(R.string.alert_msg_input_err_invalid);
                             toast.setDuration(Toast.LENGTH_SHORT);
                             toast.show();
                             clearFocusableInputBoxes();
-                            Log.i(TAG, "Button: Too big number");
+                            Log.i(TAG, "Button: Date not valid. ");
+                            return;
                         }
-                    } catch (Exception e) {
-                        toast.setText(R.string.alert_msg_input_err);
+                    } else {
+                        //提示输入空 并清空输入框
+                        toast.setText(R.string.alert_msg_input_err_empty);
                         toast.setDuration(Toast.LENGTH_SHORT);
                         toast.show();
                         clearFocusableInputBoxes();
-                        Log.i(TAG, "Button: Bad input type");
+                        Log.i(TAG, "Button: Date empty. ");
+                        return;
+
                     }
                     //群体免疫
                 } else {
@@ -678,6 +687,36 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlStartDateDayInput.setText("");
         controlStartDateMonthInput.setText("");
         controlDurationInput.setText(controlDurationInput.isFocusable() ? "" : controlDurationInput.getText());
+    }
+
+    /**
+     * 判断输入日期是否正确
+     *
+     * @param month,day
+     * @author xjy
+     */
+    public boolean isDateValid(int month, int day) {
+        boolean isDateValid = true;
+        //如果空
+        if ("0".equals(String.valueOf(month)) || "0".equals(String.valueOf(day))) {
+            toast.setText("输入不可为空");
+            return false;
+        }
+        //月份天数对照
+        int monthDays[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        //月份<=0或者月份>12 日<=或者>31 明显离谱日期
+        if ((month <= 0 || month > 12) || (day <= 0) || (day > 31)) {
+            toast.setText("输入日期非法");
+            isDateValid = false;
+        }
+        //按大小月分
+        else {
+            if (day > monthDays[month - 1]) {
+                toast.setText("输入日期非法");
+                isDateValid = false;
+            }
+        }
+        return isDateValid;
     }
 
 
