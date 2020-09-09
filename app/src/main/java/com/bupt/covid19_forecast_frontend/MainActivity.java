@@ -505,36 +505,41 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 WebConnect.setControlDuration(Integer.valueOf(controlDurationInput.getText().toString()));
                 Log.i(TAG, "Button: ControlDuration:" + (Integer.valueOf(controlDurationInput.getText().toString())));
                 //设置控制开始日期
-                try {
-                    int monthInt = Integer.parseInt(controlStartDateMonthInput.getText().toString());
-                    int dayInt = Integer.parseInt(controlStartDateDayInput.getText().toString());
-                    if (monthInt <= 12 && dayInt <= 31) {
-                        //如果日期格式正确 则格式化表示日期
-                        String month = (monthInt >= 10) ? (controlStartDateMonthInput.getText().toString()) : ("0" + controlStartDateMonthInput.getText());
-                        String day = (dayInt >= 10) ? (controlStartDateDayInput.getText().toString()) : ("0" + controlStartDateDayInput.getText());
-                        String date = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
-                        WebConnect.setStartControlDate(date);
-                        Log.i(TAG, "Button: ControlStartDate:" + date);
-                    } else {
-                        //提示输入错误 并清空输入框
+                if (modelTypeSpinner.getSelectedItemPosition() == 0) {
+                    //检测日期合法
+                    try {
+                        int monthInt = Integer.parseInt(controlStartDateMonthInput.getText().toString());
+                        int dayInt = Integer.parseInt(controlStartDateDayInput.getText().toString());
+                        if (monthInt <= 12 && dayInt <= 31) {
+                            //如果日期格式正确 则格式化表示日期
+                            String month = (monthInt >= 10) ? (controlStartDateMonthInput.getText().toString()) : ("0" + controlStartDateMonthInput.getText());
+                            String day = (dayInt >= 10) ? (controlStartDateDayInput.getText().toString()) : ("0" + controlStartDateDayInput.getText());
+                            String date = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
+                            WebConnect.setStartControlDate(date);
+                            Log.i(TAG, "Button: ControlStartDate:" + date);
+                        } else {
+                            //提示输入错误 并清空输入框
+                            toast.setText(R.string.alert_msg_input_err);
+                            toast.setDuration(Toast.LENGTH_SHORT);
+                            toast.show();
+                            clearFocusableInputBoxes();
+                            Log.i(TAG, "Button: Too big number");
+                        }
+                    } catch (Exception e) {
                         toast.setText(R.string.alert_msg_input_err);
                         toast.setDuration(Toast.LENGTH_SHORT);
                         toast.show();
                         clearFocusableInputBoxes();
-                        Log.i(TAG, "Button: Too big number");
+                        Log.i(TAG, "Button: Bad input type");
                     }
-                    //发送
-                    //获取预测
-                    getDataTask = new GetDataTask();
-                    getDataTask.execute("Predict");
-
-                } catch (Exception e) {
-                    toast.setText(R.string.alert_msg_input_err);
-                    toast.setDuration(Toast.LENGTH_SHORT);
-                    toast.show();
-                    clearFocusableInputBoxes();
-                    Log.i(TAG, "Button: Bad input type");
+                    //群体免疫
+                } else {
+                    WebConnect.setStartControlDate("yyyy-mm-dd");
                 }
+                //发送
+                //获取预测
+                getDataTask = new GetDataTask();
+                getDataTask.execute("Predict");
             }
         });
         resetButton.setOnClickListener(new View.OnClickListener() {
@@ -611,7 +616,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             clickDateString += "\n";
                             clickDateString += clickY;
                             Log.i(TAG, "touch x轴坐标标签: " + clickDateString);
-
 
 
                             //动画移动 跟随点击动画到指定位置
