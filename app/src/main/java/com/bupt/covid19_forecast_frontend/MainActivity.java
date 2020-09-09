@@ -526,7 +526,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                     //用户输入非法 显示提示
                     else {
-                        clearFocusableInputBoxes();
                         toast.setDuration(Toast.LENGTH_LONG);
                         toast.show();
                     }
@@ -543,7 +542,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clearFocusableInputBoxes();
                 Log.i(TAG, "Button: reset button clicked");
             }
         });
@@ -695,10 +693,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @author xjy
      */
-    public void clearFocusableInputBoxes() {
-        controlStartDateDayInput.setText("");
-        controlStartDateMonthInput.setText("");
-        controlDurationInput.setText(controlDurationInput.isFocusable() ? "" : controlDurationInput.getText());
+    public void clearFocusableInputBoxes(EditText editText) {
+        editText.setText(editText.isFocusable() ? "" : editText.getText());
     }
 
     /**
@@ -723,6 +719,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (durationStr.equals("")) {
             isDurationInputValid = false;
             toast.setText(R.string.alert_msg_input_err_duration_empty);
+            //判断持续时间是否非法
+        } else if (Integer.parseInt(durationStr) <= 0) {
+            isDurationInputValid = false;
+            toast.setText(R.string.alert_msg_input_err_duration_invalid);
+            //清除持续时间输入框
+            clearFocusableInputBoxes(controlDurationInput);
         }
         return isDurationInputValid;
     }
@@ -761,15 +763,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         boolean isDateValid = true;
         //月份天数对照
         int monthDays[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        //月份<=0或者月份>12 日<=或者>31 明显离谱日期
+        //月份<=0或者月份>12 日<=或者>31 粗略排除明显离谱日期
         if ((month <= 0 || month > 12) || ((day <= 0) || (day > 31))) {
             toast.setText(R.string.alert_msg_input_err_invalid);
+            //清除日期输入框
+            clearFocusableInputBoxes(controlStartDateDayInput);
+            clearFocusableInputBoxes(controlStartDateMonthInput);
             isDateValid = false;
         }
-        //按大小月分
+        //按大小月精确分
         else {
             if (day > monthDays[month - 1]) {
                 toast.setText(R.string.alert_msg_input_err_invalid);
+                //清除日期输入框
+                clearFocusableInputBoxes(controlStartDateDayInput);
+                clearFocusableInputBoxes(controlStartDateMonthInput);
                 isDateValid = false;
             }
         }
