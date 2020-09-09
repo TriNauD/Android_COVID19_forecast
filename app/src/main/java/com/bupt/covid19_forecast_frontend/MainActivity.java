@@ -729,7 +729,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (durationStr.equals("")) {
             isDurationInputValid = false;
             toast.setText(R.string.alert_msg_input_err_duration_empty);
-            //判断持续时间是否非法
         }
         return isDurationInputValid;
     }
