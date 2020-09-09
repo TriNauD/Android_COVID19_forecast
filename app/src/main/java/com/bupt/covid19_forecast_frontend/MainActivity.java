@@ -28,7 +28,7 @@ import android.widget.ToggleButton;
 import com.android.tu.loadingdialog.LoadingDailog;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import lecho.lib.hellocharts.gesture.ContainerScrollType;
@@ -37,7 +37,6 @@ import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
-import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 import viewModel.WebConnect;
 import viewModel.LineViewModel;
@@ -57,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Switch forecastSwitch;
     private Button submitButton;
     private Button resetButton;
+    private Button tillTodyButton;
     private ToggleButton homeOrAbroadToggleButton;
     private EditText controlDurationInput;
     private EditText controlStartDateMonthInput;
@@ -432,6 +432,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //button
         submitButton = findViewById(R.id.submit_button);
         resetButton = findViewById(R.id.reset_button);
+        tillTodyButton = findViewById(R.id.till_today_button);
 
         //toggle button
         homeOrAbroadToggleButton = findViewById(R.id.home_or_abroad_toggle_btn);
@@ -539,6 +540,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 clearFocusableInputBoxes();
                 Log.i(TAG, "Button: reset button clicked");
+            }
+        });
+        tillTodyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (isDateValid(Integer.parseInt(controlStartDateMonthInput.toString()),controlStartDateDayInput.toString())){
+//
+//                }
+                Calendar calendar = Calendar.getInstance();
+//                controlDurationInput.setText();
             }
         });
         //toggle button设置listener
@@ -679,28 +690,53 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @author xjy
      */
     public boolean isUserInputParamValid() {
-        boolean isUserInputParamValid = true;
-        String monthStr = controlStartDateMonthInput.getText().toString().trim();
-        String dayStr = controlStartDateDayInput.getText().toString().trim();
+        return (isDateInputValid() && isDurationInputValid());
+    }
+
+    /**
+     * 判断输入持续时间是否正确
+     *
+     * @author xjy
+     */
+    public boolean isDurationInputValid() {
+        boolean isDurationInputValid = true;
         String durationStr = controlDurationInput.getText().toString().trim();
-        //首先判断是不是空 如果空设置提示消息为空
-        if (monthStr.equals("") || dayStr.equals("") || durationStr.equals("")) {
-            isUserInputParamValid = false;
-            toast.setText(R.string.alert_msg_input_err_empty);
+        //判断是不是空 如果空设置提示消息为空
+        if (durationStr.equals("")) {
+            isDurationInputValid = false;
+            toast.setText(R.string.alert_msg_input_err_duration_empty);
         }
-        //再判断日期是否合法
-        else {
-            int monthInt = Integer.parseInt(monthStr);
-            int dayInt = Integer.parseInt(dayStr);
-            isUserInputParamValid = isDateValid(monthInt, dayInt);
-        }
-        return isUserInputParamValid;
+        return isDurationInputValid;
     }
 
     /**
      * 判断输入日期是否正确
      *
-     * @param month,day
+     * @author xjy
+     */
+    public boolean isDateInputValid() {
+        boolean isDateInputValid = true;
+        String monthStr = controlStartDateMonthInput.getText().toString().trim();
+        String dayStr = controlStartDateDayInput.getText().toString().trim();
+        //首先判断是不是空 如果空设置提示消息为空
+        if (monthStr.equals("") || dayStr.equals("")) {
+            isDateInputValid = false;
+            toast.setText(R.string.alert_msg_input_err_date_empty);
+        }
+        //再判断日期是否合法
+        else {
+            int monthInt = Integer.parseInt(monthStr);
+            int dayInt = Integer.parseInt(dayStr);
+            isDateInputValid = isDateValid(monthInt, dayInt);
+        }
+        return isDateInputValid;
+    }
+
+    /**
+     * 判断日期是否正确
+     *
+     * @param month
+     * @param day
      * @author xjy
      */
     public boolean isDateValid(int month, int day) {
