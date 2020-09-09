@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModel;
 import android.graphics.Color;
 import android.util.Log;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +28,11 @@ public class LineViewModel extends ViewModel {
     //y轴字体大小
     private int yFontSize = 12;
     //x轴标签最多字符数
-    int xMaxLabelChars = 6;
+    private int xMaxLabelChars = 6;
     //y轴标签最多字符数
-    int yMaxLabelChars = 6;
+    private int yMaxLabelChars = 6;
+    //点的大小
+    private int pointSize = 2;
 
 
     /**
@@ -58,7 +59,7 @@ public class LineViewModel extends ViewModel {
             line.setColor(Color.rgb(126, 185, 236));//线的颜色 蓝色
 //            line.setPointColor(Color.rgb(255, 255, 255));//点的颜色 白色
             line.setPointColor(Color.rgb(126, 185, 236));//点的颜色 蓝色
-            line.setPointRadius(2);//点的大小
+            line.setPointRadius(pointSize);//点的大小
             line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
             line.setFilled(true);//下方填充
             line.setCubic(false);//不要曲线
@@ -158,11 +159,10 @@ public class LineViewModel extends ViewModel {
             } else if (i == 2) {
                 line.setColor(Color.rgb(50, 205, 50));//第三条线绿色
             } else {
-                line.setColor(Color.rgb(126, 185, 236));//第四条线蓝色
+                line.setColor(Color.rgb(102, 102, 102));//第四条线灰色
             }
             //line.setPointColor(Color.rgb(255,255,255));//点的颜色 这个是白色
-            line.setPointRadius(1);//点的大小
-            line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
+            line.setPointRadius(pointSize);//点的大小
             line.setFilled(true);//下方填充
             line.setCubic(false);//不要曲线
 
@@ -240,13 +240,4 @@ public class LineViewModel extends ViewModel {
     public List<Axis[]> getAxesList() {
         return axesList;
     }
-
-    public static boolean isHasControl() {
-        return WebConnect.isHasControl();
-    }
-
-    public static void setHasControl(boolean hasControl) {
-        WebConnect.setHasControl(hasControl);
-    }
-
 }

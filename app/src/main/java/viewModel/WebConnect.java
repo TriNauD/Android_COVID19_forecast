@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -36,7 +37,7 @@ public class WebConnect {
     //“真实线”的节点数
     private static int numOfRealPoints = 9999;
     //“预测线”的节点数
-    private static int numOfForecastPoints = 333;
+    private static int numOfForecastPoints = 30;
 
 
     //预测参数
@@ -47,7 +48,7 @@ public class WebConnect {
     //控制开始时间
     private static String startControlDate = "2020-01-01";
     //控制增长阶段的时间
-    private static int raiseLastTime = 7;
+    private static int controlDuration = 7;
     //控制强度
     private static int controlGrade = 1;
 
@@ -368,12 +369,18 @@ public class WebConnect {
 
         //进行获取
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        //解决超时问题
+        OkHttpClient client = new OkHttpClient.Builder().
+                connectTimeout(60, TimeUnit.SECONDS).
+                readTimeout(60, TimeUnit.SECONDS).
+                writeTimeout(60, TimeUnit.SECONDS).build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://39.96.80.224:8080")
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         API api = retrofit.create(API.class);
-        Call<List<Integer>> task = api.getPredict(name, isProvince, hasControl, startControlDate, raiseLastTime, controlGrade);
+        Call<List<Integer>> task = api.getPredict(name, isProvince, hasControl, startControlDate, controlDuration, controlGrade);
         task.enqueue(new Callback<List<Integer>>() {
             @Override
             public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
@@ -451,20 +458,7 @@ public class WebConnect {
     public static void initForecast() {
         for (int i = 0; i < numOfForecastLines; ++i) {
             float[] linePoints = new float[numOfForecastPoints];//一条线上面的点
-            for (int j = 0; j < numOfForecastPoints; ++j) {
-                linePoints[j] = xyPredict[j];
-
-//                if (hasControl) {
-//                    //如果进行控制
-//                    linePoints[j] = 1150000 - j * j * 1000;
-//                } else {
-//                    //群体免疫
-//                    float x = j * 1000;
-//                    linePoints[j] = 1150000 + (float) Math.sqrt(x) * 1000;
-//                }
-            }
-            //判定是否要刷新
-//            int size = lineData.size();
+            System.arraycopy(xyPredict, 0, linePoints, 0, numOfForecastPoints);
             if (lineDataList.size() < numOfRealLines + numOfForecastLines) {
                 //如果线组里面还没有预测线，就新添加
                 lineDataList.add(linePoints);
@@ -553,8 +547,27 @@ public class WebConnect {
         }
     }
 
-    //----------------------getter & setter---------------------------------------------------------
+    /**
+     * 清空预测线的数据
+     *
+     * @author lym
+     */
+    public static void resetPredictData() {
+        Arrays.fill(xyPredict, 0);
+    }
 
+    /**
+     * 清空真实线的数据
+     *
+     * @author lym
+     */
+    public static void resetRealData() {
+        for (int i = 0; i < xyReal.length; i++) {
+            Arrays.fill(xyReal[i], 0);
+        }
+    }
+
+    //----------------------getter & setter---------------------------------------------------------
     public static List<List<String>> getAxisLableList() {
         return axisLableList;
     }
@@ -595,12 +608,12 @@ public class WebConnect {
         WebConnect.startControlDate = startControlDate;
     }
 
-    public static int getRaiseLastTime() {
-        return raiseLastTime;
+    public static int getControlDuration() {
+        return controlDuration;
     }
 
-    public static void setRaiseLastTime(int raiseLastTime) {
-        WebConnect.raiseLastTime = raiseLastTime;
+    public static void setControlDuration(int controlDuration) {
+        WebConnect.controlDuration = controlDuration;
     }
 
     public static int getControlGrade() {
