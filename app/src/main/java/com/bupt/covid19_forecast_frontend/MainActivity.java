@@ -476,7 +476,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onRefresh() {
                 Log.i(TAG, "Swipe: is refreshed");
+
+                //刷新数据
+                getDataTask = new GetDataTask();
+                if (WebConnect.getIsProvince()) {
+                    getDataTask.execute("Province");
+                } else {
+                    getDataTask.execute("World");
+                }
+
+                //重新画图
                 drawChart();
+
                 Log.i(TAG, "Swipe: fresh finished");
                 //画完图后把刷新状态设为false
                 swipeRefreshLayout.setRefreshing(false);
