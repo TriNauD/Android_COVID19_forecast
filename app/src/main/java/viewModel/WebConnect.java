@@ -35,7 +35,7 @@ public class WebConnect {
     //“真实线”的节点数
     private static int numOfRealPoints = 9999;
     //“预测线”的节点数
-    private static int numOfForecastPoints = 30;
+    private static int numOfForecastPoints = 300;
 
 
     //预测参数
@@ -457,11 +457,11 @@ public class WebConnect {
     public static void initForecast() {
         for (int i = 0; i < numOfForecastLines; ++i) {
             float[] linePoints = new float[numOfForecastPoints];//一条线上面的点
-            System.arraycopy(xyPredict, 0, linePoints, 0, numOfForecastPoints);
-//            //假数据专用调试
-//            for (int j = 0; j < numOfForecastPoints; j++) {
-//                linePoints[j] = new Random().nextInt(100) + j * 10000;
-//            }
+//            System.arraycopy(xyPredict, 0, linePoints, 0, numOfForecastPoints);
+            //假数据专用调试
+            for (int j = 0; j < numOfForecastPoints; j++) {
+                linePoints[j] = new Random().nextInt(10) + j * j * 10;
+            }
             if (lineDataList.size() < numOfRealLines + numOfForecastLines) {
                 //如果线组里面还没有预测线，就新添加
                 lineDataList.add(linePoints);
