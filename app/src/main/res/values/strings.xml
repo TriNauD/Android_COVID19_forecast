@@ -25,6 +25,7 @@
     <string name="reset_button_text">重置</string>
     <string name="alert_msg_forecasting">正在预测……</string>
     <string name="alert_msg_input_err_invalid">输入日期非法</string>
+    <string name="alert_msg_input_err_after_today">输入日期超出今日范围</string>
     <string name="alert_msg_input_err_duration_invalid">持续时间非法</string>
     <string name="alert_msg_input_err_duration_empty">持续时间不可为空</string>
     <string name="alert_msg_input_err_date_empty">日期不可为空</string>

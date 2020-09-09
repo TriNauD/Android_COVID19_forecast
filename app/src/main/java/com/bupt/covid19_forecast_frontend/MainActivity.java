@@ -557,9 +557,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         Date dateNow = new Date();
                         //得到差距多少天
                         int distance = getTimeDistance(controlStartDate, dateNow);
-                        //如果持续时间输入框可更改则设为该差距 否则不变
-                        controlDurationInput.setText(controlDurationInput.isFocusable() ? String.valueOf(distance) : controlDurationInput.getText());
-                        Log.i(TAG, "tillTodayButton: 距离" + distance);
+                        //判断是否
+                        if (distance > 0) {
+                            //如果持续时间输入框可更改则设为该差距 否则不变
+                            controlDurationInput.setText(controlDurationInput.isFocusable() ? String.valueOf(distance) : controlDurationInput.getText());
+                            Log.i(TAG, "tillTodayButton: 距离" + distance);
+                        } else {
+                            //超出今天范围
+                            clearFocusableInputBoxes(controlStartDateMonthInput);
+                            clearFocusableInputBoxes(controlStartDateDayInput);
+                            clearFocusableInputBoxes(controlDurationInput);
+                            toast.setText(R.string.alert_msg_input_err_after_today);
+                            toast.show();
+                        }
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -720,11 +730,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             isDurationInputValid = false;
             toast.setText(R.string.alert_msg_input_err_duration_empty);
             //判断持续时间是否非法
-        } else if (Integer.parseInt(durationStr) <= 0) {
-            isDurationInputValid = false;
-            toast.setText(R.string.alert_msg_input_err_duration_invalid);
-            //清除持续时间输入框
-            clearFocusableInputBoxes(controlDurationInput);
         }
         return isDurationInputValid;
     }
