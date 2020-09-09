@@ -118,10 +118,15 @@ public class ButtonTest {
 
     //用户输入参数测试
     @Test
-    public void testUserParamInput(){
+    public void testUserParamInput() {
         //开启预测
         onView(withId(R.id.forecast_switch)).perform(click());
 
-        //
+        // input 09 0
+        onView(withId(R.id.control_start_date_day_input))
+                .perform(typeText("09"), closeSoftKeyboard());
+        onView(withId(R.id.control_start_date_month_input))
+                .perform(typeText("0"), closeSoftKeyboard());
+        onView(withId(R.id.submit_button)).perform(click());
     }
 }
