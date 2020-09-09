@@ -796,10 +796,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         //如果预测按钮开着
                         //因为在我们的线系统中，跟在真实后面的就是预测线了
                         curLineIndex = lineViewModel.getNumOfRealLines();
-                        //同时显示参数们
+                        //显示第2行和按钮行
                         paramLine2.setVisibility(View.VISIBLE);
                         buttonLine.setVisibility(View.VISIBLE);
-                        //用户参数要看modelType是否为控制
+                        //用户参数行要看modelType是否为控制
                         userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 0 ? View.VISIBLE : View.INVISIBLE);
                     } else {
                         //如果没在预测就正常0
@@ -820,10 +820,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //选了第1个选项：控制
                 if (pos == 0) {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
-                    //控制等级spinner应该保持出现
-                    controlLevelSpinner.setVisibility(View.VISIBLE);
-                    controlLevelLabel.setVisibility(View.VISIBLE);
-                    //第三行要看第二行是否出现
+                    //用户参数行要看第二行是否出现
                     if (paramLine2.getVisibility() == View.VISIBLE) {
                         userParamLines.setVisibility(View.VISIBLE);
                     }
@@ -831,10 +828,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //选了第2个选项：群体免疫
                 else {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
-                    //第三行和控制等级spinner应该隐藏
+                    //用户参数行应该隐藏
                     userParamLines.setVisibility(View.INVISIBLE);
-                    controlLevelSpinner.setVisibility(View.INVISIBLE);
-                    controlLevelLabel.setVisibility(View.INVISIBLE);
                 }
                 break;
             }
