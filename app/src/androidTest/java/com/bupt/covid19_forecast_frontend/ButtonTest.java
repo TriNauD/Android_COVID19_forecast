@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class ButtonTest{
+public class ButtonTest {
 
     @Rule
     public ActivityTestRule<MainActivity> activityRule
@@ -123,15 +123,14 @@ public class ButtonTest{
 
 
     /**
-    @Test
-    public void testScreenRotation(){
-        //onView(withId(R.id.home_or_abroad_toggle_btn)).perform(click());
-        onView(withId(R.id.forecast_switch)).perform(click());
-        //测试屏幕旋转
-        activityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        activityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }
-    */
+     * @Test public void testScreenRotation(){
+     * //onView(withId(R.id.home_or_abroad_toggle_btn)).perform(click());
+     * onView(withId(R.id.forecast_switch)).perform(click());
+     * //测试屏幕旋转
+     * activityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+     * activityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+     * }
+     */
 
     //用户输入参数测试
     @Test
@@ -148,31 +147,41 @@ public class ButtonTest{
     }
 
     @Test
-    public void testSEIR(){
+    public void testSEIR() throws InterruptedException {
         onView(withId(R.id.forecast_switch)).perform(click());
 
         onView(withId(R.id.model_type_spinner)).perform(click());
         onData(anything()).atPosition(2).perform(click());
         onView(withId(R.id.model_type_spinner)).check(matches(withSpinnerText(containsString("SEIR"))));
 
+        String r1 = "10";//感染者接触人数
+        String b1 = "0.001";//感染者传染概率
+        String r2 = "60";//潜伏者接触人数
+        String b2 = "0.1";//潜伏者传染概率
+        String a = "0.01";//潜伏者患病概率
+        String v = "0.9";//感染者康复概率
+        String d = "0.001";//病死率
+        String n = "10000000000";//总人数
+
         onView(withId(R.id.r1_input))
-                .perform(typeText("10"), closeSoftKeyboard());
+                .perform(typeText(r1), closeSoftKeyboard());
         onView(withId(R.id.b1_input))
-                .perform(typeText("0.5"), closeSoftKeyboard());
+                .perform(typeText(b1), closeSoftKeyboard());
         onView(withId(R.id.r2_input))
-                .perform(typeText("10"), closeSoftKeyboard());
+                .perform(typeText(r2), closeSoftKeyboard());
         onView(withId(R.id.b2_input))
-                .perform(typeText("0.5"), closeSoftKeyboard());
+                .perform(typeText(b2), closeSoftKeyboard());
         onView(withId(R.id.a_input))
-                .perform(typeText("0.5"), closeSoftKeyboard());
+                .perform(typeText(a), closeSoftKeyboard());
         onView(withId(R.id.v_input))
-                .perform(typeText("0.5"), closeSoftKeyboard());
+                .perform(typeText(v), closeSoftKeyboard());
         onView(withId(R.id.d_input))
-                .perform(typeText("0.5"), closeSoftKeyboard());
+                .perform(typeText(d), closeSoftKeyboard());
         onView(withId(R.id.n_input))
-                .perform(typeText("10000"), closeSoftKeyboard());
+                .perform(typeText(n), closeSoftKeyboard());
 
         onView(withId(R.id.submit_button)).perform(click());
+        Thread.sleep(1000000000);
 
     }
 
