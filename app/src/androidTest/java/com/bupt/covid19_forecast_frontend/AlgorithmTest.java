@@ -57,7 +57,7 @@ public class AlgorithmTest {
         onData(anything()).atPosition(0).perform(click());
 
         //自定义控制天数
-        for(i=3;i<11;i++){
+        for(i=4;i<12;i++){
             onView(withId(R.id.control_start_date_month_input))
                     .perform(typeText(mounth[i]), closeSoftKeyboard());
             onView(withId(R.id.control_start_date_day_input))
