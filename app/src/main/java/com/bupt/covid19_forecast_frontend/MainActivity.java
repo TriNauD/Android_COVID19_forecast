@@ -30,6 +30,7 @@ import android.widget.ToggleButton;
 
 import com.android.tu.loadingdialog.LoadingDailog;
 
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -588,9 +589,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             WebConnect.setV(Float.parseFloat(vInput.getText().toString()));
                             WebConnect.setD(Float.parseFloat(dInput.getText().toString()));
                             WebConnect.setN(Integer.parseInt(nInput.getText().toString()));
+                            //log
+                            Log.i(TAG, "Button: " + "R1: " + Integer.parseInt(r1Input.getText().toString()));
+                            Log.i(TAG, "Button: " + "B1: " + Float.parseFloat(b1Input.getText().toString()));
+                            Log.i(TAG, "Button: " + "R2: " + Integer.parseInt(r2Input.getText().toString()));
+                            Log.i(TAG, "Button: " + "B2: " + Float.parseFloat(b2Input.getText().toString()));
+                            Log.i(TAG, "Button: " + "A: " + Float.parseFloat(aInput.getText().toString()));
+                            Log.i(TAG, "Button: " + "V: " + Float.parseFloat(vInput.getText().toString()));
+                            Log.i(TAG, "Button: " + "D: " + Float.parseFloat(dInput.getText().toString()));
+                            Log.i(TAG, "Button: " + "N: " + Integer.parseInt(nInput.getText().toString()));
                             //预测
-                        /*    getDataTask = new GetDataTask();
-                            getDataTask.execute("Predict");*/
+                            getDataTask = new GetDataTask();
+                            getDataTask.execute("Predict");
+
                         }
                         //用户参数错误则提示错误
                         else {
@@ -814,14 +825,36 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return isUserInputParamValid;
     }
 
+
     /**
      * 判断SEIR 参数输入是否正确
      *
      * @author xjy
      */
     public boolean isSEIRParamInputValid() {
+        EditText[] SEIRParamEditTexts = {r1Input, b1Input, r2Input, b2Input, aInput, vInput, dInput, nInput};
+        boolean isSEIRParamInputValid = true;
+        boolean isAllSEIRParamFilled = true;
+        //遍历输入框判断是否有框为空
+        for (int i = 0; i < 8; i++) {
+            if (SEIRParamEditTexts[i].getText().equals("")) {
+                isAllSEIRParamFilled = false;
+                break;
+            }
+        }
+        //有参数为空
+        if (!isAllSEIRParamFilled) {
+            toast.setText(R.string.alert_msg_input_err_param_empty);
+            isSEIRParamInputValid = false;
+        }
+        //参数都不为空 则判断取值
+        else {
+            //判断取值范围还没写
+            isSEIRParamInputValid = true;
+        }
+
         toast.setText("SEIR param err");
-        return false;
+        return isSEIRParamInputValid;
     }
 
 
