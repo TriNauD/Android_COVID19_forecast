@@ -52,8 +52,8 @@
     </string-array>
 
     <string-array name="model_type_choices">
-        <item>控制</item>
         <item>群体免疫</item>
+        <item>控制</item>
         <item>SEIR</item>
     </string-array>
 

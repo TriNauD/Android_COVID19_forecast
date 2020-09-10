@@ -902,8 +902,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         //显示第2行和按钮行
                         paramLine2.setVisibility(View.VISIBLE);
                         buttonLine.setVisibility(View.VISIBLE);
-                        //用户参数行要看modelType是否为控制
-                        userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 0 ? View.VISIBLE : View.INVISIBLE);
+                        //用户参数行要看modelType
+                        userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() != 0 ? View.VISIBLE : View.GONE);
+                        userParamControl.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 1 ? View.VISIBLE : View.GONE);
+                        userParamSEIR.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 2 ? View.VISIBLE : View.GONE);
                     } else {
                         //如果没在预测就正常0
                         curLineIndex = 0;
@@ -918,11 +920,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 draw();
                 break;
             }
-            //第2个spinner 模型类型（群体和控制）
+            //第2个spinner 模型类型（群体免疫/控制/SEIR）
             case R.id.model_type_spinner: {
                 switch (pos) {
-                    //选了第1个选项：控制
+                    //选了第1个选项：群体免疫
                     case 0: {
+                        Log.i(TAG, "onItemSelected: 群体免疫");
+                        //用户参数行应该隐藏
+                        userParamLines.setVisibility(View.GONE);
+                    }
+                    break;
+                    //选了第2个选项：控制
+                    case 1: {
                         Log.i(TAG, "onItemSelected: 控制");
                         //用户参数行要看是否正在预测
                         if (isForecastSwitchedOn) {
@@ -930,13 +939,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             userParamControl.setVisibility(View.VISIBLE);
                             userParamSEIR.setVisibility(View.GONE);
                         }
-                    }
-                    break;
-                    //选了第2个选项：群体免疫
-                    case 1: {
-                        Log.i(TAG, "onItemSelected: 群体免疫");
-                        //用户参数行应该隐藏
-                        userParamLines.setVisibility(View.GONE);
                     }
                     break;
                     //选了第3个选项：SEIR
@@ -1083,8 +1085,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     paramLine2.setVisibility(View.VISIBLE);
                     buttonLine.setVisibility(View.VISIBLE);
                     //用户参数要看modelType是否为控制
-                    userParamControl.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 0 ? View.VISIBLE : View.GONE);
-                    userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() != 1 ? View.VISIBLE : View.GONE);
+                    userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() != 0 ? View.VISIBLE : View.GONE);
+                    userParamControl.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 1 ? View.VISIBLE : View.GONE);
                     userParamSEIR.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 2 ? View.VISIBLE : View.GONE);
 
                 } else {
