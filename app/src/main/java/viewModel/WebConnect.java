@@ -589,10 +589,6 @@ public class WebConnect {
         return axisLableList;
     }
 
-    public static void setAxisLableList(List<List<String>> axisLableList) {
-        WebConnect.axisLableList = axisLableList;
-    }
-
     public static int getNumOfRealLines() {
         return numOfRealLines;
     }
@@ -609,40 +605,16 @@ public class WebConnect {
         return numOfForecastPoints;
     }
 
-    public static boolean isHasControl() {
-        return true;
-    }
-
-    public static void setHasControl(boolean hasControl) {
-
-    }
-
-    public static int getControlType() {
-        return controlType;
-    }
-
     public static void setControlType(int controlType) {
         WebConnect.controlType = controlType;
-    }
-
-    public static String getStartControlDate() {
-        return startControlDate;
     }
 
     public static void setStartControlDate(String startControlDate) {
         WebConnect.startControlDate = startControlDate;
     }
 
-    public static int getControlDuration() {
-        return controlDuration;
-    }
-
     public static void setControlDuration(int controlDuration) {
         WebConnect.controlDuration = controlDuration;
-    }
-
-    public static int getControlGrade() {
-        return controlGrade;
     }
 
     public static void setControlGrade(int controlGrade) {
@@ -651,10 +623,6 @@ public class WebConnect {
 
     public static List<float[]> getLineDataList() {
         return lineDataList;
-    }
-
-    public static void setLineDataList(List<float[]> lineDataList) {
-        WebConnect.lineDataList = lineDataList;
     }
 
     public static Boolean getIsProvince() {
