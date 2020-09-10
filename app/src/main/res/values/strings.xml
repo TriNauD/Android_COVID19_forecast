@@ -1,4 +1,5 @@
 <resources>
+    <!--labels-->
     <string name="app_name">疫情预测</string>
     <string name="national_title">疫情趋势</string>
     <string name="ui_text_home">国内</string>
@@ -21,8 +22,19 @@
     <string name="control_start_date_year_label">年</string>
     <string name="control_start_date_month_label">月</string>
     <string name="control_start_date_day_label">日</string>
+    <string name="r1_label">感染者接触人数</string>
+    <string name="b1_label">感染者传染概率</string>
+    <string name="r2_label">潜伏者接触人数</string>
+    <string name="b2_label">潜伏者传染概率</string>
+    <string name="a_label">潜伏者患病概率</string>
+    <string name="v_label">感染者康复概率</string>
+    <string name="d_label">感染者病死概率</string>
+    <string name="n_label">预测地区总人数</string>
+
+
     <string name="submit_button_text">提交</string>
     <string name="reset_button_text">重置</string>
+    <!--alert msg-->
     <string name="alert_msg_forecasting">正在预测……</string>
     <string name="alert_msg_input_err_invalid">输入日期非法</string>
     <string name="alert_msg_input_err_after_today">输入日期超出范围</string>
@@ -40,8 +52,9 @@
     </string-array>
 
     <string-array name="model_type_choices">
-        <item>控制</item>
         <item>群体免疫</item>
+        <item>控制</item>
+        <item>SEIR</item>
     </string-array>
 
     <string-array name="control_level_choices">

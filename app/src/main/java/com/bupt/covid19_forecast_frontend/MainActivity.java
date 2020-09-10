@@ -1,12 +1,14 @@
 package com.bupt.covid19_forecast_frontend;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -67,6 +69,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private EditText controlDurationInput;
     private EditText controlStartDateMonthInput;
     private EditText controlStartDateDayInput;
+    private EditText r1Input;
+    private EditText b1Input;
+    private EditText r2Input;
+    private EditText b2Input;
+    private EditText aInput;
+    private EditText vInput;
+    private EditText dInput;
+    private EditText nInput;
     private TextView toolbarTitle;
     private TextView controlLevelLabel;
     private TextView controlStartDateLabel;
@@ -79,7 +89,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private RelativeLayout paramLine1;
     private RelativeLayout paramLine2;
     private LinearLayout userParamLines;
-    private RelativeLayout userParamLine1;
+    private LinearLayout userParamControl;
+    private LinearLayout userParamSEIR;
     private RelativeLayout buttonLine;
     //提示消息
     Toast toast;
@@ -214,6 +225,43 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    /**
+     * 键盘类
+     *
+     * @author xjy
+     */
+    public static class KeyboardUtils {
+
+        /**
+         * 根据传入控件的坐标和用户的焦点坐标，判断是否隐藏键盘，如果点击的位置在控件内，则不隐藏键盘
+         *
+         * @param view  控件view
+         * @param event 焦点位置
+         * @return 是否隐藏
+         */
+        public static void hideKeyboard(MotionEvent event, View view, Activity activity) {
+            try {
+                if (view != null && view instanceof EditText) {
+                    int[] location = {0, 0};
+                    view.getLocationInWindow(location);
+                    int left = location[0], top = location[1], right = left
+                            + view.getWidth(), bootom = top + view.getHeight();
+                    // （判断是不是EditText获得焦点）判断焦点位置坐标是否在控件所在区域内，如果位置在控件区域外，则隐藏键盘
+                    if (event.getRawX() < left || event.getRawX() > right
+                            || event.getY() < top || event.getRawY() > bootom) {
+                        // 隐藏键盘
+                        IBinder token = view.getWindowToken();
+                        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     /*————————————画图相关————————————*/
 
     /**
@@ -272,7 +320,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol4.setText(strings[3]);
 
     }
-
 
 
     /**
@@ -394,7 +441,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         paramLine1 = findViewById(R.id.param_line_1);
         paramLine2 = findViewById(R.id.param_line_2);
         userParamLines = findViewById(R.id.user_param_lines);
-        userParamLine1 = findViewById(R.id.user_param_line_1);
+        userParamControl = findViewById(R.id.user_param_control);
+        userParamSEIR = findViewById(R.id.user_param_SEIR);
         buttonLine = findViewById(R.id.buttonLine);
 
         //switch
@@ -412,6 +460,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationInput = findViewById(R.id.control_duration_input);
         controlStartDateMonthInput = findViewById(R.id.control_start_date_month_input);
         controlStartDateDayInput = findViewById(R.id.control_start_date_day_input);
+        r1Input = findViewById(R.id.r1_input);
+        b1Input = findViewById(R.id.b1_input);
+        r2Input = findViewById(R.id.r2_input);
+        b2Input = findViewById(R.id.b2_input);
+        aInput = findViewById(R.id.a_input);
+        vInput = findViewById(R.id.v_input);
+        dInput = findViewById(R.id.d_input);
+        nInput = findViewById(R.id.n_input);
+        //title text
         toolbarTitle = findViewById(R.id.toolbar_title);
 
         //people num 4个col对应4个数字 需要改数就setText
@@ -478,13 +535,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Button: submit button clicked");
-                //设置控制或群体免疫
+                //设置群体免疫/控制/SEIR
+                //1:群体免疫 2:控制 3:SEIR
                 WebConnect.setControlType(modelTypeSpinner.getSelectedItemPosition() + 1);
                 Log.i(TAG, "Button: ControlType:" + (modelTypeSpinner.getSelectedItemPosition() + 1));
                 //设置控制等级
+                //0:自定义 1:一级 2:二级 3:三级
                 WebConnect.setControlGrade((controlLevelSpinner.getSelectedItemPosition() + 1) % 4);
                 Log.i(TAG, "Button: ControlLevel:" + ((controlLevelSpinner.getSelectedItemPosition() + 1) % 4));
-                //设置控制开始日期&持续时间
+                //设置控制开始日期(yyyy-MM-dd)&持续时间
                 //控制
                 if (modelTypeSpinner.getSelectedItemPosition() == 0) {
                     //用户输入合法（不为空且日期合法）
@@ -519,9 +578,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clearFocusableInputBoxes(controlDurationInput);
-                clearFocusableInputBoxes(controlStartDateMonthInput);
-                clearFocusableInputBoxes(controlStartDateDayInput);
+                clearAllFocusableInputBoxes();
                 Log.i(TAG, "Button: reset button clicked");
             }
         });
@@ -650,6 +707,46 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 return false;
             }
         });
+    }
+
+    /**
+     * 点击事件分发
+     *
+     * @author xjy
+     */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                //获取当前获得焦点的View
+                View view = getCurrentFocus();
+                //调用方法判断是否需要隐藏键盘
+                KeyboardUtils.hideKeyboard(ev, view, this);
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    /**
+     * 清空当前所有可编辑输入框组件内容
+     *
+     * @author xjy
+     */
+    public void clearAllFocusableInputBoxes() {
+        if (modelTypeSpinner.getSelectedItem().equals("控制")) {
+            clearFocusableInputBoxes(controlStartDateDayInput);
+            clearFocusableInputBoxes(controlStartDateMonthInput);
+            clearFocusableInputBoxes(controlDurationInput);
+        } else if (modelTypeSpinner.getSelectedItem().equals("SEIR")) {
+            clearFocusableInputBoxes(r1Input);
+            clearFocusableInputBoxes(b1Input);
+            clearFocusableInputBoxes(r2Input);
+            clearFocusableInputBoxes(b2Input);
+            clearFocusableInputBoxes(aInput);
+            clearFocusableInputBoxes(vInput);
+            clearFocusableInputBoxes(dInput);
+            clearFocusableInputBoxes(nInput);
+        }
     }
 
     /**
@@ -844,8 +941,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         //显示第2行和按钮行
                         paramLine2.setVisibility(View.VISIBLE);
                         buttonLine.setVisibility(View.VISIBLE);
-                        //用户参数行要看modelType是否为控制
-                        userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 0 ? View.VISIBLE : View.INVISIBLE);
+                        //用户参数行要看modelType
+                        userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() != 0 ? View.VISIBLE : View.GONE);
+                        userParamControl.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 1 ? View.VISIBLE : View.GONE);
+                        userParamSEIR.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 2 ? View.VISIBLE : View.GONE);
                     } else {
                         //如果没在预测就正常0
                         curLineIndex = 0;
@@ -860,21 +959,35 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 draw();
                 break;
             }
-            //第2个spinner 模型类型（群体和控制）
+            //第2个spinner 模型类型（群体免疫/控制/SEIR）
             case R.id.model_type_spinner: {
-                //选了第1个选项：控制
-                if (pos == 0) {
-                    Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
-                    //用户参数行要看第二行是否出现
-                    if (paramLine2.getVisibility() == View.VISIBLE) {
-                        userParamLines.setVisibility(View.VISIBLE);
+                switch (pos) {
+                    //选了第1个选项：群体免疫
+                    case 0: {
+                        Log.i(TAG, "onItemSelected: 群体免疫");
+                        //用户参数行应该隐藏
+                        userParamLines.setVisibility(View.GONE);
                     }
-                }
-                //选了第2个选项：群体免疫
-                else {
-                    Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
-                    //用户参数行应该隐藏
-                    userParamLines.setVisibility(View.INVISIBLE);
+                    break;
+                    //选了第2个选项：控制
+                    case 1: {
+                        Log.i(TAG, "onItemSelected: 控制");
+                        //用户参数行要看是否正在预测
+                        if (isForecastSwitchedOn) {
+                            userParamLines.setVisibility(View.VISIBLE);
+                            userParamControl.setVisibility(View.VISIBLE);
+                            userParamSEIR.setVisibility(View.GONE);
+                        }
+                    }
+                    break;
+                    //选了第3个选项：SEIR
+                    case 2: {
+                        Log.i(TAG, "onItemSelected: SEIR");
+                        userParamLines.setVisibility(View.VISIBLE);
+                        userParamControl.setVisibility(View.GONE);
+                        userParamSEIR.setVisibility(View.VISIBLE);
+                    }
+                    break;
                 }
                 break;
             }
@@ -1011,7 +1124,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     paramLine2.setVisibility(View.VISIBLE);
                     buttonLine.setVisibility(View.VISIBLE);
                     //用户参数要看modelType是否为控制
-                    userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 0 ? View.VISIBLE : View.INVISIBLE);
+                    userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() != 0 ? View.VISIBLE : View.GONE);
+                    userParamControl.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 1 ? View.VISIBLE : View.GONE);
+                    userParamSEIR.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 2 ? View.VISIBLE : View.GONE);
+
                 } else {
                     Log.i(TAG, "onCheckedChanged 开关状态：关闭");
                     //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
@@ -1087,5 +1203,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         drawChart();
 
     }
+
 
 }
