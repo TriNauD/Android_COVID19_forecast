@@ -141,11 +141,11 @@ public class WebConnect {
                     String dateStr = lastDate.toString();
                     Log.i(TAG, "onResponse: 最后一天日期是： " +
                             dateStr.substring(0, 4) + " 年 " +
-                            dateStr.substring(5, 7).replaceFirst("0", "") + " 月 " +
-                            dateStr.substring(8, 10).replaceFirst("0", "") + " 日 ");
+                            dateStr.substring(5, 7) + " 月 " +
+                            dateStr.substring(8, 10) + " 日 ");
                     //分离月/日
-                    String month = dateStr.substring(5, 7).replaceFirst("0", "");
-                    String day = dateStr.substring(8, 10).replaceFirst("0", "");
+                    String month = dateStr.substring(5, 7);
+                    String day = dateStr.substring(8, 10);
                     //x轴用的标签
                     String xDateString = month + "/" + day;
                     Log.i(TAG, "onResponse: x轴显示日期： " + xDateString);
@@ -199,8 +199,8 @@ public class WebConnect {
                         //x轴标签
                         String dateStr1 = oneDay1.getDate().toString();
                         //分离月/日
-                        String month1 = dateStr1.substring(5, 7).replaceFirst("0", "");
-                        String day1 = dateStr1.substring(8, 10).replaceFirst("0", "");
+                        String month1 = dateStr1.substring(5, 7);
+                        String day1 = dateStr1.substring(8, 10);
                         //x轴用的标签
                         String xDateString1 = month1 + "/" + day1;
                         xRealLabel[i] = xDateString1;
@@ -282,11 +282,11 @@ public class WebConnect {
                     String dateStr = lastDate.toString();
                     Log.i(TAG, "onResponse: 最后一天日期是： " +
                             dateStr.substring(0, 4) + " 年 " +
-                            dateStr.substring(5, 7).replaceFirst("0", "") + " 月 " +
-                            dateStr.substring(8, 10).replaceFirst("0", "") + " 日 ");
+                            dateStr.substring(5, 7) + " 月 " +
+                            dateStr.substring(8, 10) + " 日 ");
                     //分离月/日
-                    String month = dateStr.substring(5, 7).replaceFirst("0", "");
-                    String day = dateStr.substring(8, 10).replaceFirst("0", "");
+                    String month = dateStr.substring(5, 7);
+                    String day = dateStr.substring(8, 10);
                     //x轴用的标签
                     String xDateString = month + "/" + day;
                     Log.i(TAG, "onResponse: x轴显示日期： " + xDateString);
@@ -340,8 +340,8 @@ public class WebConnect {
                         //x轴标签
                         String dateStr1 = oneDay1.getDate().toString();
                         //分离月/日
-                        String month1 = dateStr1.substring(5, 7).replaceFirst("0", "");
-                        String day1 = dateStr1.substring(8, 10).replaceFirst("0", "");
+                        String month1 = dateStr1.substring(5, 7);
+                        String day1 = dateStr1.substring(8, 10);
                         //x轴用的标签
                         String xDateString1 = month1 + "/" + day1;
                         xRealLabel[i] = xDateString1;
