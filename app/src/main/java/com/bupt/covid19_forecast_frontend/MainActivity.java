@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //点击的日期标签
     String clickDateString = "";
     //点击的线下标
-    private int clickLineIndex = 0;
+    private int clickColorLineIndex = 0;
 
     /*————————————获取数据相关————————————*/
 
@@ -266,6 +266,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    private int showLineNum = 0;
+
     /**
      * 小画家
      *
@@ -289,6 +291,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (isForecast) {
             showLines.add(allLines.get(0));
         }
+        //在画的“线”有几条
+        showLineNum = showLines.size();
 
         //手指点击的竖直线
         //点
@@ -325,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //颜色
         handLine.setColor(Color.WHITE);
         //点击的线的颜色
-        labelLine.setColor(showLines.get(clickLineIndex).getColor());
+        labelLine.setColor(showLines.get(clickColorLineIndex).getColor());
 
         //加入总的线列表
         showLines.add(handLine);
@@ -565,7 +569,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         public void onValueSelected(int lineIndex, int pointIndex, PointValue pointValue) {
                             //获取点击的线
                             Log.i(TAG, "touch线为 lineIndex: " + lineIndex + " , pointIndex: " + pointIndex);
-                            clickLineIndex = lineIndex;
+                            //如果是需要颜色的线，就赋值
+                            if (lineIndex <= showLineNum) {
+                                clickColorLineIndex = lineIndex;
+                            }
 
                             //获取点击坐标
                             int x = (int) pointValue.getX();
