@@ -1236,6 +1236,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         //清空点击显示
         clearClick();
+        //清空预测线
+        WebConnect.resetPredictData();
+
         //判断监听到的是哪个组件被选中
         switch (buttonView.getId()) {
             //如果是预测开关按钮switch
