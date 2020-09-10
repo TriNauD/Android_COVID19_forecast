@@ -140,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //先设置为没有开始获取&没有获取成功
             WebConnect.setIsGetFinished(false);
             WebConnect.setIsGetSuccess(false);
-            Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished());
 
             //创建一个遮罩
             dialog = loadBuilder.create();
@@ -234,7 +233,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @author lym
      */
     private void drawChart() {
-        Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
 
 
@@ -264,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //int -> String
         for (int i = 0; i < 4; i++) {
             strings[i] = String.valueOf(integers[i]);
-            Log.i(TAG, "updateFourNum第" + i + "个字符串：" + strings[i]);
+//            Log.i(TAG, "updateFourNum第" + i + "个字符串：" + strings[i]);
         }
 
         peopleNumBarCol1.setText(strings[0]);
@@ -364,7 +362,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myLineChartView.setLineChartData(curLineData);
 
         //----------------------- 互动与视图 ------------------------------
-        Log.i(TAG, "调参师");
         myLineChartView.setInteractive(true);
         myLineChartView.setZoomEnabled(true);
         myLineChartView.setContainerScrollEnabled(true, ContainerScrollType.VERTICAL);
@@ -631,7 +628,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             clickDateString = String.valueOf(labelChars);
                             clickDateString += " ";
                             clickDateString += clickY;
-                            Log.i(TAG, "touch x轴坐标标签: " + clickDateString);
+//                            Log.i(TAG, "touch x轴坐标标签: " + clickDateString);
 
                             //动画移动 跟随点击动画到指定位置
                             myLineChartView.moveToWithAnimation(clickX, clickY);
@@ -809,7 +806,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         //日志调试
-        Log.i(TAG, "onItemSelected 进入函数");
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
 
         //清空点击显示
@@ -988,8 +984,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
-        Log.i(TAG, "onNothingSelected 进入函数");
     }
 
     /**
@@ -1000,7 +994,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Log.i(TAG, "onCheckedChanged 进入函数");
         //清空点击显示
         clearClick();
         //判断监听到的是哪个组件被选中
