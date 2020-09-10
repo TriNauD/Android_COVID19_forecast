@@ -479,8 +479,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 Log.i(TAG, "Button: submit button clicked");
                 //设置控制或群体免疫
-                WebConnect.setHasControl(modelTypeSpinner.getSelectedItemPosition() == 0);
-                Log.i(TAG, "Button: hasControl:" + (modelTypeSpinner.getSelectedItemPosition() == 0));
+                WebConnect.setControlType(modelTypeSpinner.getSelectedItemPosition() + 1);
+                Log.i(TAG, "Button: ControlType:" + (modelTypeSpinner.getSelectedItemPosition() + 1));
                 //设置控制等级
                 WebConnect.setControlGrade((controlLevelSpinner.getSelectedItemPosition() + 1) % 4);
                 Log.i(TAG, "Button: ControlLevel:" + ((controlLevelSpinner.getSelectedItemPosition() + 1) % 4));
