@@ -538,40 +538,66 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //设置群体免疫/控制/SEIR
                 //1:群体免疫 2:控制 3:SEIR
                 WebConnect.setControlType(modelTypeSpinner.getSelectedItemPosition() + 1);
-                Log.i(TAG, "Button: ControlType:" + (modelTypeSpinner.getSelectedItemPosition() + 1));
                 //设置控制等级
                 //0:自定义 1:一级 2:二级 3:三级
                 WebConnect.setControlGrade((controlLevelSpinner.getSelectedItemPosition() + 1) % 4);
+                Log.i(TAG, "Button: ControlType:" + (modelTypeSpinner.getSelectedItemPosition() + 1));
                 Log.i(TAG, "Button: ControlLevel:" + ((controlLevelSpinner.getSelectedItemPosition() + 1) % 4));
-                //设置控制开始日期(yyyy-MM-dd)&持续时间
-                //控制
-                if (modelTypeSpinner.getSelectedItemPosition() == 0) {
-                    //用户输入合法（不为空且日期合法）
-                    if (isUserInputParamValid()) {
-                        //格式化日期输入
-                        String date = formatDateInput();
-                        //WebConnect设置开始时间
-                        WebConnect.setStartControlDate(date);
-                        Log.i(TAG, "Button: ControlStartDate:" + date);
-                        //WebConnect设置控制持续时间
-                        WebConnect.setControlDuration(Integer.valueOf(controlDurationInput.getText().toString()));
-                        Log.i(TAG, "Button: ControlDuration:" + (Integer.valueOf(controlDurationInput.getText().toString())));
-                        //发送 获取预测
+                //设置用户参数
+                switch (modelTypeSpinner.getSelectedItemPosition()) {
+                    //群体免疫
+                    case 0: {
                         getDataTask = new GetDataTask();
                         getDataTask.execute("Predict");
                     }
-                    //用户输入非法 显示提示
-                    else {
-                        toast.setDuration(Toast.LENGTH_LONG);
-                        toast.show();
+                    break;
+                    //控制
+                    case 1: {
+                        //设置开始日期&持续时间
+                        //用户输入合法（不为空且日期合法）
+                        if (isUserInputParamValid()) {
+                            //格式化日期输入
+                            String date = formatDateInput();
+                            //WebConnect设置开始时间
+                            WebConnect.setStartControlDate(date);
+                            Log.i(TAG, "Button: ControlStartDate:" + date);
+                            //WebConnect设置控制持续时间
+                            WebConnect.setControlDuration(Integer.valueOf(controlDurationInput.getText().toString()));
+                            Log.i(TAG, "Button: ControlDuration:" + (Integer.valueOf(controlDurationInput.getText().toString())));
+                            //发送 获取预测
+                            getDataTask = new GetDataTask();
+                            getDataTask.execute("Predict");
+                        }
+                        //用户输入非法 显示提示
+                        else {
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.show();
+                        }
                     }
-                }
-                //群体免疫
-                else {
-                    WebConnect.setStartControlDate("yyyy-mm-dd");
-                    //发送 获取预测
-                    getDataTask = new GetDataTask();
-                    getDataTask.execute("Predict");
+                    break;
+                    //SEIR
+                    case 2: {
+                        //用户参数合法则传参数并预测
+                        if (isUserInputParamValid()) {
+                            //传参数
+                            WebConnect.setR1(Integer.parseInt(r1Input.getText().toString()));
+                            WebConnect.setB1(Float.parseFloat(b1Input.getText().toString()));
+                            WebConnect.setR2(Integer.parseInt(r2Input.getText().toString()));
+                            WebConnect.setB2(Float.parseFloat(b2Input.getText().toString()));
+                            WebConnect.setA(Float.parseFloat(aInput.getText().toString()));
+                            WebConnect.setV(Float.parseFloat(vInput.getText().toString()));
+                            WebConnect.setD(Float.parseFloat(dInput.getText().toString()));
+                            WebConnect.setN(Integer.parseInt(nInput.getText().toString()));
+                            //预测
+                        /*    getDataTask = new GetDataTask();
+                            getDataTask.execute("Predict");*/
+                        }
+                        //用户参数错误则提示错误
+                        else {
+                            toast.show();
+                        }
+                    }
+                    break;
                 }
             }
         });
@@ -765,8 +791,39 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @author xjy
      */
     public boolean isUserInputParamValid() {
-        return (isDateInputValid() && isDurationInputValid());
+        boolean isUserInputParamValid = true;
+        //根据当前模型类型判断
+        switch (modelTypeSpinner.getSelectedItemPosition()) {
+            //群体
+            case 0: {
+                isUserInputParamValid = true;
+            }
+            break;
+            //控制
+            case 1: {
+                isUserInputParamValid = (isDateInputValid() && isDurationInputValid());
+            }
+            break;
+            //SEIR
+            case 2: {
+                isUserInputParamValid = isSEIRParamInputValid();
+            }
+            break;
+        }
+
+        return isUserInputParamValid;
     }
+
+    /**
+     * 判断SEIR 参数输入是否正确
+     *
+     * @author xjy
+     */
+    public boolean isSEIRParamInputValid() {
+        toast.setText("SEIR param err");
+        return false;
+    }
+
 
     /**
      * 判断输入持续时间是否正确
@@ -855,7 +912,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         dateFormatted = "2020" + "-" + month.substring(month.length() - 2, month.length()) + "-" + day.substring(day.length() - 2, day.length());
         return dateFormatted;
     }
-
 
     /**
      * 获得两个日期间距多少天
