@@ -1,12 +1,14 @@
 package com.bupt.covid19_forecast_frontend;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -215,6 +217,43 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    /**
+     * 键盘类
+     *
+     * @author xjy
+     */
+    public static class KeyboardUtils {
+
+        /**
+         * 根据传入控件的坐标和用户的焦点坐标，判断是否隐藏键盘，如果点击的位置在控件内，则不隐藏键盘
+         *
+         * @param view  控件view
+         * @param event 焦点位置
+         * @return 是否隐藏
+         */
+        public static void hideKeyboard(MotionEvent event, View view, Activity activity) {
+            try {
+                if (view != null && view instanceof EditText) {
+                    int[] location = {0, 0};
+                    view.getLocationInWindow(location);
+                    int left = location[0], top = location[1], right = left
+                            + view.getWidth(), bootom = top + view.getHeight();
+                    // （判断是不是EditText获得焦点）判断焦点位置坐标是否在控件所在区域内，如果位置在控件区域外，则隐藏键盘
+                    if (event.getRawX() < left || event.getRawX() > right
+                            || event.getY() < top || event.getRawY() > bootom) {
+                        // 隐藏键盘
+                        IBinder token = view.getWindowToken();
+                        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     /*————————————画图相关————————————*/
 
     /**
@@ -273,7 +312,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol4.setText(strings[3]);
 
     }
-
 
 
     /**
@@ -652,6 +690,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 return false;
             }
         });
+    }
+
+    /**
+     * 点击事件分发
+     *
+     * @author xjy
+     */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                //获取当前获得焦点的View
+                View view = getCurrentFocus();
+                //调用方法判断是否需要隐藏键盘
+                KeyboardUtils.hideKeyboard(ev, view, this);
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     /**
@@ -1106,5 +1162,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         drawChart();
 
     }
+
 
 }

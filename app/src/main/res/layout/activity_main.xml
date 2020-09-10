@@ -20,10 +20,7 @@
             android:layout_height="wrap_content">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
+                android:layout_height="wrap_content">
                 <!--people num bar-->
                 <LinearLayout
                     android:id="@+id/people_num_bar"
@@ -557,9 +554,6 @@
                     android:layout_height="280dp"
                     android:layout_below="@+id/people_num_bar"
                     android:layout_marginRight="20dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
                     android:layout_marginEnd="20dp" />
 
 
