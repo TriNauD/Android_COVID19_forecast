@@ -32,6 +32,8 @@ public class TestAll {
 
     @Test
     public void testAll() throws InterruptedException {
+        Thread.sleep(10000);
+
         //测试切换省份
         onView(withId(R.id.change_province_spinner)).perform(click());
         onData(anything()).atPosition(1).perform(click());
@@ -52,7 +54,7 @@ public class TestAll {
         onView(withId(R.id.line_type_spinner)).check(matches(withSpinnerText(containsString("现存确诊"))));
         //测试切换预测状态
         onView(withId(R.id.forecast_switch)).perform(click());
-        Thread.sleep(1000);
+        Thread.sleep(3000);
         //测试群体免疫
         onView(withId(R.id.submit_button)).perform(click());
         Thread.sleep(3000);
@@ -82,6 +84,10 @@ public class TestAll {
 
         onView(withId(R.id.till_today_button)).perform(click());
         onView(withId(R.id.submit_button)).perform(click());
+
+        Thread.sleep(1000);
+        onView(withId(R.id.reset_button)).perform(click());
+        Thread.sleep(3000);
 
         onView(withId(R.id.model_type_spinner)).perform(click());
         onData(anything()).atPosition(2).perform(click());
@@ -114,7 +120,6 @@ public class TestAll {
                 .perform(typeText(d), closeSoftKeyboard());
 
         onView(withId(R.id.submit_button)).perform(click());
-        onView(withId(R.id.reset_button)).perform(click());
 
         onView(withId(R.id.r1_input)).perform(repeatedlyUntil(swipeDown(),
                 hasDescendant(withId(R.id.people_num_bar_col_1_title)),
