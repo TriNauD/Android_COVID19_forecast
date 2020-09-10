@@ -41,6 +41,7 @@
     <string name="alert_msg_input_err_duration_invalid">持续时间非法</string>
     <string name="alert_msg_input_err_duration_empty">持续时间不可为空</string>
     <string name="alert_msg_input_err_date_empty">日期不可为空</string>
+    <string name="alert_msg_input_err_param_empty">不可为空</string>
     <string name="alert_msg_get_data_failure">获取数据失败</string>
     <string name="alert_msg_get_data_success">获取数据成功</string>
 
