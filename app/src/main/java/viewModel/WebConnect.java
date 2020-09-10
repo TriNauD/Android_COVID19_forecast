@@ -49,6 +49,20 @@ public class WebConnect {
     private static int controlDuration = 7;
     //控制强度
     private static int controlGrade = 1;
+    //感染者接触人数r1
+    private static int r1 = 0;
+    //感染者传染概率b1
+    private static float b1 = 0;
+    //潜伏者接触人数r2
+    private static int r2 = 0;
+    //潜伏者传染概率b2
+    private static float b2 = 0;
+    //潜伏者患病概率a
+    private static float a = 0;
+    //感染者康复概率v
+    private static float v = 0;
+    //感染者病死率d
+    private static float d = 0;
 
     //所有线数据
     private static List<float[]> lineDataList = new ArrayList<>();
@@ -600,7 +614,7 @@ public class WebConnect {
     }
 
     public static void setHasControl(boolean hasControl) {
-        
+
     }
 
     public static int getControlType() {
