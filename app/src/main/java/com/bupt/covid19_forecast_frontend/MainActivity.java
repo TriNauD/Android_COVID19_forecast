@@ -30,7 +30,6 @@ import android.widget.ToggleButton;
 
 import com.android.tu.loadingdialog.LoadingDailog;
 
-import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,8 +46,6 @@ import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.view.LineChartView;
 import viewModel.WebConnect;
 import viewModel.LineViewModel;
-
-import static android.icu.text.DateTimePatternGenerator.DAY;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
@@ -835,13 +832,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         EditText[] SEIRParamEditTexts = {r1Input, b1Input, r2Input, b2Input, aInput, vInput, dInput, nInput};
         boolean isSEIRParamInputValid = true;
         boolean isAllSEIRParamFilled = true;
+
+        //提取数字
+        List<Integer> tempInts = new ArrayList<>();
+        List<Float> tempFloats = new ArrayList<>();
+
         //遍历输入框判断是否有框为空
         for (int i = 0; i < 8; i++) {
             if (SEIRParamEditTexts[i].getText().equals("")) {
                 isAllSEIRParamFilled = false;
                 break;
+            } else {
+                //把数字提取出来，后面统一判断
+                if (i == 0 || i == 2 || i == 7) {
+                    tempInts.add(Integer.parseInt(SEIRParamEditTexts[i].getText().toString()));
+                } else {
+                    tempFloats.add(Float.parseFloat(SEIRParamEditTexts[i].getText().toString()));
+                }
             }
         }
+
         //有参数为空
         if (!isAllSEIRParamFilled) {
             toast.setText(R.string.alert_msg_input_err_param_empty);
@@ -849,11 +859,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         //参数都不为空 则判断取值
         else {
-            //判断取值范围还没写
-            isSEIRParamInputValid = true;
+            for (int i = 0; i < tempInts.size(); i++) {
+
+                Log.i(TAG, "Button: temp Integer i: " + tempInts.get(i));
+
+                //人数 >0
+                isSEIRParamInputValid = (tempInts.get(i) > 0);
+                if (!isSEIRParamInputValid) {
+                    toast.setText(R.string.alert_msg_input_err_param_people);
+                    return false;
+                }
+            }
+
+            for (int i = 0; i < tempFloats.size(); i++) {
+
+                Log.i(TAG, "Button: Float i: " + tempFloats.get(i));
+
+                //概率 在(0,1)
+                isSEIRParamInputValid = ((tempFloats.get(i) > 0) && (tempFloats.get(i) < 1));
+                if (!isSEIRParamInputValid) {
+                    toast.setText(R.string.alert_msg_input_err_param_posibility);
+                    return false;
+                }
+            }
         }
 
-        toast.setText("SEIR param err");
+//        toast.setText("SEIR param err");
         return isSEIRParamInputValid;
     }
 
