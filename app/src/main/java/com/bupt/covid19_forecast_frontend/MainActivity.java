@@ -69,6 +69,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private EditText controlDurationInput;
     private EditText controlStartDateMonthInput;
     private EditText controlStartDateDayInput;
+    private EditText r1Input;
+    private EditText b1Input;
+    private EditText r2Input;
+    private EditText b2Input;
+    private EditText aInput;
+    private EditText vInput;
+    private EditText dInput;
+    private EditText nInput;
     private TextView toolbarTitle;
     private TextView controlLevelLabel;
     private TextView controlStartDateLabel;
@@ -452,6 +460,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         controlDurationInput = findViewById(R.id.control_duration_input);
         controlStartDateMonthInput = findViewById(R.id.control_start_date_month_input);
         controlStartDateDayInput = findViewById(R.id.control_start_date_day_input);
+        r1Input = findViewById(R.id.r1_input);
+        b1Input = findViewById(R.id.b1_input);
+        r2Input = findViewById(R.id.r2_input);
+        b2Input = findViewById(R.id.b2_input);
+        aInput = findViewById(R.id.a_input);
+        vInput = findViewById(R.id.v_input);
+        dInput = findViewById(R.id.d_input);
+        nInput = findViewById(R.id.n_input);
+        //title text
         toolbarTitle = findViewById(R.id.toolbar_title);
 
         //people num 4个col对应4个数字 需要改数就setText
@@ -559,9 +576,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clearFocusableInputBoxes(controlDurationInput);
-                clearFocusableInputBoxes(controlStartDateMonthInput);
-                clearFocusableInputBoxes(controlStartDateDayInput);
+                clearAllFocusableInputBoxes();
                 Log.i(TAG, "Button: reset button clicked");
             }
         });
@@ -708,6 +723,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 break;
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    /**
+     * 清空当前所有可编辑输入框组件内容
+     *
+     * @author xjy
+     */
+    public void clearAllFocusableInputBoxes() {
+        if (modelTypeSpinner.getSelectedItem().equals("控制")) {
+            clearFocusableInputBoxes(controlStartDateDayInput);
+            clearFocusableInputBoxes(controlStartDateMonthInput);
+            clearFocusableInputBoxes(controlDurationInput);
+        } else if (modelTypeSpinner.getSelectedItem().equals("SEIR")) {
+            clearFocusableInputBoxes(r1Input);
+            clearFocusableInputBoxes(b1Input);
+            clearFocusableInputBoxes(r2Input);
+            clearFocusableInputBoxes(b2Input);
+            clearFocusableInputBoxes(aInput);
+            clearFocusableInputBoxes(vInput);
+            clearFocusableInputBoxes(dInput);
+            clearFocusableInputBoxes(nInput);
+        }
     }
 
     /**
