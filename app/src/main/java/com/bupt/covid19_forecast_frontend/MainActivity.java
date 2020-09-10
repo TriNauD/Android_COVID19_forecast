@@ -839,7 +839,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //遍历输入框判断是否有框为空
         for (int i = 0; i < 8; i++) {
-            if (SEIRParamEditTexts[i].getText().equals("")) {
+            if (SEIRParamEditTexts[i].getText().toString().equals("")) {
                 isAllSEIRParamFilled = false;
                 break;
             } else {
