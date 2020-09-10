@@ -155,13 +155,13 @@ public class ButtonTest {
         onView(withId(R.id.model_type_spinner)).check(matches(withSpinnerText(containsString("SEIR"))));
 
         String r1 = "10";//感染者接触人数
-        String b1 = "0.001";//感染者传染概率
-        String r2 = "60";//潜伏者接触人数
-        String b2 = "0.1";//潜伏者传染概率
-        String a = "0.01";//潜伏者患病概率
-        String v = "0.9";//感染者康复概率
-        String d = "0.001";//病死率
-        String n = "10000000000";//总人数
+        String b1 = "0.01";//感染者传染概率
+        String r2 = "65";//潜伏者接触人数
+        String b2 = "0.01";//潜伏者传染概率
+        String a = "0.04";//潜伏者患病概率
+        String v = "0.15";//感染者康复概率
+        String d = "0.25";//病死率
+        String n = "1000000";//总人数
 
         onView(withId(R.id.r1_input))
                 .perform(typeText(r1), closeSoftKeyboard());
