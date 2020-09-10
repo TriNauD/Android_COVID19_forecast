@@ -40,8 +40,8 @@ public class WebConnect {
     //预测参数
     //是否在国内，true表示省份，false表示国家
     private static Boolean isProvince = false;
-    //是否进行控制
-    private static Boolean hasControl = true;
+    //控制类型
+    private static int controlType = 0;
     //控制开始时间
     private static String startControlDate = "2020-01-01";
     //控制增长阶段的时间
@@ -377,7 +377,7 @@ public class WebConnect {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         API api = retrofit.create(API.class);
-        Call<List<Integer>> task = api.getPredict(name, isProvince, hasControl, startControlDate, controlDuration, controlGrade);
+        Call<List<Integer>> task = api.getPredict(name, isProvince, controlType, startControlDate, controlDuration, controlGrade);
         task.enqueue(new Callback<List<Integer>>() {
             @Override
             public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
@@ -590,11 +590,19 @@ public class WebConnect {
     }
 
     public static boolean isHasControl() {
-        return hasControl;
+        return true;
     }
 
     public static void setHasControl(boolean hasControl) {
-        WebConnect.hasControl = hasControl;
+        
+    }
+
+    public static int getControlType() {
+        return controlType;
+    }
+
+    public static void setControlType(int controlType) {
+        WebConnect.controlType = controlType;
     }
 
     public static String getStartControlDate() {
