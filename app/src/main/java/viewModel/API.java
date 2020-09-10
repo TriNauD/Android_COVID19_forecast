@@ -18,7 +18,7 @@ public interface API {
     @GET("/server/getPredict")
     Call<List<Integer>> getPredict(@Query("name") String name,
                                    @Query("isNation") Boolean isNation,
-                                   @Query("hasControl") Boolean hasControl,
+                                   @Query("controlType") int controlType,
                                    @Query("startControlDate") String startControlDate,
                                    @Query("raiseLastTime") int raiseLastTime,
                                    @Query("controlGrade") int controlGrade);
