@@ -22,6 +22,8 @@
     <string name="control_start_date_year_label">年</string>
     <string name="control_start_date_month_label">月</string>
     <string name="control_start_date_day_label">日</string>
+    <string name="population_sub_title">人数</string>
+    <string name="possibility_sub_title">概率</string>
     <string name="r1_label">感染者接触人数</string>
     <string name="b1_label">感染者传染概率</string>
     <string name="r2_label">潜伏者接触人数</string>
