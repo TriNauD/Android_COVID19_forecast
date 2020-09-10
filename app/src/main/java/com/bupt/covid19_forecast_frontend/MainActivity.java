@@ -1032,6 +1032,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //清空点击显示
         clearClick();
+        //清空预测线
+        WebConnect.resetPredictData();
 
         int parentID = parent.getId();
 
