@@ -28,6 +28,9 @@
     <string name="b2_label">潜伏者传染概率</string>
     <string name="a_label">潜伏者患病概率</string>
     <string name="v_label">感染者康复概率</string>
+    <string name="d_label">感染者病死概率</string>
+    <string name="n_label">预测地区总人数</string>
+
 
     <string name="submit_button_text">提交</string>
     <string name="reset_button_text">重置</string>
