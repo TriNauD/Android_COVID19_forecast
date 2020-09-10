@@ -83,6 +83,8 @@ public class WebConnect {
     private static List<Alltime_province> provinceList = new ArrayList<>();
     //世界的列表
     private static List<Alltime_world> nationList = new ArrayList<>();
+    //预测的列表
+    private static List<Integer> predictList = new ArrayList<>();
 
     //某一天的4个数
     private static Integer[] oneDayFourNum = new Integer[4];
@@ -128,8 +130,7 @@ public class WebConnect {
                         //已经获取完毕
                         isGetFinished = true;
                         isGetSuccess = false;
-                        Log.i(TAG, "isGetFinished省份失败" + isGetFinished);
-                        Log.i(TAG, "isGetSuccess省份失败" + isGetSuccess);
+                        Log.i(TAG, "省份失败，空body");
                         return;
                     }
                     //最后一天的所有数据
@@ -269,8 +270,7 @@ public class WebConnect {
                         //已经获取完毕
                         isGetFinished = true;
                         isGetSuccess = false;
-                        Log.i(TAG, "isGetFinished世界失败" + isGetFinished);
-                        Log.i(TAG, "isGetSuccess世界失败" + isGetSuccess);
+                        Log.i(TAG, "世界失败，空body");
                         return;
                     }
                     //最后一天的所有数据
@@ -394,23 +394,33 @@ public class WebConnect {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         API api = retrofit.create(API.class);
-        Call<List<Integer>> task = api.getPredict(name, isProvince, controlType, startControlDate, controlDuration, controlGrade,r1,b1,r2,b2,a,v,d,n);
+        Call<List<Integer>> task = api.getPredict(name, isProvince, controlType, startControlDate, controlDuration, controlGrade, r1, b1, r2, b2, a, v, d, n);
         task.enqueue(new Callback<List<Integer>>() {
             @Override
             public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
                 Log.i(TAG, name + "预测onResponse --> " + response.code());
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     List<Integer> predict = response.body();
+                    predictList = predict;
+
+                    if (predictList.size() <= 0) {
+                        //已经获取完毕
+                        isGetFinished = true;
+                        isGetSuccess = false;
+                        Log.i(TAG, "预测失败，空body");
+                        return;
+                    }
+
                     //第一天预测的数据
-                    Log.i(TAG, "onResponse: 第一天预测的数据： " + predict.get(0));
+                    Log.i(TAG, "onResponse: 第一天预测的数据： " + predictList.get(0));
 
                     //将预测数据放到线上
-                    for (int j = 0; j < predict.size(); ++j) {
-                        xyPredict[j] = predict.get(j);
+                    for (int j = 0; j < predictList.size(); ++j) {
+                        xyPredict[j] = predictList.get(j);
                     }
 
                     //预测线的节点数量要根据传入数量
-                    numOfForecastPoints = predict.size();
+                    numOfForecastPoints = predictList.size();
 
                     //真正的获取数据成功
                     isGetSuccess = true;
