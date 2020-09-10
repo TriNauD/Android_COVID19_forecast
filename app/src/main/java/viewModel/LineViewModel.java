@@ -50,7 +50,13 @@ public class LineViewModel extends ViewModel {
             //绑定数据
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
             for (int p = 0; p < WebConnect.getNumOfForecastPoints(); p++) {
-                int x = p;//预测点
+                int x;
+                if (WebConnect.getNumOfForecastPoints() < WebConnect.getNumOfRealPoints()) {
+                    //如果预测的点数量小于真实的点数量
+                    x = p + WebConnect.getNumOfRealPoints();//预测点接在真实后面
+                } else {
+                    x = p;//预测点直接放
+                }
                 float y = WebConnect.getLineDataList().get(i + WebConnect.getNumOfRealLines())[p];
                 tempArrayList.add(new PointValue(x, y));//在真实线后面的是预测线
             }
