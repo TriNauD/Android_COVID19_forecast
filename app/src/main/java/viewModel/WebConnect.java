@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import domain.Alltime_province;
@@ -34,14 +35,14 @@ public class WebConnect {
     //“真实线”的节点数
     private static int numOfRealPoints = 9999;
     //“预测线”的节点数
-    private static int numOfForecastPoints = 30;
+    private static int numOfForecastPoints = 300;
 
 
     //预测参数
     //是否在国内，true表示省份，false表示国家
     private static Boolean isProvince = false;
-    //是否进行控制
-    private static Boolean hasControl = true;
+    //控制类型
+    private static int controlType = 0;
     //控制开始时间
     private static String startControlDate = "2020-01-01";
     //控制增长阶段的时间
@@ -377,7 +378,7 @@ public class WebConnect {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         API api = retrofit.create(API.class);
-        Call<List<Integer>> task = api.getPredict(name, isProvince, hasControl, startControlDate, controlDuration, controlGrade);
+        Call<List<Integer>> task = api.getPredict(name, isProvince, controlType, startControlDate, controlDuration, controlGrade);
         task.enqueue(new Callback<List<Integer>>() {
             @Override
             public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
@@ -436,6 +437,7 @@ public class WebConnect {
                 //debug TAG
 //                Log.d(TAG, "initReal：xyReal[i][j]: " + xyReal[i][j]);
                 linePoints[j] = xyReal[i][j];
+//                linePoints[j] = new Random().nextInt(10) + j * 1000;//假数据专用调试
             }
             if (lineDataList.size() < numOfRealLines) {
                 //如果是空的就初始化
@@ -456,6 +458,10 @@ public class WebConnect {
         for (int i = 0; i < numOfForecastLines; ++i) {
             float[] linePoints = new float[numOfForecastPoints];//一条线上面的点
             System.arraycopy(xyPredict, 0, linePoints, 0, numOfForecastPoints);
+            //假数据专用调试
+//            for (int j = 0; j < numOfForecastPoints; j++) {
+//                linePoints[j] = new Random().nextInt(10) + j * j * 10;
+//            }
             if (lineDataList.size() < numOfRealLines + numOfForecastLines) {
                 //如果线组里面还没有预测线，就新添加
                 lineDataList.add(linePoints);
@@ -590,11 +596,19 @@ public class WebConnect {
     }
 
     public static boolean isHasControl() {
-        return hasControl;
+        return true;
     }
 
     public static void setHasControl(boolean hasControl) {
-        WebConnect.hasControl = hasControl;
+        
+    }
+
+    public static int getControlType() {
+        return controlType;
+    }
+
+    public static void setControlType(int controlType) {
+        WebConnect.controlType = controlType;
     }
 
     public static String getStartControlDate() {

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -109,15 +110,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //国家下拉框是不是第一次调用
     private boolean isFirstChooseNation = true;
 
-    //画图调参用
     //当前显示的线是几号
     private int curLineIndex = 0;
     //最大y轴
     private int MaxY = 2200000;
+
     //点击坐标
     int clickX, clickY;
     //点击的日期标签
     String clickDateString = "";
+    //点击的线下标
+    private int clickColorLineIndex = 0;
+    //在画的线有几条是需要标签颜色的
+    private int showColorLineNum = 0;
 
     /*————————————获取数据相关————————————*/
 
@@ -137,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //先设置为没有开始获取&没有获取成功
             WebConnect.setIsGetFinished(false);
             WebConnect.setIsGetSuccess(false);
-            Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished());
 
             //创建一个遮罩
             dialog = loadBuilder.create();
@@ -231,7 +235,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @author lym
      */
     private void drawChart() {
-        Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
 
 
@@ -261,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //int -> String
         for (int i = 0; i < 4; i++) {
             strings[i] = String.valueOf(integers[i]);
-            Log.i(TAG, "updateFourNum第" + i + "个字符串：" + strings[i]);
+//            Log.i(TAG, "updateFourNum第" + i + "个字符串：" + strings[i]);
         }
 
         peopleNumBarCol1.setText(strings[0]);
@@ -270,6 +273,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol4.setText(strings[3]);
 
     }
+
+
 
     /**
      * 小画家
@@ -294,6 +299,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (isForecast) {
             showLines.add(allLines.get(0));
         }
+        //在画的“线”有几条
+        showColorLineNum = showLines.size();
 
         //手指点击的竖直线
         //点
@@ -308,10 +315,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         pointValueList.add(pointValue2);
         pointValueList.add(pointValue3);
         //线
-        Line handLine = new Line();
-        handLine.setValues(pointValueList);
+        Line verticalLine = new Line();
+        verticalLine.setValues(pointValueList);
         //样式
-        handLine.setHasPoints(false);//不要点
+        verticalLine.setHasPoints(false);//不要点
+        verticalLine.setColor(Color.WHITE);//白色
+        //虚线
+        float[] floats = new float[]{10, 50};
+        DashPathEffect dashPathEffect = new DashPathEffect(floats, 0);
+        verticalLine.setPathEffect(dashPathEffect);
 
         //用来显示标签的线
         //点
@@ -326,26 +338,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //样式
         labelLine.setHasLabels(true);//常驻标签
         labelLine.setPointRadius(3);//点的大小
-
-        //颜色
-        handLine.setColor(Color.WHITE);
-        //设置为所点的线的颜色
-        if (isForecast) {
-            //在预测
-            if (clickX > WebConnect.getNumOfRealPoints()) {
-                //后面的蓝色
-                labelLine.setColor(showLines.get(0).getColor());
-            } else {
-                //前面的红色
-                labelLine.setColor(showLines.get(1).getColor());
-            }
-        } else {
-            //没在预测,用前面的颜色
-            labelLine.setColor(showLines.get(0).getColor());
-        }
+        //点击的线的颜色
+        Line colorLine = showLines.get(clickColorLineIndex);
+        labelLine.setColor(colorLine.getColor());
 
         //加入总的线列表
-        showLines.add(handLine);
+        showLines.add(verticalLine);
         showLines.add(labelLine);
 
         //------------------------- 轴 -----------------------
@@ -368,7 +366,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myLineChartView.setLineChartData(curLineData);
 
         //----------------------- 互动与视图 ------------------------------
-        Log.i(TAG, "调参师");
         myLineChartView.setInteractive(true);
         myLineChartView.setZoomEnabled(true);
         myLineChartView.setContainerScrollEnabled(true, ContainerScrollType.VERTICAL);
@@ -484,8 +481,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 Log.i(TAG, "Button: submit button clicked");
                 //设置控制或群体免疫
-                WebConnect.setHasControl(modelTypeSpinner.getSelectedItemPosition() == 0);
-                Log.i(TAG, "Button: hasControl:" + (modelTypeSpinner.getSelectedItemPosition() == 0));
+                WebConnect.setControlType(modelTypeSpinner.getSelectedItemPosition() + 1);
+                Log.i(TAG, "Button: ControlType:" + (modelTypeSpinner.getSelectedItemPosition() + 1));
                 //设置控制等级
                 WebConnect.setControlGrade((controlLevelSpinner.getSelectedItemPosition() + 1) % 4);
                 Log.i(TAG, "Button: ControlLevel:" + ((controlLevelSpinner.getSelectedItemPosition() + 1) % 4));
@@ -615,7 +612,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     LineChartOnValueSelectListener lineChartOnValueSelectListener = new LineChartOnValueSelectListener() {
                         @Override
-                        public void onValueSelected(int i, int i1, PointValue pointValue) {
+                        public void onValueSelected(int lineIndex, int pointIndex, PointValue pointValue) {
+                            //获取点击的线
+                            Log.i(TAG, "touch线为 lineIndex: " + lineIndex + " , pointIndex: " + pointIndex);
+                            //如果是需要颜色的线，就赋值
+                            if (lineIndex <= showColorLineNum) {
+                                clickColorLineIndex = lineIndex;
+                            }
+
                             //获取点击坐标
                             int x = (int) pointValue.getX();
                             int y = (int) pointValue.getY();
@@ -627,14 +631,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             Axis xAxix = lineViewModel.getAxesList().get(curLineIndex)[0];
                             char[] labelChars = xAxix.getValues().get(clickX).getLabel();
                             clickDateString = String.valueOf(labelChars);
-                            clickDateString += "\n";
+                            clickDateString += " ";
                             clickDateString += clickY;
-                            Log.i(TAG, "touch x轴坐标标签: " + clickDateString);
-
+//                            Log.i(TAG, "touch x轴坐标标签: " + clickDateString);
 
                             //动画移动 跟随点击动画到指定位置
                             myLineChartView.moveToWithAnimation(clickX, clickY);
-
 
                             //画画
                             draw();
@@ -793,6 +795,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         clickX = 0;
         clickY = 0;
         clickDateString = "";
+        clickColorLineIndex = 0;
         //简单画一下
         draw();
     }
@@ -808,7 +811,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         //日志调试
-        Log.i(TAG, "onItemSelected 进入函数");
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
 
         //清空点击显示
@@ -1001,8 +1003,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
-        Log.i(TAG, "onNothingSelected 进入函数");
     }
 
     /**
@@ -1013,7 +1013,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Log.i(TAG, "onCheckedChanged 进入函数");
         //清空点击显示
         clearClick();
         //判断监听到的是哪个组件被选中
