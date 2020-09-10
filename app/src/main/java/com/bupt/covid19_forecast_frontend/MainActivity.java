@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -313,10 +314,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         pointValueList.add(pointValue2);
         pointValueList.add(pointValue3);
         //线
-        Line handLine = new Line();
-        handLine.setValues(pointValueList);
+        Line verticalLine = new Line();
+        verticalLine.setValues(pointValueList);
         //样式
-        handLine.setHasPoints(false);//不要点
+        verticalLine.setHasPoints(false);//不要点
+        verticalLine.setColor(Color.WHITE);//白色
+        //虚线
+        float[] floats = new float[]{10, 50};
+        DashPathEffect dashPathEffect = new DashPathEffect(floats, 0);
+        verticalLine.setPathEffect(dashPathEffect);
 
         //用来显示标签的线
         //点
@@ -331,15 +337,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //样式
         labelLine.setHasLabels(true);//常驻标签
         labelLine.setPointRadius(3);//点的大小
-
-        //颜色
-        handLine.setColor(Color.WHITE);
         //点击的线的颜色
         Line colorLine = showLines.get(clickColorLineIndex);
         labelLine.setColor(colorLine.getColor());
 
         //加入总的线列表
-        showLines.add(handLine);
+        showLines.add(verticalLine);
         showLines.add(labelLine);
 
         //------------------------- 轴 -----------------------
