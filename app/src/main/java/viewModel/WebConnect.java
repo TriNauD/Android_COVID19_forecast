@@ -49,6 +49,22 @@ public class WebConnect {
     private static int controlDuration = 7;
     //控制强度
     private static int controlGrade = 1;
+    //感染者接触人数r1
+    private static int r1 = 0;
+    //感染者传染概率b1
+    private static float b1 = 0;
+    //潜伏者接触人数r2
+    private static int r2 = 0;
+    //潜伏者传染概率b2
+    private static float b2 = 0;
+    //潜伏者患病概率a
+    private static float a = 0;
+    //感染者康复概率v
+    private static float v = 0;
+    //感染者病死率d
+    private static float d = 0;
+    //该地区总人数n
+    private static int n = 0;
 
     //所有线数据
     private static List<float[]> lineDataList = new ArrayList<>();
@@ -575,10 +591,6 @@ public class WebConnect {
         return axisLableList;
     }
 
-    public static void setAxisLableList(List<List<String>> axisLableList) {
-        WebConnect.axisLableList = axisLableList;
-    }
-
     public static int getNumOfRealLines() {
         return numOfRealLines;
     }
@@ -595,40 +607,16 @@ public class WebConnect {
         return numOfForecastPoints;
     }
 
-    public static boolean isHasControl() {
-        return true;
-    }
-
-    public static void setHasControl(boolean hasControl) {
-        
-    }
-
-    public static int getControlType() {
-        return controlType;
-    }
-
     public static void setControlType(int controlType) {
         WebConnect.controlType = controlType;
-    }
-
-    public static String getStartControlDate() {
-        return startControlDate;
     }
 
     public static void setStartControlDate(String startControlDate) {
         WebConnect.startControlDate = startControlDate;
     }
 
-    public static int getControlDuration() {
-        return controlDuration;
-    }
-
     public static void setControlDuration(int controlDuration) {
         WebConnect.controlDuration = controlDuration;
-    }
-
-    public static int getControlGrade() {
-        return controlGrade;
     }
 
     public static void setControlGrade(int controlGrade) {
@@ -637,10 +625,6 @@ public class WebConnect {
 
     public static List<float[]> getLineDataList() {
         return lineDataList;
-    }
-
-    public static void setLineDataList(List<float[]> lineDataList) {
-        WebConnect.lineDataList = lineDataList;
     }
 
     public static Boolean getIsProvince() {
@@ -681,4 +665,37 @@ public class WebConnect {
     public static void setIsGetSuccess(boolean isGetSuccess) {
         WebConnect.isGetSuccess = isGetSuccess;
     }
+
+    public static void setR1(int r1) {
+        WebConnect.r1 = r1;
+    }
+
+    public static void setB1(float b1) {
+        WebConnect.b1 = b1;
+    }
+
+    public static void setR2(int r2) {
+        WebConnect.r2 = r2;
+    }
+
+    public static void setB2(float b2) {
+        WebConnect.b2 = b2;
+    }
+
+    public static void setA(float a) {
+        WebConnect.a = a;
+    }
+
+    public static void setV(float v) {
+        WebConnect.v = v;
+    }
+
+    public static void setD(float d) {
+        WebConnect.d = d;
+    }
+
+    public static void setN(int n) {
+        WebConnect.n = n;
+    }
+
 }
