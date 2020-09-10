@@ -589,6 +589,14 @@ public class WebConnect {
         return numOfForecastPoints;
     }
 
+    public static boolean isHasControl() {
+        return true;
+    }
+
+    public static void setHasControl(boolean hasControl) {
+        
+    }
+
     public static int getControlType() {
         return controlType;
     }
