@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -27,8 +28,11 @@ import android.widget.ToggleButton;
 
 import com.android.tu.loadingdialog.LoadingDailog;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import lecho.lib.hellocharts.gesture.ContainerScrollType;
@@ -37,10 +41,11 @@ import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
-import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 import viewModel.WebConnect;
 import viewModel.LineViewModel;
+
+import static android.icu.text.DateTimePatternGenerator.DAY;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
@@ -57,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Switch forecastSwitch;
     private Button submitButton;
     private Button resetButton;
+    private Button tillTodyButton;
     private ToggleButton homeOrAbroadToggleButton;
     private EditText controlDurationInput;
     private EditText controlStartDateMonthInput;
@@ -103,19 +109,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //国家下拉框是不是第一次调用
     private boolean isFirstChooseNation = true;
 
-    //画图调参用
     //当前显示的线是几号
     private int curLineIndex = 0;
     //最大y轴
     private int MaxY = 2200000;
-    //右边距，留出一点白用来滑动
-    private int rightMargin = 4;
-    //同一个框框显示x轴的范围,100表示一共显示100个点
-    private int showXRange = 100;
+
     //点击坐标
     int clickX, clickY;
     //点击的日期标签
     String clickDateString = "";
+    //点击的线下标
+    private int clickColorLineIndex = 0;
+    //在画的线有几条是需要标签颜色的
+    private int showColorLineNum = 0;
 
     /*————————————获取数据相关————————————*/
 
@@ -135,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //先设置为没有开始获取&没有获取成功
             WebConnect.setIsGetFinished(false);
             WebConnect.setIsGetSuccess(false);
-            Log.i(TAG, "Loading...开始转圈圈 isGetFinished：" + WebConnect.isGetFinished());
 
             //创建一个遮罩
             dialog = loadBuilder.create();
@@ -147,15 +152,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected String doInBackground(String... params) {
             try {
-                //去获取数据，如果成功会将isGetFinished设置为true
+                //先重置数据
+                //然后去获取数据
+                // 如果成功会将isGetFinished设置为true
                 switch (params[0]) {
                     case "World":
+                        WebConnect.resetRealData();
                         WebConnect.getWorld(currentRegionName);
                         break;
                     case "Predict":
+                        WebConnect.resetPredictData();
                         WebConnect.getPredict(currentRegionName);
                         break;
                     case "Province":
+                        WebConnect.resetRealData();
                         WebConnect.getProvince(currentRegionName);
                         break;
                 }
@@ -164,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 while (!WebConnect.isGetFinished()) {
                     Thread.sleep(1);
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -225,7 +234,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @author lym
      */
     private void drawChart() {
-        Log.i(TAG, "draw 进入函数");
         Log.i(TAG, "draw 函数：curLineIndex：" + curLineIndex);
 
 
@@ -255,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //int -> String
         for (int i = 0; i < 4; i++) {
             strings[i] = String.valueOf(integers[i]);
-            Log.i(TAG, "updateFourNum第" + i + "个字符串：" + strings[i]);
+//            Log.i(TAG, "updateFourNum第" + i + "个字符串：" + strings[i]);
         }
 
         peopleNumBarCol1.setText(strings[0]);
@@ -264,6 +272,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         peopleNumBarCol4.setText(strings[3]);
 
     }
+
+
 
     /**
      * 小画家
@@ -288,6 +298,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (isForecast) {
             showLines.add(allLines.get(0));
         }
+        //在画的“线”有几条
+        showColorLineNum = showLines.size();
 
         //手指点击的竖直线
         //点
@@ -302,10 +314,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         pointValueList.add(pointValue2);
         pointValueList.add(pointValue3);
         //线
-        Line handLine = new Line();
-        handLine.setValues(pointValueList);
+        Line verticalLine = new Line();
+        verticalLine.setValues(pointValueList);
         //样式
-        handLine.setHasPoints(false);//不要点
+        verticalLine.setHasPoints(false);//不要点
+        verticalLine.setColor(Color.WHITE);//白色
+        //虚线
+        float[] floats = new float[]{10, 50};
+        DashPathEffect dashPathEffect = new DashPathEffect(floats, 0);
+        verticalLine.setPathEffect(dashPathEffect);
 
         //用来显示标签的线
         //点
@@ -320,26 +337,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //样式
         labelLine.setHasLabels(true);//常驻标签
         labelLine.setPointRadius(3);//点的大小
-
-        //颜色
-        handLine.setColor(Color.WHITE);
-        //设置为所点的线的颜色
-        if (isForecast) {
-            //在预测
-            if (clickX > WebConnect.getNumOfRealPoints()) {
-                //后面的蓝色
-                labelLine.setColor(showLines.get(0).getColor());
-            } else {
-                //前面的红色
-                labelLine.setColor(showLines.get(1).getColor());
-            }
-        } else {
-            //没在预测,用前面的颜色
-            labelLine.setColor(showLines.get(0).getColor());
-        }
+        //点击的线的颜色
+        Line colorLine = showLines.get(clickColorLineIndex);
+        labelLine.setColor(colorLine.getColor());
 
         //加入总的线列表
-        showLines.add(handLine);
+        showLines.add(verticalLine);
         showLines.add(labelLine);
 
         //------------------------- 轴 -----------------------
@@ -361,42 +364,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //把这个设置好的数据放到view里面
         myLineChartView.setLineChartData(curLineData);
 
-        //----------------------- 视图 ------------------------------
-        Log.i(TAG, "调参师");
+        //----------------------- 互动与视图 ------------------------------
         myLineChartView.setInteractive(true);
         myLineChartView.setZoomEnabled(true);
         myLineChartView.setContainerScrollEnabled(true, ContainerScrollType.VERTICAL);
-
-//        //总体的图表范围
-//        Viewport maxViewPort = new Viewport(myLineChartView.getMaximumViewport());
-//
-//        //x轴
-//        maxViewPort.left = 0;
-//        //获取后端的节点数目
-//        int numOfRP = WebConnect.getNumOfRealPoints();
-//        int numOfFP = WebConnect.getNumOfForecastPoints();
-//        //x轴最大坐标值
-//        maxViewPort.right = numOfRP + rightMargin + (isForecast ? numOfFP : 0);
-//
-//        //y轴
-//        maxViewPort.bottom = 0;
-//        //y最大坐标值
-//        maxViewPort.top = MaxY;
-//
-//        myLineChartView.setMaximumViewport(maxViewPort);
-//
-//
-//        //显示的小界面，可以滑动
-//        Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
-//
-//        //y轴
-//        halfViewport.top = MaxY;
-//        halfViewport.bottom = 0;
-//        //x轴
-//        //先显示后100天
-//        halfViewport.left = numOfRP - showXRange;
-//        halfViewport.right = numOfRP;
-//        myLineChartView.setCurrentViewport(halfViewport);
     }
 
     /*————————————控件相关————————————*/
@@ -432,6 +403,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //button
         submitButton = findViewById(R.id.submit_button);
         resetButton = findViewById(R.id.reset_button);
+        tillTodyButton = findViewById(R.id.till_today_button);
 
         //toggle button
         homeOrAbroadToggleButton = findViewById(R.id.home_or_abroad_toggle_btn);
@@ -507,15 +479,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 Log.i(TAG, "Button: submit button clicked");
                 //设置控制或群体免疫
-                WebConnect.setHasControl(modelTypeSpinner.getSelectedItemPosition() == 0);
-                Log.i(TAG, "Button: hasControl:" + (modelTypeSpinner.getSelectedItemPosition() == 0));
+                WebConnect.setControlType(modelTypeSpinner.getSelectedItemPosition() + 1);
+                Log.i(TAG, "Button: ControlType:" + (modelTypeSpinner.getSelectedItemPosition() + 1));
                 //设置控制等级
-                WebConnect.setControlGrade(controlLevelSpinner.getSelectedItemPosition() + 1);
-                Log.i(TAG, "Button: ControlLevel:" + (controlLevelSpinner.getSelectedItemPosition() + 1));
-                //设置控制持续时间
-                WebConnect.setControlDuration(Integer.valueOf(controlDurationInput.getText().toString()));
-                Log.i(TAG, "Button: ControlDuration:" + (Integer.valueOf(controlDurationInput.getText().toString())));
-                //设置控制开始日期
+                WebConnect.setControlGrade((controlLevelSpinner.getSelectedItemPosition() + 1) % 4);
+                Log.i(TAG, "Button: ControlLevel:" + ((controlLevelSpinner.getSelectedItemPosition() + 1) % 4));
+                //设置控制开始日期&持续时间
                 //控制
                 if (modelTypeSpinner.getSelectedItemPosition() == 0) {
                     //用户输入合法（不为空且日期合法）
@@ -525,13 +494,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         //WebConnect设置开始时间
                         WebConnect.setStartControlDate(date);
                         Log.i(TAG, "Button: ControlStartDate:" + date);
+                        //WebConnect设置控制持续时间
+                        WebConnect.setControlDuration(Integer.valueOf(controlDurationInput.getText().toString()));
+                        Log.i(TAG, "Button: ControlDuration:" + (Integer.valueOf(controlDurationInput.getText().toString())));
                         //发送 获取预测
                         getDataTask = new GetDataTask();
                         getDataTask.execute("Predict");
                     }
                     //用户输入非法 显示提示
                     else {
-                        clearFocusableInputBoxes();
                         toast.setDuration(Toast.LENGTH_LONG);
                         toast.show();
                     }
@@ -548,8 +519,43 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clearFocusableInputBoxes();
+                clearFocusableInputBoxes(controlDurationInput);
+                clearFocusableInputBoxes(controlStartDateMonthInput);
+                clearFocusableInputBoxes(controlStartDateDayInput);
                 Log.i(TAG, "Button: reset button clicked");
+            }
+        });
+        tillTodyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isDateInputValid()) {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        //控制开始时间转换为date
+                        Date controlStartDate = simpleDateFormat.parse(formatDateInput());
+                        //当前日期
+                        Date dateNow = new Date();
+                        //得到差距多少天
+                        int distance = getTimeDistance(controlStartDate, dateNow);
+                        //判断是否
+                        if (distance > 0) {
+                            //如果持续时间输入框可更改则设为该差距 否则不变
+                            controlDurationInput.setText(controlDurationInput.isFocusable() ? String.valueOf(distance) : controlDurationInput.getText());
+                            Log.i(TAG, "tillTodayButton: 距离" + distance);
+                        } else {
+                            //超出今天范围
+                            clearFocusableInputBoxes(controlStartDateMonthInput);
+                            clearFocusableInputBoxes(controlStartDateDayInput);
+                            clearFocusableInputBoxes(controlDurationInput);
+                            toast.setText(R.string.alert_msg_input_err_after_today);
+                            toast.show();
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    toast.show();
+                }
             }
         });
         //toggle button设置listener
@@ -604,7 +610,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     LineChartOnValueSelectListener lineChartOnValueSelectListener = new LineChartOnValueSelectListener() {
                         @Override
-                        public void onValueSelected(int i, int i1, PointValue pointValue) {
+                        public void onValueSelected(int lineIndex, int pointIndex, PointValue pointValue) {
+                            //获取点击的线
+                            Log.i(TAG, "touch线为 lineIndex: " + lineIndex + " , pointIndex: " + pointIndex);
+                            //如果是需要颜色的线，就赋值
+                            if (lineIndex <= showColorLineNum) {
+                                clickColorLineIndex = lineIndex;
+                            }
+
                             //获取点击坐标
                             int x = (int) pointValue.getX();
                             int y = (int) pointValue.getY();
@@ -616,48 +629,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             Axis xAxix = lineViewModel.getAxesList().get(curLineIndex)[0];
                             char[] labelChars = xAxix.getValues().get(clickX).getLabel();
                             clickDateString = String.valueOf(labelChars);
-                            clickDateString += "\n";
+                            clickDateString += " ";
                             clickDateString += clickY;
-                            Log.i(TAG, "touch x轴坐标标签: " + clickDateString);
-
+//                            Log.i(TAG, "touch x轴坐标标签: " + clickDateString);
 
                             //动画移动 跟随点击动画到指定位置
                             myLineChartView.moveToWithAnimation(clickX, clickY);
 
-
                             //画画
                             draw();
-
-
-//                            //调参师傅
-//                            int numOfRP = WebConnect.getNumOfRealPoints();
-//                            int numOfFP = WebConnect.getNumOfForecastPoints();
-//                            //更新预测状态，这个值是表示显示的线是不是真的预测线
-//                            int numOfRealLines = lineViewModel.getNumOfRealLines();
-//                            boolean isForecast = (curLineIndex >= numOfRealLines);//如果索引大于“真实线”数目，就表示是在预测
-//
-//                            //显示的总点数,按照是否预测数字不同
-//                            int numOfShowPoint = numOfRP + rightMargin + (isForecast ? numOfFP : 0);
-//
-//                            //显示的小界面，可以滑动
-//                            Viewport halfViewport = new Viewport(myLineChartView.getCurrentViewport());
-//                            halfViewport.top = MaxY;
-//                            halfViewport.bottom = 0;
-//                            //先显示后100天
-//                            if (x < 50) {
-//                                //如果x是10,左0右100
-//                                halfViewport.left = 0;
-//                                halfViewport.right = showXRange;
-//                            } else if (x + 50 < numOfShowPoint) {
-//                                //如果x是60,左10右110
-//                                halfViewport.left = x - showXRange / 2;
-//                                halfViewport.right = x + showXRange / 2;
-//                            } else {
-//                                //如果一共200个点,x是160,左100,右200
-//                                halfViewport.left = numOfShowPoint - showXRange;
-//                                halfViewport.right = numOfShowPoint;
-//                            }
-//                            myLineChartView.setCurrentViewport(halfViewport);
                         }
 
                         @Override
@@ -677,10 +657,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @author xjy
      */
-    public void clearFocusableInputBoxes() {
-        controlStartDateDayInput.setText("");
-        controlStartDateMonthInput.setText("");
-        controlDurationInput.setText(controlDurationInput.isFocusable() ? "" : controlDurationInput.getText());
+    public void clearFocusableInputBoxes(EditText editText) {
+        editText.setText(editText.isFocusable() ? "" : editText.getText());
     }
 
     /**
@@ -690,42 +668,74 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @author xjy
      */
     public boolean isUserInputParamValid() {
-        boolean isUserInputParamValid = true;
-        String monthStr = controlStartDateMonthInput.getText().toString().trim();
-        String dayStr = controlStartDateDayInput.getText().toString().trim();
-        //首先判断是不是空 如果空设置提示消息为空
-        if (monthStr.equals("") || dayStr.equals("")) {
-            isUserInputParamValid = false;
-            toast.setText(R.string.alert_msg_input_err_empty);
+        return (isDateInputValid() && isDurationInputValid());
+    }
+
+    /**
+     * 判断输入持续时间是否正确
+     *
+     * @author xjy
+     */
+    public boolean isDurationInputValid() {
+        boolean isDurationInputValid = true;
+        String durationStr = controlDurationInput.getText().toString().trim();
+        //判断是不是空 如果空设置提示消息为空
+        if (durationStr.equals("")) {
+            isDurationInputValid = false;
+            toast.setText(R.string.alert_msg_input_err_duration_empty);
         }
-        //再判断日期是否合法
-        else {
-            int monthInt = Integer.parseInt(monthStr);
-            int dayInt = Integer.parseInt(dayStr);
-            isUserInputParamValid = isDateValid(monthInt, dayInt);
-        }
-        return isUserInputParamValid;
+        return isDurationInputValid;
     }
 
     /**
      * 判断输入日期是否正确
      *
-     * @param month,day
+     * @author xjy
+     */
+    public boolean isDateInputValid() {
+        boolean isDateInputValid = true;
+        String monthStr = controlStartDateMonthInput.getText().toString().trim();
+        String dayStr = controlStartDateDayInput.getText().toString().trim();
+        //首先判断是不是空 如果空设置提示消息为空
+        if (monthStr.equals("") || dayStr.equals("")) {
+            isDateInputValid = false;
+            toast.setText(R.string.alert_msg_input_err_date_empty);
+        }
+        //再判断日期是否合法
+        else {
+            int monthInt = Integer.parseInt(monthStr);
+            int dayInt = Integer.parseInt(dayStr);
+            isDateInputValid = isDateValid(monthInt, dayInt);
+        }
+        return isDateInputValid;
+    }
+
+    /**
+     * 判断日期是否正确
+     *
+     * @param month
+     * @param day
      * @author xjy
      */
     public boolean isDateValid(int month, int day) {
         boolean isDateValid = true;
         //月份天数对照
         int monthDays[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        //月份<=0或者月份>12 日<=或者>31 明显离谱日期
+        //月份<=0或者月份>12 日<=或者>31 粗略排除明显离谱日期
         if ((month <= 0 || month > 12) || ((day <= 0) || (day > 31))) {
             toast.setText(R.string.alert_msg_input_err_invalid);
+            //清除日期输入框
+            clearFocusableInputBoxes(controlStartDateDayInput);
+            clearFocusableInputBoxes(controlStartDateMonthInput);
             isDateValid = false;
         }
-        //按大小月分
+        //按大小月精确分
         else {
             if (day > monthDays[month - 1]) {
                 toast.setText(R.string.alert_msg_input_err_invalid);
+                //清除日期输入框
+                clearFocusableInputBoxes(controlStartDateDayInput);
+                clearFocusableInputBoxes(controlStartDateMonthInput);
                 isDateValid = false;
             }
         }
@@ -749,6 +759,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return dateFormatted;
     }
 
+
+    /**
+     * 获得两个日期间距多少天
+     *
+     * @param smdate
+     * @param bdate
+     * @return
+     */
+    public static int getTimeDistance(Date smdate, Date bdate) {
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(smdate);
+
+        long time1 = cal.getTimeInMillis();
+
+        cal.setTime(bdate);
+
+        long time2 = cal.getTimeInMillis();
+
+        long between_days = (time2 - time1) / (1000 * 3600 * 24);
+
+        return Integer.parseInt(String.valueOf(between_days));
+    }
+
     /**
      * 清空点击显示
      *
@@ -759,6 +793,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         clickX = 0;
         clickY = 0;
         clickDateString = "";
+        clickColorLineIndex = 0;
         //简单画一下
         draw();
     }
@@ -774,7 +809,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         //日志调试
-        Log.i(TAG, "onItemSelected 进入函数");
         Log.i(TAG, "onItemSelected 函数中，pos = " + pos);
 
         //清空点击显示
@@ -807,10 +841,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         //如果预测按钮开着
                         //因为在我们的线系统中，跟在真实后面的就是预测线了
                         curLineIndex = lineViewModel.getNumOfRealLines();
-                        //同时显示参数们
+                        //显示第2行和按钮行
                         paramLine2.setVisibility(View.VISIBLE);
                         buttonLine.setVisibility(View.VISIBLE);
-                        //用户参数要看modelType是否为控制
+                        //用户参数行要看modelType是否为控制
                         userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 0 ? View.VISIBLE : View.INVISIBLE);
                     } else {
                         //如果没在预测就正常0
@@ -831,10 +865,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //选了第1个选项：控制
                 if (pos == 0) {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
-                    //控制等级spinner应该保持出现
-                    controlLevelSpinner.setVisibility(View.VISIBLE);
-                    controlLevelLabel.setVisibility(View.VISIBLE);
-                    //第三行要看第二行是否出现
+                    //用户参数行要看第二行是否出现
                     if (paramLine2.getVisibility() == View.VISIBLE) {
                         userParamLines.setVisibility(View.VISIBLE);
                     }
@@ -842,10 +873,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //选了第2个选项：群体免疫
                 else {
                     Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
-                    //第三行和控制等级spinner应该隐藏
+                    //用户参数行应该隐藏
                     userParamLines.setVisibility(View.INVISIBLE);
-                    controlLevelSpinner.setVisibility(View.INVISIBLE);
-                    controlLevelLabel.setVisibility(View.INVISIBLE);
                 }
                 break;
             }
@@ -859,6 +888,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlDurationInput.setFocusableInTouchMode(false);
                     controlDurationInput.setCursorVisible(false);
                     controlDurationInput.setTextColor(Color.GRAY);
+                    //到今天按钮设为不可见
+                    tillTodyButton.setVisibility(View.INVISIBLE);
                     //根据选项设置默认持续时间
                     switch (pos) {
                         //一级
@@ -884,7 +915,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlDurationInput.setCursorVisible(true);
                     controlDurationInput.getText().clear();
                     controlDurationInput.setTextColor(Color.BLACK);
-
+                    //到今天按钮设为可见
+                    tillTodyButton.setVisibility(View.VISIBLE);
                 }
                 break;
             }
@@ -955,8 +987,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
-        Log.i(TAG, "onNothingSelected 进入函数");
     }
 
     /**
@@ -967,7 +997,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Log.i(TAG, "onCheckedChanged 进入函数");
         //清空点击显示
         clearClick();
         //判断监听到的是哪个组件被选中
