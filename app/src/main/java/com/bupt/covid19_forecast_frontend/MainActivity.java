@@ -607,6 +607,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                     break;
                 }
+                //清空标签
+                clearClick();
             }
         });
         resetButton.setOnClickListener(new View.OnClickListener() {
