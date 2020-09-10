@@ -21,5 +21,14 @@ public interface API {
                                    @Query("controlType") int controlType,
                                    @Query("startControlDate") String startControlDate,
                                    @Query("raiseLastTime") int raiseLastTime,
-                                   @Query("controlGrade") int controlGrade);
+                                   @Query("controlGrade") int controlGrade,
+                                   @Query("r1") int r1,
+                                   @Query("b1") float b1,
+                                   @Query("r2") int r2,
+                                   @Query("b2") float b2,
+                                   @Query("a") float a,
+                                   @Query("v") float v,
+                                   @Query("d") float d,
+                                   @Query("n") int n
+    );
 }

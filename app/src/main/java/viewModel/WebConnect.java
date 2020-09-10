@@ -394,7 +394,7 @@ public class WebConnect {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         API api = retrofit.create(API.class);
-        Call<List<Integer>> task = api.getPredict(name, isProvince, controlType, startControlDate, controlDuration, controlGrade);
+        Call<List<Integer>> task = api.getPredict(name, isProvince, controlType, startControlDate, controlDuration, controlGrade,r1,b1,r2,b2,a,v,d,n);
         task.enqueue(new Callback<List<Integer>>() {
             @Override
             public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
