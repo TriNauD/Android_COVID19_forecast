@@ -886,6 +886,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlDurationInput.setFocusableInTouchMode(false);
                     controlDurationInput.setCursorVisible(false);
                     controlDurationInput.setTextColor(Color.GRAY);
+                    //到今天按钮设为不可见
+                    tillTodyButton.setVisibility(View.INVISIBLE);
                     //根据选项设置默认持续时间
                     switch (pos) {
                         //一级
@@ -911,7 +913,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     controlDurationInput.setCursorVisible(true);
                     controlDurationInput.getText().clear();
                     controlDurationInput.setTextColor(Color.BLACK);
-
+                    //到今天按钮设为可见
+                    tillTodyButton.setVisibility(View.VISIBLE);
                 }
                 break;
             }
