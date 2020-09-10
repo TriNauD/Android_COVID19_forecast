@@ -112,6 +112,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     String clickDateString = "";
     //点击的线下标
     private int clickColorLineIndex = 0;
+    //在画的线有几条是需要标签颜色的
+    private int showColorLineNum = 0;
 
     /*————————————获取数据相关————————————*/
 
@@ -266,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    private int showLineNum = 0;
+
 
     /**
      * 小画家
@@ -292,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             showLines.add(allLines.get(0));
         }
         //在画的“线”有几条
-        showLineNum = showLines.size();
+        showColorLineNum = showLines.size();
 
         //手指点击的竖直线
         //点
@@ -571,7 +573,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             //获取点击的线
                             Log.i(TAG, "touch线为 lineIndex: " + lineIndex + " , pointIndex: " + pointIndex);
                             //如果是需要颜色的线，就赋值
-                            if (lineIndex <= showLineNum) {
+                            if (lineIndex <= showColorLineNum) {
                                 clickColorLineIndex = lineIndex;
                             }
 
