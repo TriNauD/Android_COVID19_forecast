@@ -50,7 +50,7 @@ public class LineViewModel extends ViewModel {
             //绑定数据
             List<PointValue> tempArrayList = new ArrayList<>();//一条线的数据
             for (int p = 0; p < WebConnect.getNumOfForecastPoints(); p++) {
-                int x = p + WebConnect.getNumOfRealPoints();//预测点接在真实后面
+                int x = p;//预测点
                 float y = WebConnect.getLineDataList().get(i + WebConnect.getNumOfRealLines())[p];
                 tempArrayList.add(new PointValue(x, y));//在真实线后面的是预测线
             }
@@ -61,7 +61,7 @@ public class LineViewModel extends ViewModel {
             line.setPointColor(Color.rgb(126, 185, 236));//点的颜色 蓝色
             line.setPointRadius(pointSize);//点的大小
             line.setHasLabelsOnlyForSelected(true);//点的标签在点击的时候显示
-            line.setFilled(true);//下方填充
+            line.setFilled(false);//下方不要填充
             line.setCubic(false);//不要曲线
             if (lines.size() >= WebConnect.getNumOfRealLines() + WebConnect.getNumOfForecastLines()) {
                 //如果已经有这条线了

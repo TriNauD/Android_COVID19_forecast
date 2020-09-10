@@ -108,15 +108,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //国家下拉框是不是第一次调用
     private boolean isFirstChooseNation = true;
 
-    //画图调参用
     //当前显示的线是几号
     private int curLineIndex = 0;
     //最大y轴
     private int MaxY = 2200000;
+
     //点击坐标
     int clickX, clickY;
     //点击的日期标签
     String clickDateString = "";
+    //点击的线下标
+    private int clickColorLineIndex = 0;
+    //在画的线有几条是需要标签颜色的
+    private int showColorLineNum = 0;
 
     /*————————————获取数据相关————————————*/
 
@@ -270,6 +274,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+
+
     /**
      * 小画家
      *
@@ -293,6 +299,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (isForecast) {
             showLines.add(allLines.get(0));
         }
+        //在画的“线”有几条
+        showColorLineNum = showLines.size();
 
         //手指点击的竖直线
         //点
@@ -328,20 +336,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //颜色
         handLine.setColor(Color.WHITE);
-        //设置为所点的线的颜色
-        if (isForecast) {
-            //在预测
-            if (clickX > WebConnect.getNumOfRealPoints()) {
-                //后面的蓝色
-                labelLine.setColor(showLines.get(0).getColor());
-            } else {
-                //前面的红色
-                labelLine.setColor(showLines.get(1).getColor());
-            }
-        } else {
-            //没在预测,用前面的颜色
-            labelLine.setColor(showLines.get(0).getColor());
-        }
+        //点击的线的颜色
+        Line colorLine = showLines.get(clickColorLineIndex);
+        labelLine.setColor(colorLine.getColor());
 
         //加入总的线列表
         showLines.add(handLine);
@@ -613,7 +610,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     LineChartOnValueSelectListener lineChartOnValueSelectListener = new LineChartOnValueSelectListener() {
                         @Override
-                        public void onValueSelected(int i, int i1, PointValue pointValue) {
+                        public void onValueSelected(int lineIndex, int pointIndex, PointValue pointValue) {
+                            //获取点击的线
+                            Log.i(TAG, "touch线为 lineIndex: " + lineIndex + " , pointIndex: " + pointIndex);
+                            //如果是需要颜色的线，就赋值
+                            if (lineIndex <= showColorLineNum) {
+                                clickColorLineIndex = lineIndex;
+                            }
+
                             //获取点击坐标
                             int x = (int) pointValue.getX();
                             int y = (int) pointValue.getY();
@@ -625,14 +629,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             Axis xAxix = lineViewModel.getAxesList().get(curLineIndex)[0];
                             char[] labelChars = xAxix.getValues().get(clickX).getLabel();
                             clickDateString = String.valueOf(labelChars);
-                            clickDateString += "\n";
+                            clickDateString += " ";
                             clickDateString += clickY;
                             Log.i(TAG, "touch x轴坐标标签: " + clickDateString);
 
-
                             //动画移动 跟随点击动画到指定位置
                             myLineChartView.moveToWithAnimation(clickX, clickY);
-
 
                             //画画
                             draw();
@@ -791,6 +793,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         clickX = 0;
         clickY = 0;
         clickDateString = "";
+        clickColorLineIndex = 0;
         //简单画一下
         draw();
     }
