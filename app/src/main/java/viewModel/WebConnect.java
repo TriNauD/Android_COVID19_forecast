@@ -63,6 +63,8 @@ public class WebConnect {
     private static float v = 0;
     //感染者病死率d
     private static float d = 0;
+    //该地区总人数n
+    private static int n = 0;
 
     //所有线数据
     private static List<float[]> lineDataList = new ArrayList<>();
@@ -690,6 +692,10 @@ public class WebConnect {
 
     public static void setD(float d) {
         WebConnect.d = d;
+    }
+
+    public static void setN(int n) {
+        WebConnect.n = n;
     }
 
 }
