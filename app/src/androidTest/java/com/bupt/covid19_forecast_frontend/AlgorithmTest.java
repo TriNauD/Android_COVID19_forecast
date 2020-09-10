@@ -32,6 +32,9 @@ public class AlgorithmTest {
 
         onView(withId(R.id.forecast_switch)).perform(click());
 
+        onView(withId(R.id.model_type_spinner)).perform(click());
+        onData(anything()).atPosition(1).perform(click());
+
         for (i=0;i<3;i++){
             //输入日期
             onView(withId(R.id.control_start_date_month_input))
@@ -49,12 +52,12 @@ public class AlgorithmTest {
 
         //群体免疫
         onView(withId(R.id.model_type_spinner)).perform(click());
-        onData(anything()).atPosition(1).perform(click());
+        onData(anything()).atPosition(0).perform(click());
 
         onView(withId(R.id.submit_button)).perform(click());
 
         onView(withId(R.id.model_type_spinner)).perform(click());
-        onData(anything()).atPosition(0).perform(click());
+        onData(anything()).atPosition(1).perform(click());
 
         //自定义控制天数
         for(i=4;i<12;i++){
