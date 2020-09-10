@@ -78,7 +78,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private RelativeLayout paramLine1;
     private RelativeLayout paramLine2;
     private LinearLayout userParamLines;
-    private RelativeLayout userParamLine1;
+    private LinearLayout userParamControl;
+    private LinearLayout userParamSEIR;
     private RelativeLayout buttonLine;
     //提示消息
     Toast toast;
@@ -397,7 +398,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         paramLine1 = findViewById(R.id.param_line_1);
         paramLine2 = findViewById(R.id.param_line_2);
         userParamLines = findViewById(R.id.user_param_lines);
-        userParamLine1 = findViewById(R.id.user_param_line_1);
+        userParamControl = findViewById(R.id.user_param_control);
+        userParamSEIR = findViewById(R.id.user_param_SEIR);
         buttonLine = findViewById(R.id.buttonLine);
 
         //switch
@@ -860,19 +862,33 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             //第2个spinner 模型类型（群体和控制）
             case R.id.model_type_spinner: {
-                //选了第1个选项：控制
-                if (pos == 0) {
-                    Log.i(TAG, "onItemSelected 选了第2个spinner的第1个选项");
-                    //用户参数行要看第二行是否出现
-                    if (paramLine2.getVisibility() == View.VISIBLE) {
-                        userParamLines.setVisibility(View.VISIBLE);
+                switch (pos) {
+                    //选了第1个选项：控制
+                    case 0: {
+                        Log.i(TAG, "onItemSelected: 控制");
+                        //用户参数行要看是否正在预测
+                        if (isForecastSwitchedOn) {
+                            userParamLines.setVisibility(View.VISIBLE);
+                            userParamControl.setVisibility(View.VISIBLE);
+                            userParamSEIR.setVisibility(View.GONE);
+                        }
                     }
-                }
-                //选了第2个选项：群体免疫
-                else {
-                    Log.i(TAG, "onItemSelected 选了第2个spinner的其他选项");
-                    //用户参数行应该隐藏
-                    userParamLines.setVisibility(View.INVISIBLE);
+                    break;
+                    //选了第2个选项：群体免疫
+                    case 1: {
+                        Log.i(TAG, "onItemSelected: 群体免疫");
+                        //用户参数行应该隐藏
+                        userParamLines.setVisibility(View.GONE);
+                    }
+                    break;
+                    //选了第3个选项：SEIR
+                    case 2: {
+                        Log.i(TAG, "onItemSelected: SEIR");
+                        userParamLines.setVisibility(View.VISIBLE);
+                        userParamControl.setVisibility(View.GONE);
+                        userParamSEIR.setVisibility(View.VISIBLE);
+                    }
+                    break;
                 }
                 break;
             }
@@ -1012,7 +1028,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     paramLine2.setVisibility(View.VISIBLE);
                     buttonLine.setVisibility(View.VISIBLE);
                     //用户参数要看modelType是否为控制
-                    userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 0 ? View.VISIBLE : View.INVISIBLE);
+                    userParamControl.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 0 ? View.VISIBLE : View.GONE);
+                    userParamLines.setVisibility(modelTypeSpinner.getSelectedItemPosition() != 1 ? View.VISIBLE : View.GONE);
+                    userParamSEIR.setVisibility(modelTypeSpinner.getSelectedItemPosition() == 2 ? View.VISIBLE : View.GONE);
+
                 } else {
                     Log.i(TAG, "onCheckedChanged 开关状态：关闭");
                     //因为只有第一个曲线是要预测的，关闭时就应该返回到第一个线的真实线
