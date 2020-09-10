@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -329,7 +330,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //颜色
         handLine.setColor(Color.WHITE);
         //点击的线的颜色
-        labelLine.setColor(showLines.get(clickColorLineIndex).getColor());
+        Line colorLine = showLines.get(clickColorLineIndex);
+        labelLine.setColor(colorLine.getColor());
 
         //加入总的线列表
         showLines.add(handLine);
@@ -695,6 +697,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         clickX = 0;
         clickY = 0;
         clickDateString = "";
+        clickColorLineIndex = 0;
         //简单画一下
         draw();
     }
