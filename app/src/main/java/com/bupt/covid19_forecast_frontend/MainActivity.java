@@ -535,13 +535,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Button: submit button clicked");
-                //设置控制或群体免疫
+                //设置群体免疫/控制/SEIR
+                //1:群体免疫 2:控制 3:SEIR
                 WebConnect.setControlType(modelTypeSpinner.getSelectedItemPosition() + 1);
                 Log.i(TAG, "Button: ControlType:" + (modelTypeSpinner.getSelectedItemPosition() + 1));
                 //设置控制等级
+                //0:自定义 1:一级 2:二级 3:三级
                 WebConnect.setControlGrade((controlLevelSpinner.getSelectedItemPosition() + 1) % 4);
                 Log.i(TAG, "Button: ControlLevel:" + ((controlLevelSpinner.getSelectedItemPosition() + 1) % 4));
-                //设置控制开始日期&持续时间
+                //设置控制开始日期(yyyy-MM-dd)&持续时间
                 //控制
                 if (modelTypeSpinner.getSelectedItemPosition() == 0) {
                     //用户输入合法（不为空且日期合法）
