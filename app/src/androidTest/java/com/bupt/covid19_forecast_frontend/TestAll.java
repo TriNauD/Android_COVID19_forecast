@@ -117,7 +117,7 @@ public class TestAll {
         onView(withId(R.id.reset_button)).perform(click());
 
         onView(withId(R.id.r1_input)).perform(repeatedlyUntil(swipeDown(),
-                hasDescendant(withId(R.id.chart)),
+                hasDescendant(withId(R.id.people_num_bar_col_1_title)),
                 50));
 
         Thread.sleep(1000000000);
