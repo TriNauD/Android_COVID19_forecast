@@ -663,4 +663,33 @@ public class WebConnect {
     public static void setIsGetSuccess(boolean isGetSuccess) {
         WebConnect.isGetSuccess = isGetSuccess;
     }
+
+    public static void setR1(int r1) {
+        WebConnect.r1 = r1;
+    }
+
+    public static void setB1(float b1) {
+        WebConnect.b1 = b1;
+    }
+
+    public static void setR2(int r2) {
+        WebConnect.r2 = r2;
+    }
+
+    public static void setB2(float b2) {
+        WebConnect.b2 = b2;
+    }
+
+    public static void setA(float a) {
+        WebConnect.a = a;
+    }
+
+    public static void setV(float v) {
+        WebConnect.v = v;
+    }
+
+    public static void setD(float d) {
+        WebConnect.d = d;
+    }
+
 }
