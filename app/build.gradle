@@ -20,6 +20,19 @@ android {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
+    //release apk name
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            //def date = new Date().format("yyyyMMdd" , TimeZone.getTimeZone("Asia/Shanghai"))
+            def date = new Date().format("yyyyMMdd" , TimeZone.getTimeZone("GMT+08"))
+            if(variant.buildType.name.equals('debug')){
+                outputFileName = "CovFore${date}_${versionName}.apk"
+            }
+            if(variant.buildType.name.equals('release')){
+                outputFileName = "CovFore${date}_${versionName}.apk"
+            }
+        }
+    }
 }
 
 dependencies {
