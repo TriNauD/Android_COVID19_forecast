@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">COVID19_forecast_frontend</string>
-    <string name="national_title">全国疫情趋势</string>
+    <!--labels-->
+    <string name="app_name">疫情预测</string>
+    <string name="national_title">疫情趋势</string>
+    <string name="ui_text_home">国内</string>
+    <string name="ui_text_abroad">海外</string>
     <string name="line_type_label">曲线类型</string>
     <string name="forecast_switch_label">预测</string>
     <string name="model_type_label">模型</string>
@@ -19,8 +22,32 @@
     <string name="control_start_date_year_label">年</string>
     <string name="control_start_date_month_label">月</string>
     <string name="control_start_date_day_label">日</string>
+    <string name="population_sub_title">人数</string>
+    <string name="possibility_sub_title">概率</string>
+    <string name="r1_label">感染者接触人数</string>
+    <string name="b1_label">感染者传染概率</string>
+    <string name="r2_label">潜伏者接触人数</string>
+    <string name="b2_label">潜伏者传染概率</string>
+    <string name="a_label">潜伏者患病概率</string>
+    <string name="v_label">感染者康复概率</string>
+    <string name="d_label">感染者病死概率</string>
+    <string name="n_label">预测地区总人数</string>
 
 
+    <string name="submit_button_text">提交</string>
+    <string name="reset_button_text">重置</string>
+    <!--alert msg-->
+    <string name="alert_msg_forecasting">正在预测……</string>
+    <string name="alert_msg_input_err_invalid">输入日期非法</string>
+    <string name="alert_msg_input_err_after_today">输入日期超出范围</string>
+    <string name="alert_msg_input_err_duration_invalid">持续时间非法</string>
+    <string name="alert_msg_input_err_duration_empty">持续时间不可为空</string>
+    <string name="alert_msg_input_err_date_empty">日期不可为空</string>
+    <string name="alert_msg_input_err_param_empty">不可为空</string>
+    <string name="alert_msg_input_err_param_people">人数需要大于0</string>
+    <string name="alert_msg_input_err_param_posibility">概率需要在0~1范围内（不包含边界）</string>
+    <string name="alert_msg_get_data_failure">获取数据失败</string>
+    <string name="alert_msg_get_data_success">获取数据成功</string>
 
     <string-array name="item_choices">
         <item>现存确诊</item>
@@ -28,10 +55,13 @@
         <item>累计治愈</item>
         <item>累计死亡</item>
     </string-array>
+
     <string-array name="model_type_choices">
-        <item>控制</item>
         <item>群体免疫</item>
+        <item>控制</item>
+        <item>SEIR</item>
     </string-array>
+
     <string-array name="control_level_choices">
         <item>一级控制</item>
         <item>二级控制</item>
@@ -45,15 +75,68 @@
     </string-array>
 
     <string-array name="nation_name">
-        <item>秘鲁</item>
         <item>美国</item>
+        <item>中国</item>
+        <item>日本本土</item>
         <item>英国</item>
+        <item>法国</item>
+        <item>印度</item>
         <item>巴西</item>
         <item>俄罗斯</item>
-        <item>阿联酋</item>
+        <item>秘鲁</item>
+        <item>哥伦比亚</item>
+        <item>墨西哥</item>
+        <item>西班牙</item>
+        <item>阿根廷</item>
+        <item>智利</item>
+        <item>伊朗</item>
+        <item>沙特阿拉伯</item>
         <item>巴基斯坦</item>
-        <item>新加坡</item>
-        <item>瑞典</item>
+        <item>土耳其</item>
+        <item>意大利</item>
+        <item>伊拉克</item>
+        <item>德国</item>
+        <item>菲律宾</item>
+        <item>印度尼西亚</item>
 
+
+    </string-array>
+
+    <string-array name="province_name">
+        <item>全国</item>
+        <item>北京</item>
+        <item>安徽</item>
+        <item>重庆</item>
+        <item>福建</item>
+        <item>甘肃</item>
+        <item>广东</item>
+        <item>广西</item>
+        <item>贵州</item>
+        <item>海南</item>
+        <item>河北</item>
+        <item>河南</item>
+        <item>黑龙江</item>
+        <item>湖北</item>
+        <item>湖南</item>
+        <item>江西</item>
+        <item>吉林</item>
+        <item>江苏</item>
+        <item>辽宁</item>
+        <item>内蒙古</item>
+        <item>宁夏</item>
+        <item>青海</item>
+        <item>山西</item>
+        <item>山东</item>
+        <item>陕西</item>
+        <item>上海</item>
+        <item>四川</item>
+        <item>天津</item>
+        <item>西藏</item>
+        <item>新疆</item>
+        <item>云南</item>
+        <item>浙江</item>
+        <item>香港</item>
+        <item>澳门</item>
+        <item>台湾</item>
     </string-array>
 </resources>
